@@ -1,6 +1,4 @@
 # Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
 
@@ -8,21 +6,14 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
 # Executables
+modellbasen
 *.exe
 *.out
 *.app
+
+.kdev4
+*.kdev4
+*.bak
+
+passwd

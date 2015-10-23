@@ -1,0 +1,11 @@
+[modellbasen]
+Description = modellbasen database
+Trace       = Off
+TraceFile   = stderr
+Driver      = MySQL
+SERVER      = localhost
+PORT        = 3306
+USER        = modellbasen
+PASSWORD    = modellbasen
+DATABASE    = modellbasen
+CharSet     = utf8
