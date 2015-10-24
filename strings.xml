@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<messages>
+	<message id="AppName">modellbasen</message>
+	<message id="ODBCConnectionString">DSN=modellbasen</message>
+	<message id="MySQLConnectionString">host=localhost;port=3306;db=modellbasen;user=modellbasen;password=modellbasen;compress=true;auto-reconnect=true</message>
+
+	<message id="Username">Username</message>
+	<message id="Password">Password</message>
+	<message id="LoginButton">Log in</message>
+	<message id="LogoutButton">Log out</message>
+	<message id="ProfileButton">Profile</message>
+	<message id="Ok">Ok</message>
+	<message id="Cancel">Cancel</message>
+	
+	<message id="AdministratorTab">Administrator</message>
+	<message id="ProfileTab">Profile</message>
+
+	<message id="New admin password">New admin password</message>
+	<message id="Retype admin password">Retype admin password</message>
+
+	<message id="InvalidUsernameOrPassword">Invalid username or password!</message>
+	<message id="InvalidPasswordEmpty">Password cannot be empty!</message>
+	<message id="InvalidPasswordMismatch">Passwords do not match!</message>
+	
+	<message id="ErrorSettingPassword">Something failed when updating password</message>
+	<message id="ErrorWritingToDatabase">Something failed when writing to database</message>
+
+	<message id="Database.FailedToCreateSession">Failed to create database session.</message>
+
+	<message id="Import.FailedCalculatingDistances">Failed while calculating distances.</message>
+	<message id="Import.FileParseErrorLine">File parse error line {1}.</message>
+	<message id="Import.FileTooLarge">File too large.</message>
+	<message id="Import.Success">File imported OK.</message>
+	<message id="Import.UnexpectedFileFormat">Unexpected file format.</message>
+
+	<message id="System.FileOpenFailed">Failed to open file.</message>
+	<message id="System.OutOfMemory">Out of memory.</message>
+</messages>
