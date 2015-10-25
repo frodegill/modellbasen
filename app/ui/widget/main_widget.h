@@ -21,14 +21,15 @@ public:
 private:
 	void Initialize();
 	void AddHeader(Wt::WVBoxLayout* layout);
-	void CreateAdministratorTab(Wt::WTabWidget* tab_widget);
 	void CreateProfileTab(Wt::WTabWidget* tab_widget);
+	void CreateMessageBoardTab(Wt::WTabWidget* tab_widget);
+	void CreateSearchTab(Wt::WTabWidget* tab_widget);
+	void CreateAdministratorTab(Wt::WTabWidget* tab_widget);
 
 public:
 	void ActivateMainWidget();
 
 	void LogOut();
-	void ShowProfile();
 
 private:
 
@@ -37,8 +38,10 @@ private:
 	bool            m_initialized;
 
 	Wt::WTabWidget*           m_tab_widget;
-	Wt::WContainerWidget*     m_administrator_tab;
 	Wt::WContainerWidget*     m_profile_tab;
+	Wt::WContainerWidget*     m_messageboard_tab;
+	Wt::WContainerWidget*     m_search_tab;
+	Wt::WContainerWidget*     m_administrator_tab;
 };
 
 } // namespace modellbasen

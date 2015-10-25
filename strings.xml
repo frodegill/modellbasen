@@ -12,8 +12,10 @@
 	<message id="Ok">Ok</message>
 	<message id="Cancel">Cancel</message>
 	
-	<message id="AdministratorTab">Administrator</message>
-	<message id="ProfileTab">Profile</message>
+	<message id="Tab.ProfileTab">Profile</message>
+	<message id="Tab.MessageBoardTab">Messageboard</message>
+	<message id="Tab.SearchTab">Search</message>
+	<message id="Tab.AdministratorTab">Administrator</message>
 
 	<message id="New admin password">New admin password</message>
 	<message id="Retype admin password">Retype admin password</message>
@@ -27,6 +29,7 @@
 
 	<message id="Database.FailedToCreateSession">Failed to create database session.</message>
 
+	<message id="Import.PostCodes">Import postcodes.</message>
 	<message id="Import.FailedCalculatingDistances">Failed while calculating distances.</message>
 	<message id="Import.FileParseErrorLine">File parse error line {1}.</message>
 	<message id="Import.FileTooLarge">File too large.</message>

@@ -9,7 +9,7 @@
 
 using namespace modellbasen;
 
-AdministratorTab::AdministratorTab(WebApplication* app, Wt::WTabWidget* tab_widget)
+AdministratorTab::AdministratorTab(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
   m_postcodes_fileupload(NULL),
@@ -30,12 +30,10 @@ AdministratorTab::AdministratorTab(WebApplication* app, Wt::WTabWidget* tab_widg
 		m_postcodes_fileupload->setProgressBar(m_import_progressbar);
 		tab_container_vbox->addWidget(m_postcodes_fileupload);
 
-		m_import_postcodes_button = new Wt::WPushButton(Wt::WString::tr("Import"));
+		m_import_postcodes_button = new Wt::WPushButton(Wt::WString::tr("Import.PostCodes"));
 		m_import_postcodes_button->clicked().connect(this, &AdministratorTab::OnImportButtonClicked);
 		tab_container_vbox->addWidget(m_import_postcodes_button);
 	}
-
-	tab_widget->addTab(this, Wt::WString::tr("AdministratorTab"));
 }
 
 AdministratorTab::~AdministratorTab()
