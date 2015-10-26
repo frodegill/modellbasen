@@ -16,7 +16,14 @@ public:
 	~SearchTab();
 
 private:
+	Wt::WContainerWidget* CreateTagsContainer() const;
+	Wt::WContainerWidget* CreateResultsContainer() const;
+
+private:
 	WebApplication* m_app;
+
+	Wt::WContainerWidget* m_tags_container;
+	Wt::WContainerWidget* m_results_container;
 };
 
 } // namespace modellbasen
