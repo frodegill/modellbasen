@@ -161,15 +161,15 @@ static DatabaseUpdateItem update_items[] = {
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (44, 'tag.hairdresser.tfp', 4, 4, 42, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
-	   "VALUE (45, 'tag.agency.companyname', 2, 2, 42, false);"},
+	   "VALUE (45, 'tag.hairdresser.companyname', 2, 2, 42, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
-	   "VALUE (46, 'tag.agency.companyaddress', 2, 2, 42, false);"},
+	   "VALUE (46, 'tag.hairdresser.companyaddress', 2, 2, 42, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
-	   "VALUE (47, 'tag.agency.webpage', 2, 2, 42, false);"},
+	   "VALUE (47, 'tag.hairdresser.webpage', 2, 2, 42, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
-	   "VALUE (48, 'tag.agency.publicemail', 2, 2, 42, false);"},
+	   "VALUE (48, 'tag.hairdresser.publicemail', 2, 2, 42, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
-	   "VALUE (49, 'tag.agency.phone', 2, 2, 42, false);"},
+	   "VALUE (49, 'tag.hairdresser.phone', 2, 2, 42, false);"},
 
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (50, 'tag.agency', 4, 4, NULL, false);"},
