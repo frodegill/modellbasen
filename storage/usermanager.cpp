@@ -1,8 +1,9 @@
 #include "usermanager.h"
 
-#include "../app/global.h"
 #include <boost/locale.hpp>
 #include "Wt/Auth/HashFunction"
+#include "../app/global.h"
+#include "dbo/tag.h"
 
 
 using namespace modellbasen;

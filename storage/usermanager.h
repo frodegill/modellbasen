@@ -2,7 +2,6 @@
 #define _USERMANAGER_H_
 
 #include "../app/defines.h"
-#include "dbo/tag.h"
 #include "dbo/user.h"
 
 

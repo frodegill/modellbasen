@@ -17,6 +17,9 @@
 	<message id="Tab.SearchTab">Search</message>
 	<message id="Tab.AdministratorTab">Administrator</message>
 
+	<message id="Widget.SearchTags">Search tags</message>
+	<message id="Widget.AvailableTags">Available tags</message>
+	
 	<message id="tag.administrator">Is Administrator</message>
 	<message id="tag.name">Name</message>
 	<message id="tag.sirname">Sirname</message>

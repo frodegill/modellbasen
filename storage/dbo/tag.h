@@ -96,7 +96,7 @@ public:
 	TagDataType        GetInsertDataType() const {return static_cast<TagDataType>(m_insert_datatype);}
 	TagDataType        GetQueryDataType() const {return static_cast<TagDataType>(m_query_datatype);}
 	Poco::UInt32       GetParentId() const {return m_parent_id;}
-	bool							 IsQueryOnly() const {return m_query_only;}
+	bool               IsQueryOnly() const {return m_query_only;}
 
 private:
 	Poco::UInt32 m_id;

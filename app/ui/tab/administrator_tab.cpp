@@ -5,6 +5,7 @@
 //#include <Wt/WText>
 #include "../../application.h"
 #include "../../../storage/import_postcodes.h"
+#include "../../../storage/dbo/tag.h"
 
 
 using namespace modellbasen;
