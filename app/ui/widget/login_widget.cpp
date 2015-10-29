@@ -97,8 +97,13 @@ void LoginWidget::ActivateLoginWidget()
 	m_app->root()->addWidget(this);
 
 	//Set focus
+#ifdef DEBUG
+	m_username_edit->setText("admin");
+	m_password_edit->setText("admin");
+#else
 	m_username_edit->setText("");
 	m_password_edit->setText("");
+#endif
 	m_username_edit->setFocus();
 }
 

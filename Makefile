@@ -18,7 +18,7 @@ CXX = g++
 CXXFLAGS = -I/usr/local/include -I/usr/include -W -Wall -Werror -pipe -std=c++11
 
 ifdef DEBUG_INFO
- CXXFLAGS += -g
+ CXXFLAGS += -g -DDEBUG
  LIBSFLAGS = -L/usr/lib/debug/usr/lib -lPocoDatad -lPocoFoundationd
 else
  CXXFLAGS += -O3
