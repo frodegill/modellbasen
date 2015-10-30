@@ -11,3 +11,15 @@ Tag::Tag()
   m_query_only(true)
 {
 }
+
+bool Tag::GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const
+{
+	std::string key = GetName();
+	if (is_query)
+	{
+		if (localized_strings->resolveKey(key+".query", text))
+			return true;
+	}
+
+	return localized_strings->resolveKey(key, text);
+}

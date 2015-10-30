@@ -18,8 +18,10 @@ public:
 	~SearchTab();
 
 private:
-	Wt::WContainerWidget* CreateTagsContainer() const;
+	Wt::WContainerWidget* CreateTagsContainer();
 	Wt::WContainerWidget* CreateResultsContainer() const;
+
+	void OnAvailableTagButtonClicked(Poco::UInt32 tag_id);
 
 private:
 	WebApplication* m_app;

@@ -28,7 +28,7 @@ SearchTab::~SearchTab()
 {
 }
 
-Wt::WContainerWidget* SearchTab::CreateTagsContainer() const
+Wt::WContainerWidget* SearchTab::CreateTagsContainer()
 {
 	Wt::WContainerWidget* tags_container = new Wt::WContainerWidget();
 	Wt::WVBoxLayout* tags_container_vbox = new Wt::WVBoxLayout();
@@ -46,8 +46,12 @@ Wt::WContainerWidget* SearchTab::CreateTagsContainer() const
 		for(std::list<Tag>::const_iterator it = tags.begin(); it!=tags.end(); ++it)
 		{
 			Tag tag = *it;
-			Wt::WPushButton* button = new Wt::WPushButton(tag.GetName());
+			std::string tag_text;
+			tag.GetTagText(m_app->localizedStrings(), true, tag_text);
+			Wt::WPushButton* button = new Wt::WPushButton(tag_text);
 			button->setMargin(Wt::WLength(0.2, Wt::WLength::FontEm));
+			Poco::UInt32 tag_id = tag.GetId();
+			button->clicked().connect(std::bind(&SearchTab::OnAvailableTagButtonClicked, this, tag_id));
 			available_tags->addWidget(button);
 		}
 	}
@@ -61,4 +65,8 @@ Wt::WContainerWidget* SearchTab::CreateResultsContainer() const
 	Wt::WGridLayout* results_container_grid = new Wt::WGridLayout();
 	results_container->setLayout(results_container_grid);
 	return results_container;
+}
+
+void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 UNUSED(tag_id))
+{
 }

@@ -1,9 +1,10 @@
 #ifndef _DBO_TAG_H_
 #define _DBO_TAG_H_
 
+#include <string>
+#include <Wt/WLocalizedStrings>
 #include "classes.h"
 #include "../poco_glue.h"
-#include <string>
 
 
 namespace modellbasen
@@ -97,6 +98,8 @@ public:
 	TagDataType        GetQueryDataType() const {return static_cast<TagDataType>(m_query_datatype);}
 	Poco::UInt32       GetParentId() const {return m_parent_id;}
 	bool               IsQueryOnly() const {return m_query_only;}
+
+	bool               GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const;
 
 private:
 	Poco::UInt32 m_id;
