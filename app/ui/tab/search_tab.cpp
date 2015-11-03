@@ -76,12 +76,13 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 
 	QueryDialogs dialogs(m_app);
 
-	switch(tag.GetQueryDataType())
+	Tag::TagDataType query_datatype = tag.GetQueryDataType();
+	switch(query_datatype)
 	{
 		case Tag::INTEGER:
 		{
 			Poco::UInt32 value;
-			if (!dialogs.GetInt(value)) return;
+			if (!dialogs.GetInt("","",value)) return;
 			m_search.AddIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
@@ -89,14 +90,14 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::LOCATION:
 		{
 			std::string value;
-			if (!dialogs.GetString(value)) return;
+			if (!dialogs.GetString("","",value)) return;
 			m_search.AddStringSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
 		case Tag::DATETIME:
 		{
 			Poco::UInt64 value;
-			if (!dialogs.GetDatetime(value)) return;
+			if (!dialogs.GetDatetime("","",value)) return;
 			m_search.AddDatetimeSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
@@ -106,16 +107,11 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			break;
 		}
 		case Tag::SINGLESELECT:
-		{
-			std::list<std::string> values;
-			if (!dialogs.GetSingleSelect(values)) return;
-			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
-			break;
-		}
 		case Tag::MULTISELECT:
 		{
+			bool multiselect = Tag::MULTISELECT==query_datatype;
 			std::list<std::string> values;
-			if (!dialogs.GetMultiSelect(values)) return;
+			if (!dialogs.GetSelect("","",multiselect, values)) return;
 			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
 			break;
 		}
@@ -124,7 +120,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::AGE_RANGE:
 		{
 			Poco::UInt32 value1, value2;
-			if (!dialogs.GetInts(value1, value2)) return;
+			if (!dialogs.GetInts("","","",value1, value2)) return;
 			m_search.AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}
@@ -132,7 +128,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		{
 			std::string value1;
 			Poco::UInt32 value2;
-			if (!dialogs.GetStringInt(value1, value2)) return;
+			if (!dialogs.GetStringInt("","","",value1, value2)) return;
 			m_search.AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}

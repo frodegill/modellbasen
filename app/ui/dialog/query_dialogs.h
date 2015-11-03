@@ -13,13 +13,12 @@ public:
 	QueryDialogs(WebApplication* app);
 
 public:
-	bool GetInt(Poco::UInt32& value) const;
-	bool GetString(std::string& value) const;
-	bool GetDatetime(Poco::UInt64& value) const;
-	bool GetSingleSelect(std::list<std::string>& value) const;
-	bool GetMultiSelect(std::list<std::string>& value) const;
-	bool GetInts(Poco::UInt32& value1, Poco::UInt32& value2) const;
-	bool GetStringInt(std::string& value1, Poco::UInt32& value2) const;
+	bool GetInt(const std::string& title, const std::string& label, Poco::UInt32& value) const;
+	bool GetString(const std::string& title, const std::string& label, std::string& value) const;
+	bool GetDatetime(const std::string& title, const std::string& label, Poco::UInt64& value) const;
+	bool GetSelect(const std::string& title, const std::string& label, bool multiselect, std::list<std::string>& value) const;
+	bool GetInts(const std::string& title, const std::string& label1, const std::string& label2, Poco::UInt32& value1, Poco::UInt32& value2) const;
+	bool GetStringInt(const std::string& title, const std::string& label1, const std::string& label2, std::string& value1, Poco::UInt32& value2) const;
 
 private:
 	WebApplication* m_app;

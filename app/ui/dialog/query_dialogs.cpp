@@ -16,37 +16,32 @@ QueryDialogs::QueryDialogs(WebApplication* app)
 
 }
 
-bool QueryDialogs::GetInt(Poco::UInt32& UNUSED(value)) const
+bool QueryDialogs::GetInt(const std::string& UNUSED(title), const std::string& UNUSED(label), Poco::UInt32& UNUSED(value)) const
 {
 	return false;
 }
 
-bool QueryDialogs::GetString(std::string& UNUSED(value)) const
+bool QueryDialogs::GetString(const std::string& UNUSED(title), const std::string& UNUSED(label), std::string& UNUSED(value)) const
 {
 	return false;
 }
 
-bool QueryDialogs::GetDatetime(Poco::UInt64& UNUSED(value)) const
+bool QueryDialogs::GetDatetime(const std::string& UNUSED(title), const std::string& UNUSED(label), Poco::UInt64& UNUSED(value)) const
 {
 	return false;
 }
 
-bool QueryDialogs::GetSingleSelect(std::list<std::string>& UNUSED(value)) const
+bool QueryDialogs::GetSelect(const std::string& UNUSED(title), const std::string& UNUSED(label), bool UNUSED(multiselect), std::list<std::string>& UNUSED(value)) const
 {
 	return false;
 }
 
-bool QueryDialogs::GetMultiSelect(std::list<std::string>& UNUSED(value)) const
+bool QueryDialogs::GetInts(const std::string& UNUSED(title), const std::string& UNUSED(label1), const std::string& UNUSED(label2), Poco::UInt32& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
 {
 	return false;
 }
 
-bool QueryDialogs::GetInts(Poco::UInt32& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
-{
-	return false;
-}
-
-bool QueryDialogs::GetStringInt(std::string& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
+bool QueryDialogs::GetStringInt(const std::string& UNUSED(title), const std::string& UNUSED(label1), const std::string& UNUSED(label2), std::string& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
 {
 	return false;
 }
