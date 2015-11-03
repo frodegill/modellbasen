@@ -79,7 +79,6 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 	switch(tag.GetQueryDataType())
 	{
 		case Tag::INTEGER:
-		case Tag::LOCATION:
 		{
 			Poco::UInt32 value;
 			if (!dialogs.GetInt(value)) return;
@@ -87,6 +86,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			break;
 		}
 		case Tag::STRING:
+		case Tag::LOCATION:
 		{
 			std::string value;
 			if (!dialogs.GetString(value)) return;
@@ -122,11 +122,18 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::HEIGHT_RANGE:
 		case Tag::DAY_RANGE:
 		case Tag::AGE_RANGE:
-		case Tag::DISTANCE:
 		{
 			Poco::UInt32 value1, value2;
 			if (!dialogs.GetInts(value1, value2)) return;
 			m_search.AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
+			break;
+		}
+		case Tag::DISTANCE:
+		{
+			std::string value1;
+			Poco::UInt32 value2;
+			if (!dialogs.GetStringInt(value1, value2)) return;
+			m_search.AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}
 		default: return;

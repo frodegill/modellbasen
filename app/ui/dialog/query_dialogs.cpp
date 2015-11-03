@@ -46,6 +46,11 @@ bool QueryDialogs::GetInts(Poco::UInt32& UNUSED(value1), Poco::UInt32& UNUSED(va
 	return false;
 }
 
+bool QueryDialogs::GetStringInt(std::string& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
+{
+	return false;
+}
+
 #if 0
 	Wt::WDialog dialog(Wt::WString::tr("CreateLanguage"));
 

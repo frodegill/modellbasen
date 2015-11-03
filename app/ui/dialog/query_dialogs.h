@@ -19,6 +19,7 @@ public:
 	bool GetSingleSelect(std::list<std::string>& value) const;
 	bool GetMultiSelect(std::list<std::string>& value) const;
 	bool GetInts(Poco::UInt32& value1, Poco::UInt32& value2) const;
+	bool GetStringInt(std::string& value1, Poco::UInt32& value2) const;
 
 private:
 	WebApplication* m_app;
