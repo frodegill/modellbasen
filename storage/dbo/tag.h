@@ -90,6 +90,7 @@ public: //For PoCo::Data
 
 public:
 	Tag();
+	bool Initialize(Poco::UInt32 id);
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}

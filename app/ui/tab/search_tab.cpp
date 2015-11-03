@@ -5,6 +5,7 @@
 #include <Wt/WHBoxLayout>
 #include <Wt/WVBoxLayout>
 #include "../../application.h"
+#include "../dialog/query_dialogs.h"
 
 
 using namespace modellbasen;
@@ -67,6 +68,67 @@ Wt::WContainerWidget* SearchTab::CreateResultsContainer() const
 	return results_container;
 }
 
-void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 UNUSED(tag_id))
+void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 {
+	Tag tag;
+	if (!tag.Initialize(tag_id))
+		return;
+
+	QueryDialogs dialogs(m_app);
+
+	switch(tag.GetQueryDataType())
+	{
+		case Tag::INTEGER:
+		case Tag::LOCATION:
+		{
+			Poco::UInt32 value;
+			if (!dialogs.GetInt(value)) return;
+			m_search.AddIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
+			break;
+		}
+		case Tag::STRING:
+		{
+			std::string value;
+			if (!dialogs.GetString(value)) return;
+			m_search.AddStringSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
+			break;
+		}
+		case Tag::DATETIME:
+		{
+			Poco::UInt64 value;
+			if (!dialogs.GetDatetime(value)) return;
+			m_search.AddDatetimeSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
+			break;
+		}
+		case Tag::BOOLEAN:
+		{
+			m_search.AddBooleanSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType());
+			break;
+		}
+		case Tag::SINGLESELECT:
+		{
+			std::list<std::string> values;
+			if (!dialogs.GetSingleSelect(values)) return;
+			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
+			break;
+		}
+		case Tag::MULTISELECT:
+		{
+			std::list<std::string> values;
+			if (!dialogs.GetMultiSelect(values)) return;
+			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
+			break;
+		}
+		case Tag::HEIGHT_RANGE:
+		case Tag::DAY_RANGE:
+		case Tag::AGE_RANGE:
+		case Tag::DISTANCE:
+		{
+			Poco::UInt32 value1, value2;
+			if (!dialogs.GetInts(value1, value2)) return;
+			m_search.AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
+			break;
+		}
+		default: return;
+	}
 }
