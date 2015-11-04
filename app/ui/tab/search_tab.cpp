@@ -82,7 +82,9 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::INTEGER:
 		{
 			Poco::UInt32 value;
-			if (!dialogs.GetInt("","",value)) return;
+			if (!dialogs.GetInt(Wt::WString::tr("tag.query.title"),
+			                    Wt::WString::tr("tag.query.integer.label"),
+			                    value)) return;
 			m_search.AddIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
@@ -90,14 +92,18 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::LOCATION:
 		{
 			std::string value;
-			if (!dialogs.GetString("","",value)) return;
+			if (!dialogs.GetString(Wt::WString::tr("tag.query.title"),
+			                       Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.string.label":"tag.query.location.label"),
+			                       value)) return;
 			m_search.AddStringSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
 		case Tag::DATETIME:
 		{
 			Poco::UInt64 value;
-			if (!dialogs.GetDatetime("","",value)) return;
+			if (!dialogs.GetDatetime(Wt::WString::tr("tag.query.title"),
+			                         Wt::WString::tr("tag.query.datetime.label"),
+			                         value)) return;
 			m_search.AddDatetimeSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
@@ -111,7 +117,10 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		{
 			bool multiselect = Tag::MULTISELECT==query_datatype;
 			std::list<std::string> values;
-			if (!dialogs.GetSelect("","",multiselect, values)) return;
+			if (!dialogs.GetSelect(Wt::WString::tr("tag.query.title"),
+			                       Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.singleselect.label":"tag.query.multiselect.label"),
+			                       multiselect,
+			                       values)) return;
 			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
 			break;
 		}
@@ -119,8 +128,27 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::DAY_RANGE:
 		case Tag::AGE_RANGE:
 		{
+			Wt::WString label1, label2;
+			if (Tag::HEIGHT_RANGE==query_datatype)
+			{
+				label1 = Wt::WString::tr("tag.query.heightrange.label1");
+				label2 = Wt::WString::tr("tag.query.heightrange.label2");
+			}
+			else if (Tag::DAY_RANGE==query_datatype)
+			{
+				label1 = Wt::WString::tr("tag.query.dayrange.label1");
+				label2 = Wt::WString::tr("tag.query.dayrange.label2");
+			}
+			else
+			{
+				label1 = Wt::WString::tr("tag.query.agerange.label1");
+				label2 = Wt::WString::tr("tag.query.agerange.label2");
+			}
 			Poco::UInt32 value1, value2;
-			if (!dialogs.GetInts("","","",value1, value2)) return;
+			if (!dialogs.GetInts(Wt::WString::tr("tag.query.title"),
+			                     label1,
+			                     label2,
+			                     value1, value2)) return;
 			m_search.AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}
@@ -128,7 +156,10 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		{
 			std::string value1;
 			Poco::UInt32 value2;
-			if (!dialogs.GetStringInt("","","",value1, value2)) return;
+			if (!dialogs.GetStringInt(Wt::WString::tr("tag.query.title"),
+			                          Wt::WString::tr("tag.query.distance.label1"),
+			                          Wt::WString::tr("tag.query.distance.label2"),
+			                          value1, value2)) return;
 			m_search.AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}

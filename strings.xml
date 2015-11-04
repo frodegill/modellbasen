@@ -79,6 +79,22 @@
 	<message id="tag.agency.publicemail">(Agency) Public E-Mail</message>
 	<message id="tag.agency.phone">(Agency) Phone Number</message>
 
+	<message id="tag.query.title">Query filter</message>
+	<message id="tag.query.integer.label">Number:</message>
+	<message id="tag.query.string.label">Text:</message>
+	<message id="tag.query.datetime.label">Date:</message>
+	<message id="tag.query.location.label">Postcode:</message>
+	<message id="tag.query.singleselect.label">Value:</message>
+	<message id="tag.query.multiselect.label">Values:</message>
+	<message id="tag.query.heightrange.label1">Min height:</message>
+	<message id="tag.query.heightrange.label2">Max height:</message>
+	<message id="tag.query.dayrange.label1">Min days:</message>
+	<message id="tag.query.dayrange.label2">Max days:</message>
+	<message id="tag.query.agerange.label1">Min age:</message>
+	<message id="tag.query.agerange.label2">Max age:</message>
+	<message id="tag.query.distance.label1">Postcode:</message>
+	<message id="tag.query.distance.label2">Max distance:</message>
+
 	<message id="New admin password">New admin password</message>
 	<message id="Retype admin password">Retype admin password</message>
 

@@ -1,11 +1,10 @@
 #include "query_dialogs.h"
 
-//#include <Wt/WDialog>
-//#include <Wt/WGridLayout>
-//#include <Wt/WLineEdit>
-//#include <Wt/WPushButton>
-//#include "../../defines.h"
-//#include "../../../storage/database_update.h"
+#include <Wt/WHBoxLayout>
+#include <Wt/WVBoxLayout>
+#include <Wt/WGridLayout>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
 
 
 using namespace modellbasen;
@@ -16,79 +15,92 @@ QueryDialogs::QueryDialogs(WebApplication* app)
 
 }
 
-bool QueryDialogs::GetInt(const std::string& UNUSED(title), const std::string& UNUSED(label), Poco::UInt32& UNUSED(value)) const
+bool QueryDialogs::GetInt(const Wt::WString& title, const Wt::WString& label, Poco::UInt32& UNUSED(value)) const
 {
-	return false;
-}
-
-bool QueryDialogs::GetString(const std::string& UNUSED(title), const std::string& UNUSED(label), std::string& UNUSED(value)) const
-{
-	return false;
-}
-
-bool QueryDialogs::GetDatetime(const std::string& UNUSED(title), const std::string& UNUSED(label), Poco::UInt64& UNUSED(value)) const
-{
-	return false;
-}
-
-bool QueryDialogs::GetSelect(const std::string& UNUSED(title), const std::string& UNUSED(label), bool UNUSED(multiselect), std::list<std::string>& UNUSED(value)) const
-{
-	return false;
-}
-
-bool QueryDialogs::GetInts(const std::string& UNUSED(title), const std::string& UNUSED(label1), const std::string& UNUSED(label2), Poco::UInt32& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
-{
-	return false;
-}
-
-bool QueryDialogs::GetStringInt(const std::string& UNUSED(title), const std::string& UNUSED(label1), const std::string& UNUSED(label2), std::string& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
-{
-	return false;
-}
-
-#if 0
-	Wt::WDialog dialog(Wt::WString::tr("CreateLanguage"));
+	Wt::WDialog dialog(title);
 
 	Wt::WGridLayout* dlg_grid_layout = new Wt::WGridLayout();
 	dlg_grid_layout->setContentsMargins(DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING);
 
 	int row = 0;
 
-	//Create language name widget
-	dlg_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("LanguageNameHeader")), row, 0, Wt::AlignRight);
-	Wt::WLineEdit* language_name_edit = new Wt::WLineEdit();
-	language_name_edit->setTextSize(20);
-	language_name_edit->setMaxLength(NAME_LEN);
-	dlg_grid_layout->addWidget(language_name_edit, row++, 1, Wt::AlignLeft);
+	dlg_grid_layout->addWidget(new Wt::WText(label), row, 0, Wt::AlignRight);
+	Wt::WLineEdit* int_edit = new Wt::WLineEdit();
+	int_edit->setTextSize(10);
+	int_edit->setMaxLength(10);
+	dlg_grid_layout->addWidget(int_edit, row++, 1, Wt::AlignLeft);
 
-	//Create language longname widget
-	dlg_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("LanguageLongnameHeader")), row, 0, Wt::AlignRight);
-	Wt::WLineEdit* language_longname_edit = new Wt::WLineEdit();
-	language_longname_edit->setTextSize(20);
-	language_longname_edit->setMaxLength(LONGNAME_LEN);
-	dlg_grid_layout->addWidget(language_longname_edit, row++, 1, Wt::AlignLeft);
+	AppendCommonDialogCode(dialog, dlg_grid_layout, row);
 
-	//Create language description widget
-	dlg_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("LanguageDescriptionHeader")), row, 0, Wt::AlignRight);
-	Wt::WLineEdit* language_description_edit = new Wt::WLineEdit();
-	language_description_edit->setTextSize(20);
-	language_description_edit->setMaxLength(DESCRIPTION_LEN);
-	dlg_grid_layout->addWidget(language_description_edit, row++, 1, Wt::AlignLeft);
-
-	Wt::WPushButton* ok_button = new Wt::WPushButton(Wt::WString::tr("Ok"));
-	ok_button->clicked().connect(&dialog, &Wt::WDialog::accept);
-	dlg_grid_layout->addWidget(ok_button, row, 0, Wt::AlignCenter);
-
-	Wt::WPushButton* cancel_button = new Wt::WPushButton(Wt::WString::tr("Cancel"));
-	cancel_button->clicked().connect(&dialog, &Wt::WDialog::reject);
-	dlg_grid_layout->addWidget(cancel_button, row++, 1, Wt::AlignCenter);
-
-	//Build layout
-	dialog.contents()->setLayout(dlg_grid_layout);
 	if (Wt::WDialog::Accepted != dialog.exec())
 		return false;
 
-	app->GetRepositoryCodelibrary()->AddLanguage(language_name_edit->text().toUTF8(), language_longname_edit->text().toUTF8(), language_description_edit->text().toUTF8());
+	//TODO Get value
 
 	return true;
-#endif
+}
+
+bool QueryDialogs::GetString(const Wt::WString& title, const Wt::WString& label, std::string& value) const
+{
+	Wt::WDialog dialog(title);
+
+	Wt::WGridLayout* dlg_grid_layout = new Wt::WGridLayout();
+	dlg_grid_layout->setContentsMargins(DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING);
+
+	int row = 0;
+
+	dlg_grid_layout->addWidget(new Wt::WText(label), row, 0, Wt::AlignRight);
+	Wt::WLineEdit* string_edit = new Wt::WLineEdit();
+	string_edit->setTextSize(50);
+	string_edit->setMaxLength(255);
+	dlg_grid_layout->addWidget(string_edit, row++, 1, Wt::AlignLeft);
+
+	AppendCommonDialogCode(dialog, dlg_grid_layout, row);
+
+	if (Wt::WDialog::Accepted != dialog.exec())
+		return false;
+
+	value = string_edit->text().toUTF8();
+
+	return true;
+}
+
+bool QueryDialogs::GetDatetime(const Wt::WString& UNUSED(title), const Wt::WString& UNUSED(label), Poco::UInt64& UNUSED(value)) const
+{
+	return false;
+}
+
+bool QueryDialogs::GetSelect(const Wt::WString& UNUSED(title), const Wt::WString& UNUSED(label), bool UNUSED(multiselect), std::list<std::string>& UNUSED(value)) const
+{
+	return false;
+}
+
+bool QueryDialogs::GetInts(const Wt::WString& UNUSED(title), const Wt::WString& UNUSED(label1), const Wt::WString& UNUSED(label2), Poco::UInt32& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
+{
+	return false;
+}
+
+bool QueryDialogs::GetStringInt(const Wt::WString& UNUSED(title), const Wt::WString& UNUSED(label1), const Wt::WString& UNUSED(label2), std::string& UNUSED(value1), Poco::UInt32& UNUSED(value2)) const
+{
+	return false;
+}
+
+void QueryDialogs::AppendCommonDialogCode(Wt::WDialog& dialog, Wt::WGridLayout* layout, int row) const
+{
+	Wt::WContainerWidget* buttons_container = new Wt::WContainerWidget();
+	Wt::WHBoxLayout* buttons_container_hbox = new Wt::WHBoxLayout();
+	buttons_container->setLayout(buttons_container_hbox);
+
+	Wt::WPushButton* ok_button = new Wt::WPushButton(Wt::WString::tr("Ok"));
+	ok_button->setDefault(true);
+	ok_button->clicked().connect(&dialog, &Wt::WDialog::accept);
+	buttons_container_hbox->addWidget(ok_button);
+
+	Wt::WPushButton* cancel_button = new Wt::WPushButton(Wt::WString::tr("Cancel"));
+	cancel_button->clicked().connect(&dialog, &Wt::WDialog::reject);
+	buttons_container_hbox->addWidget(cancel_button);
+
+	layout->addWidget(buttons_container, row, 0, 1, 2, Wt::AlignCenter);
+
+	dialog.contents()->setLayout(layout);
+}
