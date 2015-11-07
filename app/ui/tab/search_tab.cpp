@@ -116,10 +116,11 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		case Tag::MULTISELECT:
 		{
 			bool multiselect = Tag::MULTISELECT==query_datatype;
-			std::list<std::string> values;
+			std::list<Poco::UInt32> values;
 			if (!dialogs.GetSelect(Wt::WString::tr("tag.query.title"),
 			                       Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.singleselect.label":"tag.query.multiselect.label"),
 			                       multiselect,
+			                       tag,
 			                       values)) return;
 			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
 			break;

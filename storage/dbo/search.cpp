@@ -93,7 +93,7 @@ bool Search::AddBooleanSearchInstance(Poco::UInt32 tag_id, //boolean (exists)
 }
 
 bool Search::AddStringListSearchInstance(Poco::UInt32 tag_id, //singleselect, multiselect
-                                         Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::list<std::string>& selectionvalues)
+                                         Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::list<Poco::UInt32>& selectionvalues)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(tag_id, insert_datatype, query_datatype));
 	search_instance->SetSelectionValues(selectionvalues);

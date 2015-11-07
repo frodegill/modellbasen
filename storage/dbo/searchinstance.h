@@ -27,7 +27,7 @@ public:
 	void SetIntValues(Poco::UInt32 intvalue, Poco::UInt32 intvalue2);
 	void SetStringValue(const std::string& stringvalue);
 	void SetDatetimeValue(Poco::Int64 datetimevalue);
-	void SetSelectionValues(const std::list<std::string>& selectionvalues);
+	void SetSelectionValues(const std::list<Poco::UInt32>& selectionvalues);
 
 private:
 	Poco::UInt32 m_tag_id;
@@ -38,7 +38,7 @@ private:
 	Poco::UInt32 m_intvalue2;
 	std::string  m_stringvalue;
 	Poco::Int64  m_datetimevalue;
-	std::list<std::string> m_selectionvalues;
+	std::list<Poco::UInt32> m_selectionvalues;
 };
 
 } // namespace modellbasen

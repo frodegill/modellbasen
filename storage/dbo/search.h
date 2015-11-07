@@ -36,7 +36,7 @@ public:
 	                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype);
 
 	bool AddStringListSearchInstance(Poco::UInt32 tag_id, //singleselect, multiselect
-	                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::list<std::string>& selectionvalues);
+	                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::list<Poco::UInt32>& selectionvalues);
 
 	bool AddIntegerIntegerSearchInstance(Poco::UInt32 tag_id, //height_range, day_range, age_range
 	                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, Poco::UInt32 intvalue, Poco::UInt32 intvalue2);

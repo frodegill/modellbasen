@@ -54,7 +54,7 @@ void SearchInstance::SetDatetimeValue(Poco::Int64 datetimevalue)
 	}
 }
 
-void SearchInstance::SetSelectionValues(const std::list<std::string>& selectionvalues)
+void SearchInstance::SetSelectionValues(const std::list<Poco::UInt32>& selectionvalues)
 {
 	if ((Tag::SINGLESELECT==m_query_datatype && 1==selectionvalues.size()) ||
 	    Tag::MULTISELECT==m_query_datatype)

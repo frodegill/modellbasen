@@ -1,5 +1,6 @@
 #include "tag.h"
 #include "../../app/global.h"
+#include "tagvalue.h"
 
 
 using namespace modellbasen;
@@ -23,6 +24,22 @@ bool Tag::Initialize(Poco::UInt32 id)
 		Poco::Data::use(id), Poco::Data::into(*this), Poco::Data::now;
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
+	return true;
+}
+
+bool Tag::GetTagValues(std::list<TagValue>& tag_values) const
+{
+	tag_values.clear();
+
+	Poco::Data::Session* session;
+	if (!DB.CreateSession(session))
+		return false;
+
+	*session << "SELECT id,value,pos,tag FROM tagvalue WHERE tag=? ORDER BY pos;",
+		Poco::Data::use(m_id), Poco::Data::into(tag_values), Poco::Data::now;
+
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+
 	return true;
 }
 

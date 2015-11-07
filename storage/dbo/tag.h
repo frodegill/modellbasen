@@ -100,6 +100,8 @@ public:
 	Poco::UInt32       GetParentId() const {return m_parent_id;}
 	bool               IsQueryOnly() const {return m_query_only;}
 
+	bool               GetTagValues(std::list<TagValue>& tag_values) const;
+
 	bool               GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const;
 
 private:

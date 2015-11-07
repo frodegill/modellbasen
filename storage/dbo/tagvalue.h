@@ -20,6 +20,9 @@ public:
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}
+	const std::string& GetValue() const {return m_value;}
+	Poco::UInt32       GetPos() const {return m_pos;}
+	Poco::UInt32       GetTagId() const {return m_tag_id;}
 
 private:
 	Poco::UInt32 m_id;

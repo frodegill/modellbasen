@@ -3,6 +3,8 @@
 
 #include <Wt/WDialog>
 #include "../../application.h"
+#include "../../../storage/dbo/tag.h"
+#include "../../../storage/dbo/tagvalue.h"
 
 
 namespace modellbasen
@@ -17,7 +19,8 @@ public:
 	bool GetInt(const Wt::WString& title, const Wt::WString& label, Poco::UInt32& value) const;
 	bool GetString(const Wt::WString& title, const Wt::WString& label, std::string& value) const;
 	bool GetDatetime(const Wt::WString& title, const Wt::WString& label, Poco::UInt64& value) const;
-	bool GetSelect(const Wt::WString& title, const Wt::WString& label, bool multiselect, std::list<std::string>& value) const;
+	bool GetSelect(const Wt::WString& title, const Wt::WString& label, bool multiselect,
+	               const Tag& tag, std::list<Poco::UInt32>& selected_values) const;
 	bool GetInts(const Wt::WString& title, const Wt::WString& label1, const Wt::WString& label2, Poco::UInt32& value1, Poco::UInt32& value2) const;
 	bool GetStringInt(const Wt::WString& title, const Wt::WString& label1, const Wt::WString& label2, std::string& value1, Poco::UInt32& value2) const;
 
