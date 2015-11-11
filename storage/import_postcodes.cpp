@@ -1,11 +1,16 @@
-#include "import_postcodes.h"
+#ifdef USE_PCH
+# include "../pch.h"
+#else
+# include <boost/algorithm/string.hpp>
+# include <fstream>
+# include <stdlib.h>
+#endif
 
-#include <boost/algorithm/string.hpp>
-#include <fstream>
-#include <stdlib.h>
+#include "import_postcodes.h"
+#include "dbo/postcode.h"
 #include "../app/defines.h"
 #include "../app/global.h"
-#include "dbo/postcode.h"
+
 
 #define FILEBUFFER_SIZE (10*1024)
 
@@ -202,9 +207,9 @@ bool PostCodesImporter::StorePostCode(Poco::Data::Session* session_in_transactio
 	*session_in_transaction << "INSERT INTO postcode (postcode, place, latitude, longitude) "\
 	                            "VALUE (?, ?, ?, ?) "\
 	                            "ON DUPLICATE KEY UPDATE place=?, latitude=?, longitude=?;",
-		Poco::Data::use(postcode), Poco::Data::use(place), Poco::Data::use(latitude), Poco::Data::use(longitude),
-		Poco::Data::use(place), Poco::Data::use(latitude), Poco::Data::use(longitude),
-		Poco::Data::now;
+		Poco::Data::Keywords::useRef(postcode), Poco::Data::Keywords::useRef(place), Poco::Data::Keywords::use(latitude), Poco::Data::Keywords::use(longitude),
+		Poco::Data::Keywords::useRef(place), Poco::Data::Keywords::use(latitude), Poco::Data::Keywords::use(longitude),
+		Poco::Data::Keywords::now;
 	
 	return true;
 }
@@ -212,7 +217,7 @@ bool PostCodesImporter::StorePostCode(Poco::Data::Session* session_in_transactio
 bool PostCodesImporter::CalculatePostCodeDistances(Poco::Data::Session* session_in_transaction, WebApplication* app, Wt::WProgressBar* progressbar)
 {
 	std::list<PostCode> postcodes;
-	*session_in_transaction << "SELECT postcode, place, latitude, longitude FROM postcode;", Poco::Data::into(postcodes), Poco::Data::now;
+	*session_in_transaction << "SELECT postcode, place, latitude, longitude FROM postcode;", Poco::Data::Keywords::into(postcodes), Poco::Data::Keywords::now;
 
 	size_t total_distances = (postcodes.size() * (postcodes.size()-1)) / 2;
 	progressbar->setRange(0, total_distances);
@@ -227,7 +232,7 @@ bool PostCodesImporter::CalculatePostCodeDistances(Poco::Data::Session* session_
 	insert_statement << "INSERT INTO postcode_distance (source, destination, distance) "\
 		                   "VALUE (?, ?, ?) "\
 		                   "ON DUPLICATE KEY UPDATE distance=?;",
-			Poco::Data::use(source_postcode), Poco::Data::use(destination_postcode), Poco::Data::use(distance), Poco::Data::use(distance);
+			Poco::Data::Keywords::use(source_postcode), Poco::Data::Keywords::use(destination_postcode), Poco::Data::Keywords::use(distance), Poco::Data::Keywords::use(distance);
 
 	size_t processed_distances = 0;
 	while (1 < postcodes.size())

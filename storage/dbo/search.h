@@ -18,6 +18,7 @@ namespace modellbasen
 class Search {
 public:
 	bool GetSearchedTagIds(std::list<Poco::UInt32>& result) const;
+	bool GetSearchedTags(std::list<std::shared_ptr<SearchInstance>>& instances) const {instances=m_searchinstances; return true;}
 	bool GetAvailableTags(std::list<Tag>& tags) const;
 
 	bool FindMatchingUsers(std::list<User>& result) const;

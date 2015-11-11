@@ -1,7 +1,11 @@
-#include "profile_tab.h"
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WHBoxLayout>
+# include <Wt/WVBoxLayout>
+#endif
 
-#include <Wt/WHBoxLayout>
-#include <Wt/WVBoxLayout>
+#include "profile_tab.h"
 #include "../../application.h"
 
 

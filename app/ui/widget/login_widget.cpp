@@ -1,7 +1,10 @@
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WGridLayout>
+#endif
+
 #include "login_widget.h"
-
-#include <Wt/WGridLayout>
-
 #include "../../application.h"
 #include "../../defines.h"
 #include "../../../storage/usermanager.h"

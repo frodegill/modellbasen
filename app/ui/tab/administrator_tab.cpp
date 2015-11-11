@@ -1,8 +1,11 @@
-#include "administrator_tab.h"
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WHBoxLayout>
+# include <Wt/WVBoxLayout>
+#endif
 
-#include <Wt/WHBoxLayout>
-#include <Wt/WVBoxLayout>
-//#include <Wt/WText>
+#include "administrator_tab.h"
 #include "../../application.h"
 #include "../../../storage/import_postcodes.h"
 #include "../../../storage/dbo/tag.h"

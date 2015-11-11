@@ -38,25 +38,25 @@ template <> class TypeHandler<class modellbasen::MessageBoard>
 public:
 	static std::size_t size() {return 4;}
 
-	static void bind(std::size_t pos, const modellbasen::MessageBoard& obj, AbstractBinder* pBinder)
+	static void bind(std::size_t pos, const modellbasen::MessageBoard& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder);
-		TypeHandler<std::string>::bind(pos++, obj.m_message, pBinder);
-		TypeHandler<Poco::Int64>::bind(pos++, obj.m_posted_time, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_user_id, pBinder);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<std::string>::bind(pos++, obj.m_message, pBinder, dir);
+		TypeHandler<Poco::Int64>::bind(pos++, obj.m_posted_time, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_user_id, pBinder, dir);
 	}
 
-	static void prepare(std::size_t pos, const modellbasen::MessageBoard& obj, AbstractPreparation* pPrepare)
+	static void prepare(std::size_t pos, const modellbasen::MessageBoard& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPrepare);
-		TypeHandler<std::string>::prepare(pos++, obj.m_message, pPrepare);
-		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_posted_time, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_user_id, pPrepare);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<std::string>::prepare(pos++, obj.m_message, pPreparator);
+		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_posted_time, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_user_id, pPreparator);
 	}
 
-	static void extract(std::size_t pos, modellbasen::MessageBoard& obj, const modellbasen::MessageBoard& defVal, AbstractExtractor* pExt)
+	static void extract(std::size_t pos, modellbasen::MessageBoard& obj, const modellbasen::MessageBoard& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);

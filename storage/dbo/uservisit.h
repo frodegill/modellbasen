@@ -39,27 +39,27 @@ template <> class TypeHandler<class modellbasen::UserVisit>
 public:
 	static std::size_t size() {return 5;}
 
-	static void bind(std::size_t pos, const modellbasen::UserVisit& obj, AbstractBinder* pBinder)
+	static void bind(std::size_t pos, const modellbasen::UserVisit& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_user_id, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_visitor_id, pBinder);
-		TypeHandler<Poco::Int64>::bind(pos++, obj.m_last_visit, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_visits, pBinder);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_user_id, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_visitor_id, pBinder, dir);
+		TypeHandler<Poco::Int64>::bind(pos++, obj.m_last_visit, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_visits, pBinder, dir);
 	}
 
-	static void prepare(std::size_t pos, const modellbasen::UserVisit& obj, AbstractPreparation* pPrepare)
+	static void prepare(std::size_t pos, const modellbasen::UserVisit& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_user_id, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_visitor_id, pPrepare);
-		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_last_visit, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_visits, pPrepare);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_user_id, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_visitor_id, pPreparator);
+		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_last_visit, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_visits, pPreparator);
 	}
 
-	static void extract(std::size_t pos, modellbasen::UserVisit& obj, const modellbasen::UserVisit& defVal, AbstractExtractor* pExt)
+	static void extract(std::size_t pos, modellbasen::UserVisit& obj, const modellbasen::UserVisit& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);

@@ -7,6 +7,7 @@ all:    $(PROGRAM)
 .PHONY: all
 
 # source files
+PCH = pch.h
 DEBUG_INFO = YES
 #USE_ODBC_CONNECTION = YES
 SOURCES = $(shell find -L . -name '*.cpp'|grep -v "/example/")
@@ -17,37 +18,51 @@ DEPS = $(OBJECTS:.o=.dep)
 CXX = g++
 CXXFLAGS = -I/usr/local/include -I/usr/include -W -Wall -Werror -pipe -std=c++11
 
+ifdef PCH
+ CXXFLAGS += -DUSE_PCH
+endif
+
 ifdef DEBUG_INFO
  CXXFLAGS += -g -DDEBUG
- LIBSFLAGS = -L/usr/lib/debug/usr/lib -lPocoDatad -lPocoFoundationd
+ LIBSFLAGS = -L/usr/local/lib -lPocoDatad -lPocoFoundationd
 else
  CXXFLAGS += -O3
- LIBSFLAGS = -L/usr/lib -lPocoData -lPocoFoundation
+ LIBSFLAGS = -L/usr/local/lib -lPocoData -lPocoFoundation
 endif
 
 ifdef USE_ODBC_CONNECTION
  CXXFLAGS += -DUSE_ODBC_CONNECTION
  ifdef DEBUG_INFO
-  LIBSFLAGS += -lPocoODBCd
+  LIBSFLAGS += -lPocoDataODBCd
  else
-  LIBSFLAGS += -lPocoODBC
+  LIBSFLAGS += -lPocoDataODBC
  endif
 else
  ifdef DEBUG_INFO
-  LIBSFLAGS += -lPocoMySQLd
+  LIBSFLAGS += -lPocoDataMySQLd
  else
-  LIBSFLAGS += -lPocoMySQL
+  LIBSFLAGS += -lPocoDataMySQL
  endif
 endif
 
 LIBSFLAGS += -lwt -lwthttp -lboost_system -lboost_thread -lboost_signals -lboost_locale -lpthread -lvips
 
+ifdef PCH
+%.o: %.cpp $(PCH).gch
+else
 %.o: %.cpp
+endif
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 %.dep: %.cpp
 	$(CXX) $(CXXFLAGS) -MM $< -MT $(<:.cpp=.o) > $@
 
+
+############ Precompiled header ################
+ifdef PCH
+$(PCH).gch: $(PCH)
+	$(CXX) -x c++ -c $(PCH) -o $(PCH).gch $(CXXFLAGS)
+endif
 
 ############# Main application #################
 $(PROGRAM):	$(OBJECTS) $(DEPS)
@@ -62,6 +77,9 @@ endif
 clean:
 	find . -name '*~' -delete
 	-rm -f $(PROGRAM) $(OBJECTS) $(DEPS)
+ifdef PCH
+	-rm -f $(PCH).gch
+endif
 
 install:
 	strip -s $(PROGRAM) && cp $(PROGRAM) /usr/local/bin/

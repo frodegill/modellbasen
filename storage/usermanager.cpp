@@ -1,9 +1,13 @@
-#include "usermanager.h"
+#ifdef USE_PCH
+# include "../pch.h"
+#else
+# include <boost/locale.hpp>
+# include "Wt/Auth/HashFunction"
+#endif
 
-#include <boost/locale.hpp>
-#include "Wt/Auth/HashFunction"
-#include "../app/global.h"
+#include "usermanager.h"
 #include "dbo/tag.h"
+#include "../app/global.h"
 
 
 using namespace modellbasen;
@@ -33,10 +37,10 @@ bool UserManager::LogIn(const std::string& username, const std::string& password
 	}
 
 	*session << "SELECT id, bcrypt_password_hash FROM user WHERE username=?",
-		Poco::Data::into(user->m_id),
-		Poco::Data::into(user->m_bcrypt_password_hash),
-		Poco::Data::use(username_lowercase),
-		Poco::Data::now;
+		Poco::Data::Keywords::into(user->m_id),
+		Poco::Data::Keywords::into(user->m_bcrypt_password_hash),
+		Poco::Data::Keywords::use(username_lowercase),
+		Poco::Data::Keywords::now;
 	
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
@@ -84,9 +88,9 @@ bool UserManager::ChangePassword(const std::string& old_password, const std::str
 	ComputeHash(m_current_user->GetUsername(), new_password, hash);
 
 	*session << "UPDATE user SET bcrypt_password_hash=? WHERE id=?",
-			Poco::Data::use(hash),
-			Poco::Data::use(m_current_user->m_id),
-			Poco::Data::now;
+			Poco::Data::Keywords::use(hash),
+			Poco::Data::Keywords::use(m_current_user->m_id),
+			Poco::Data::Keywords::now;
 
 	DB.ReleaseSession(session, PocoGlue::COMMIT);
 
@@ -111,9 +115,9 @@ bool UserManager::AdminChangePassword(const std::string& username, const std::st
 
 	uint count;
 	*session << "SELECT COUNT(*) FROM user WHERE username=?",
-			Poco::Data::into(count),
-			Poco::Data::use(username_lowercase),
-			Poco::Data::now;
+			Poco::Data::Keywords::into(count),
+			Poco::Data::Keywords::use(username_lowercase),
+			Poco::Data::Keywords::now;
 
 	if (0 == count)
 	{
@@ -125,9 +129,9 @@ bool UserManager::AdminChangePassword(const std::string& username, const std::st
 	ComputeHash(username_lowercase, new_password, hash);
 
 	*session << "UPDATE user SET bcrypt_password_hash=? WHERE username=?",
-			Poco::Data::use(hash),
-			Poco::Data::use(username_lowercase),
-			Poco::Data::now;
+			Poco::Data::Keywords::use(hash),
+			Poco::Data::Keywords::use(username_lowercase),
+			Poco::Data::Keywords::now;
 
 	DB.ReleaseSession(session, PocoGlue::COMMIT);
 

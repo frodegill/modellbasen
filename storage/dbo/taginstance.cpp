@@ -1,4 +1,9 @@
-#include "taginstance.h"
+#ifdef USE_PCH
+# include "../../pch.h"
+#else
+#endif
+
+# include "taginstance.h"
 
 
 using namespace modellbasen;

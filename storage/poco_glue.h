@@ -12,7 +12,7 @@
 #endif
 
 #include <Poco/Bugcheck.h>
-#include <Poco/Data/Common.h>
+#include <Poco/Nullable.h>
 #include <Poco/Data/SessionPool.h>
 
 

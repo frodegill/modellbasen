@@ -1,7 +1,11 @@
-#include "messageboard_tab.h"
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WHBoxLayout>
+# include <Wt/WVBoxLayout>
+#endif
 
-#include <Wt/WHBoxLayout>
-#include <Wt/WVBoxLayout>
+#include "messageboard_tab.h"
 #include "../../application.h"
 
 

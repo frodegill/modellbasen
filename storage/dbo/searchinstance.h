@@ -21,6 +21,7 @@ public:
 
 public:
 	Poco::UInt32 GetTagId() const {return m_tag_id;}
+	bool ToString(std::string& str) const;
 
 public:
 	void SetIntValue(Poco::UInt32 intvalue);

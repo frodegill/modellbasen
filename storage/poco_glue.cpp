@@ -1,6 +1,10 @@
-#include "poco_glue.h"
+#ifdef USE_PCH
+# include "../pch.h"
+#else
+#endif
 
 #include "database_update.h"
+#include "poco_glue.h"
 #include "../app/global.h"
 
 
@@ -48,7 +52,7 @@ bool PocoGlue::CreateSession(Poco::Data::Session*& session)
 		if (!session)
 			return false;
 
-		*session << "set autocommit = 0", Poco::Data::now;
+		*session << "set autocommit = 0", Poco::Data::Keywords::now;
 		session->begin();
 
 		return true;

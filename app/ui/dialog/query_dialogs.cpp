@@ -1,13 +1,17 @@
-#include "query_dialogs.h"
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WDatePicker>
+# include <Wt/WHBoxLayout>
+# include <Wt/WVBoxLayout>
+# include <Wt/WGridLayout>
+# include <Wt/WLength>
+# include <Wt/WLineEdit>
+# include <Wt/WPushButton>
+# include <Wt/WSelectionBox>
+#endif
 
-#include <Wt/WDatePicker>
-#include <Wt/WHBoxLayout>
-#include <Wt/WVBoxLayout>
-#include <Wt/WGridLayout>
-#include <Wt/WLength>
-#include <Wt/WLineEdit>
-#include <Wt/WPushButton>
-#include <Wt/WSelectionBox>
+#include "query_dialogs.h"
 
 
 using namespace modellbasen;

@@ -2,6 +2,7 @@
 #define _SEARCH_TAB_H_
 
 #include <Wt/WContainerWidget>
+#include <Wt/WGroupBox>
 
 #include "../../../storage/dbo/search.h"
 
@@ -21,6 +22,9 @@ private:
 	Wt::WContainerWidget* CreateTagsContainer();
 	Wt::WContainerWidget* CreateResultsContainer() const;
 
+	void PopulateTagsContainers();
+
+	void OnSearchInstanceTagButtonClicked(Poco::UInt32 tag_id);
 	void OnAvailableTagButtonClicked(Poco::UInt32 tag_id);
 
 private:
@@ -30,6 +34,9 @@ private:
 
 	Wt::WContainerWidget* m_tags_container;
 	Wt::WContainerWidget* m_results_container;
+
+	Wt::WGroupBox* m_search_tags;
+	Wt::WGroupBox* m_available_tags;
 };
 
 } // namespace modellbasen

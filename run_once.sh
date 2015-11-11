@@ -1,6 +1,7 @@
 #!/bin/sh
 
-sudo apt-get install g++ make libwthttp-dev libpoco-dev libboost-locale-dev mysql-server unixodbc libmyodbc unixodbc-dev
+sudo apt-get install g++ make libwthttp-dev libboost-locale-dev mysql-server libmysqlclient-dev unixodbc libmyodbc unixodbc-dev
+echo "Depends on Poco 1.6.1+. Download, compile and install the Complete Edition from http://pocoproject.org/"
 
 #Create database
 echo "When asked for password, use sudo if applicable, then MySQL admin password"

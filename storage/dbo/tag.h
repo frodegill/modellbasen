@@ -123,29 +123,29 @@ template <> class TypeHandler<class modellbasen::Tag>
 public:
 	static std::size_t size() {return 6;}
 
-	static void bind(std::size_t pos, const modellbasen::Tag& obj, AbstractBinder* pBinder)
+	static void bind(std::size_t pos, const modellbasen::Tag& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder);
-		TypeHandler<std::string>::bind(pos++, obj.m_name, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_insert_datatype, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_query_datatype, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_parent_id, pBinder);
-		TypeHandler<bool>::bind(pos++, obj.m_query_only, pBinder);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<std::string>::bind(pos++, obj.m_name, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_insert_datatype, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_query_datatype, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_parent_id, pBinder, dir);
+		TypeHandler<bool>::bind(pos++, obj.m_query_only, pBinder, dir);
 	}
 
-	static void prepare(std::size_t pos, const modellbasen::Tag& obj, AbstractPreparation* pPrepare)
+	static void prepare(std::size_t pos, const modellbasen::Tag& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPrepare);
-		TypeHandler<std::string>::prepare(pos++, obj.m_name, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_insert_datatype, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_query_datatype, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_parent_id, pPrepare);
-		TypeHandler<bool>::prepare(pos++, obj.m_query_only, pPrepare);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<std::string>::prepare(pos++, obj.m_name, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_insert_datatype, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_query_datatype, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_parent_id, pPreparator);
+		TypeHandler<bool>::prepare(pos++, obj.m_query_only, pPreparator);
 	}
 
-	static void extract(std::size_t pos, modellbasen::Tag& obj, const modellbasen::Tag& defVal, AbstractExtractor* pExt)
+	static void extract(std::size_t pos, modellbasen::Tag& obj, const modellbasen::Tag& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);

@@ -1,6 +1,11 @@
+#ifdef USE_PCH
+# include "../../pch.h"
+#else
+#endif
+
 #include "tag.h"
-#include "../../app/global.h"
 #include "tagvalue.h"
+#include "../../app/global.h"
 
 
 using namespace modellbasen;
@@ -21,7 +26,7 @@ bool Tag::Initialize(Poco::UInt32 id)
 		return false;
 
 	*session << "SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE id=?;",
-		Poco::Data::use(id), Poco::Data::into(*this), Poco::Data::now;
+		Poco::Data::Keywords::use(id), Poco::Data::Keywords::into(*this), Poco::Data::Keywords::now;
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 	return true;
@@ -36,7 +41,7 @@ bool Tag::GetTagValues(std::list<TagValue>& tag_values) const
 		return false;
 
 	*session << "SELECT id,value,pos,tag FROM tagvalue WHERE tag=? ORDER BY pos;",
-		Poco::Data::use(m_id), Poco::Data::into(tag_values), Poco::Data::now;
+		Poco::Data::Keywords::useRef(m_id), Poco::Data::Keywords::into(tag_values), Poco::Data::Keywords::now;
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 

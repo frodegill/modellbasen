@@ -1,3 +1,8 @@
+#ifdef USE_PCH
+# include "../pch.h"
+#else
+#endif
+
 #include "database_update.h"
 #include "../app/global.h"
 
@@ -210,22 +215,22 @@ bool DatabaseUpdate::GetDatabaseVersion(Poco::Data::Session* session_in_transact
 	                           "(id CHAR(50) CHARACTER SET utf8 NOT NULL,"\
 	                           " value VARCHAR(4096) CHARACTER SET utf8,"\
 	                           " PRIMARY KEY metadata_pk1 (id))"\
-	                           " engine = InnoDB", Poco::Data::now;
+	                           " engine = InnoDB", Poco::Data::Keywords::now;
 
 	uint16_t count;
 	*session_in_transaction << "SELECT COUNT(*) FROM metadata WHERE id='db_version'",
-			Poco::Data::into(count,(const uint16_t)0), Poco::Data::now;
+			Poco::Data::Keywords::into(count,(const uint16_t)0), Poco::Data::Keywords::now;
 
 	if (0==count)
 	{
-		*session_in_transaction << "INSERT INTO metadata (id, value) VALUE ('db_version',0);", Poco::Data::now;
+		*session_in_transaction << "INSERT INTO metadata (id, value) VALUE ('db_version',0);", Poco::Data::Keywords::now;
 
 		if (!PocoGlue::CommitTransaction(session_in_transaction)) //Only CREATE TABLE, INSERT will get here
 			return false;
 	}
 
 	*session_in_transaction << "SELECT value FROM metadata WHERE id='db_version'",
-			Poco::Data::into(db_version,(const uint32_t)0), Poco::Data::now;
+			Poco::Data::Keywords::into(db_version,(const uint32_t)0), Poco::Data::Keywords::now;
 
 	return true;
 }
@@ -247,14 +252,14 @@ bool DatabaseUpdate::UpdateIfNeeded(Poco::Data::Session* session_in_transaction)
 
 			try
 			{
-				*session_in_transaction << update_items[index].m_update_query, Poco::Data::now;
+				*session_in_transaction << update_items[index].m_update_query, Poco::Data::Keywords::now;
 
 				if (update_items[index].m_db_version != update_items[index+1].m_db_version)
 				{
 					*session_in_transaction << "UPDATE metadata "\
 					                           "SET value = ? "\
 					                           "WHERE id='db_version'",
-						Poco::Data::use(max_version), Poco::Data::now;
+						Poco::Data::Keywords::use(max_version), Poco::Data::Keywords::now;
 
 					if (!PocoGlue::CommitTransaction(session_in_transaction))
 						return false;

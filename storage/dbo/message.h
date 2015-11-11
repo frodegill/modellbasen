@@ -44,37 +44,37 @@ template <> class TypeHandler<class modellbasen::Message>
 public:
 	static std::size_t size() {return 10;}
 
-	static void bind(std::size_t pos, const modellbasen::Message& obj, AbstractBinder* pBinder)
+	static void bind(std::size_t pos, const modellbasen::Message& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder);
-		TypeHandler<std::string>::bind(pos++, obj.m_text, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_sender_id, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_recipient_id, pBinder);
-		TypeHandler<Poco::Int64>::bind(pos++, obj.m_sent_time, pBinder);
-		TypeHandler<Poco::Int64>::bind(pos++, obj.m_read_time, pBinder);
-		TypeHandler<Poco::Int64>::bind(pos++, obj.m_replied_time, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_in_reply_to_id, pBinder);
-		TypeHandler<bool>::bind(pos++, obj.m_sender_has_deleted, pBinder);
-		TypeHandler<bool>::bind(pos++, obj.m_recipient_has_deleted, pBinder);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<std::string>::bind(pos++, obj.m_text, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_sender_id, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_recipient_id, pBinder, dir);
+		TypeHandler<Poco::Int64>::bind(pos++, obj.m_sent_time, pBinder, dir);
+		TypeHandler<Poco::Int64>::bind(pos++, obj.m_read_time, pBinder, dir);
+		TypeHandler<Poco::Int64>::bind(pos++, obj.m_replied_time, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_in_reply_to_id, pBinder, dir);
+		TypeHandler<bool>::bind(pos++, obj.m_sender_has_deleted, pBinder, dir);
+		TypeHandler<bool>::bind(pos++, obj.m_recipient_has_deleted, pBinder, dir);
 	}
 
-	static void prepare(std::size_t pos, const modellbasen::Message& obj, AbstractPreparation* pPrepare)
+	static void prepare(std::size_t pos, const modellbasen::Message& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPrepare);
-		TypeHandler<std::string>::prepare(pos++, obj.m_text, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_sender_id, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_recipient_id, pPrepare);
-		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_sent_time, pPrepare);
-		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_read_time, pPrepare);
-		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_replied_time, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_in_reply_to_id, pPrepare);
-		TypeHandler<bool>::prepare(pos++, obj.m_sender_has_deleted, pPrepare);
-		TypeHandler<bool>::prepare(pos++, obj.m_recipient_has_deleted, pPrepare);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<std::string>::prepare(pos++, obj.m_text, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_sender_id, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_recipient_id, pPreparator);
+		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_sent_time, pPreparator);
+		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_read_time, pPreparator);
+		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_replied_time, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_in_reply_to_id, pPreparator);
+		TypeHandler<bool>::prepare(pos++, obj.m_sender_has_deleted, pPreparator);
+		TypeHandler<bool>::prepare(pos++, obj.m_recipient_has_deleted, pPreparator);
 	}
 
-	static void extract(std::size_t pos, modellbasen::Message& obj, const modellbasen::Message& defVal, AbstractExtractor* pExt)
+	static void extract(std::size_t pos, modellbasen::Message& obj, const modellbasen::Message& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);

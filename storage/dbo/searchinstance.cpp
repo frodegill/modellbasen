@@ -1,3 +1,8 @@
+#ifdef USE_PCH
+# include "../../pch.h"
+#else
+#endif
+
 #include "searchinstance.h"
 
 
@@ -16,8 +21,12 @@ SearchInstance::SearchInstance(Poco::UInt32 tag_id, Tag::TagDataType insert_data
 
 SearchInstance::~SearchInstance()
 {
-	int dummy = 0;
-	dummy++;
+}
+
+bool SearchInstance::ToString(std::string& str) const
+{
+	str = "ToDo";
+	return true;
 }
 
 void SearchInstance::SetIntValue(Poco::UInt32 intvalue)

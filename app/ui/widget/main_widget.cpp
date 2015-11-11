@@ -1,12 +1,16 @@
-#include "main_widget.h"
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WImage>
+# include <Wt/WHBoxLayout>
+#endif
 
-#include <Wt/WImage>
-#include <Wt/WHBoxLayout>
-#include "../../application.h"
-#include "../tab/profile_tab.h"
-#include "../tab/messageboard_tab.h"
-#include "../tab/search_tab.h"
+#include "main_widget.h"
 #include "../tab/administrator_tab.h"
+#include "../tab/messageboard_tab.h"
+#include "../tab/profile_tab.h"
+#include "../tab/search_tab.h"
+#include "../../application.h"
 
 
 using namespace modellbasen;

@@ -1,10 +1,13 @@
-#include "global.h"
+#ifdef USE_PCH
+# include "../pch.h"
+#else
+# include <boost/locale.hpp>
+# include <Wt/WString>
+#endif
 
 #include "application.h"
 #include "defines.h"
-#include <boost/locale.hpp>
-#include <Wt/WString>
-
+#include "global.h"
 
 
 // Logging

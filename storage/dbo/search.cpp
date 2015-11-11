@@ -1,5 +1,9 @@
-#include "search.h"
+#ifdef USE_PCH
+# include "../../pch.h"
+#else
+#endif
 
+#include "search.h"
 #include "../../app/global.h"
 
 
@@ -42,12 +46,12 @@ bool Search::GetAvailableTags(std::list<Tag>& tags) const
 	if (parent_ids.empty())
 	{
 		*session << "SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE parent IS NULL ORDER BY parent,id;",
-			Poco::Data::into(tags), Poco::Data::now;
+			Poco::Data::Keywords::into(tags), Poco::Data::Keywords::now;
 	}
 	else
 	{
 		*session << "SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE parent IS NULL OR parent IN (?) ORDER BY parent,id;",
-			Poco::Data::use(parent_ids), Poco::Data::into(tags), Poco::Data::now;
+			Poco::Data::Keywords::use(parent_ids), Poco::Data::Keywords::into(tags), Poco::Data::Keywords::now;
 	}
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);

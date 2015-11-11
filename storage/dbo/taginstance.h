@@ -42,31 +42,31 @@ template <> class TypeHandler<class modellbasen::TagInstance>
 public:
 	static std::size_t size() {return 7;}
 
-	static void bind(std::size_t pos, const modellbasen::TagInstance& obj, AbstractBinder* pBinder)
+	static void bind(std::size_t pos, const modellbasen::TagInstance& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder);
-		TypeHandler<std::string>::bind(pos++, obj.m_stringvalue, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_intvalue, pBinder);
-		TypeHandler<Poco::Int64>::bind(pos++, obj.m_datetimevalue, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_tag_id, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_owner_id, pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_eventparticipant_id, pBinder);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<std::string>::bind(pos++, obj.m_stringvalue, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_intvalue, pBinder, dir);
+		TypeHandler<Poco::Int64>::bind(pos++, obj.m_datetimevalue, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_tag_id, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_owner_id, pBinder, dir);
+		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_eventparticipant_id, pBinder, dir);
 	}
 
-	static void prepare(std::size_t pos, const modellbasen::TagInstance& obj, AbstractPreparation* pPrepare)
+	static void prepare(std::size_t pos, const modellbasen::TagInstance& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPrepare);
-		TypeHandler<std::string>::prepare(pos++, obj.m_stringvalue, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_intvalue, pPrepare);
-		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_datetimevalue, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_tag_id, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_owner_id, pPrepare);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_eventparticipant_id, pPrepare);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<std::string>::prepare(pos++, obj.m_stringvalue, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_intvalue, pPreparator);
+		TypeHandler<Poco::Int64>::prepare(pos++, obj.m_datetimevalue, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_tag_id, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_owner_id, pPreparator);
+		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_eventparticipant_id, pPreparator);
 	}
 
-	static void extract(std::size_t pos, modellbasen::TagInstance& obj, const modellbasen::TagInstance& defVal, AbstractExtractor* pExt)
+	static void extract(std::size_t pos, modellbasen::TagInstance& obj, const modellbasen::TagInstance& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);

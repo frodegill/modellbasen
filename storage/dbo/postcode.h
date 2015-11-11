@@ -41,25 +41,25 @@ template <> class TypeHandler<class modellbasen::PostCode>
 public:
 	static std::size_t size() {return 4;}
 
-	static void bind(std::size_t pos, const modellbasen::PostCode& obj, AbstractBinder* pBinder)
+	static void bind(std::size_t pos, const modellbasen::PostCode& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<std::string>::bind(pos++, obj.m_postcode, pBinder);
-		TypeHandler<std::string>::bind(pos++, obj.m_place, pBinder);
-		TypeHandler<double>::bind(pos++, obj.m_latitude, pBinder);
-		TypeHandler<double>::bind(pos++, obj.m_longitude, pBinder);
+		TypeHandler<std::string>::bind(pos++, obj.m_postcode, pBinder, dir);
+		TypeHandler<std::string>::bind(pos++, obj.m_place, pBinder, dir);
+		TypeHandler<double>::bind(pos++, obj.m_latitude, pBinder, dir);
+		TypeHandler<double>::bind(pos++, obj.m_longitude, pBinder, dir);
 	}
 
-	static void prepare(std::size_t pos, const modellbasen::PostCode& obj, AbstractPreparation* pPrepare)
+	static void prepare(std::size_t pos, const modellbasen::PostCode& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<std::string>::prepare(pos++, obj.m_postcode, pPrepare);
-		TypeHandler<std::string>::prepare(pos++, obj.m_place, pPrepare);
-		TypeHandler<double>::prepare(pos++, obj.m_latitude, pPrepare);
-		TypeHandler<double>::prepare(pos++, obj.m_longitude, pPrepare);
+		TypeHandler<std::string>::prepare(pos++, obj.m_postcode, pPreparator);
+		TypeHandler<std::string>::prepare(pos++, obj.m_place, pPreparator);
+		TypeHandler<double>::prepare(pos++, obj.m_latitude, pPreparator);
+		TypeHandler<double>::prepare(pos++, obj.m_longitude, pPreparator);
 	}
 
-	static void extract(std::size_t pos, modellbasen::PostCode& obj, const modellbasen::PostCode& defVal, AbstractExtractor* pExt)
+	static void extract(std::size_t pos, modellbasen::PostCode& obj, const modellbasen::PostCode& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<std::string>::extract(pos++, obj.m_postcode, defVal.m_postcode, pExt);

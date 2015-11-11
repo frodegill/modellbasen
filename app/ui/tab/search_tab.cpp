@@ -1,18 +1,23 @@
-#include "search_tab.h"
+#ifdef USE_PCH
+# include "../../../pch.h"
+#else
+# include <Wt/WPushButton>
+# include <Wt/WHBoxLayout>
+# include <Wt/WVBoxLayout>
+#endif
 
-#include <Wt/WGroupBox>
-#include <Wt/WPushButton>
-#include <Wt/WHBoxLayout>
-#include <Wt/WVBoxLayout>
-#include "../../application.h"
+#include "search_tab.h"
 #include "../dialog/query_dialogs.h"
+#include "../../application.h"
 
 
 using namespace modellbasen;
 
 SearchTab::SearchTab(WebApplication* app)
 : Wt::WContainerWidget(),
-  m_app(app)
+  m_app(app),
+  m_search_tags(NULL),
+  m_available_tags(NULL)
 {
 	Wt::WHBoxLayout* tab_container_hbox = new Wt::WHBoxLayout();
 	tab_container_hbox->setContentsMargins(0, 9, 0, 0);
@@ -35,12 +40,47 @@ Wt::WContainerWidget* SearchTab::CreateTagsContainer()
 	Wt::WVBoxLayout* tags_container_vbox = new Wt::WVBoxLayout();
 	tags_container->setLayout(tags_container_vbox);
 
-	Wt::WGroupBox* search_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.SearchTags"));
-	tags_container_vbox->addWidget(search_tags, 1);
+	m_search_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.SearchTags"));
+	tags_container_vbox->addWidget(m_search_tags, 1);
 
-	Wt::WGroupBox* available_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.AvailableTags"));
-	tags_container_vbox->addWidget(available_tags, 1);
+	m_available_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.AvailableTags"));
+	tags_container_vbox->addWidget(m_available_tags, 1);
 	
+	PopulateTagsContainers();
+
+	return tags_container;
+}
+
+Wt::WContainerWidget* SearchTab::CreateResultsContainer() const
+{
+	Wt::WContainerWidget* results_container = new Wt::WContainerWidget();
+	Wt::WGridLayout* results_container_grid = new Wt::WGridLayout();
+	results_container->setLayout(results_container_grid);
+	return results_container;
+}
+
+void SearchTab::PopulateTagsContainers()
+{
+	m_search_tags->clear();
+	std::list<std::shared_ptr<SearchInstance>> searched_instances;
+	if (m_search.GetSearchedTags(searched_instances))
+	{
+		for(std::list<std::shared_ptr<SearchInstance>>::const_iterator it = searched_instances.begin(); it!=searched_instances.end(); ++it)
+		{
+			std::shared_ptr<SearchInstance> search_instance = *it;
+			std::string tag_text;
+			if (search_instance->ToString(tag_text))
+			{
+				Wt::WPushButton* button = new Wt::WPushButton(tag_text);
+				button->setMargin(Wt::WLength(0.2, Wt::WLength::FontEm));
+				Poco::UInt32 tag_id = search_instance->GetTagId();
+				button->clicked().connect(std::bind(&SearchTab::OnSearchInstanceTagButtonClicked, this, tag_id));
+				m_search_tags->addWidget(button);
+			}
+		}
+	}
+
+	m_available_tags->clear();
 	std::list<Tag> tags;
 	if (m_search.GetAvailableTags(tags))
 	{
@@ -53,19 +93,13 @@ Wt::WContainerWidget* SearchTab::CreateTagsContainer()
 			button->setMargin(Wt::WLength(0.2, Wt::WLength::FontEm));
 			Poco::UInt32 tag_id = tag.GetId();
 			button->clicked().connect(std::bind(&SearchTab::OnAvailableTagButtonClicked, this, tag_id));
-			available_tags->addWidget(button);
+			m_available_tags->addWidget(button);
 		}
 	}
-
-	return tags_container;
 }
 
-Wt::WContainerWidget* SearchTab::CreateResultsContainer() const
+void SearchTab::OnSearchInstanceTagButtonClicked(Poco::UInt32 UNUSED(tag_id))
 {
-	Wt::WContainerWidget* results_container = new Wt::WContainerWidget();
-	Wt::WGridLayout* results_container_grid = new Wt::WGridLayout();
-	results_container->setLayout(results_container_grid);
-	return results_container;
 }
 
 void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
@@ -164,6 +198,8 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			m_search.AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}
-		default: return;
+		default: break;
 	}
+
+	PopulateTagsContainers();
 }
