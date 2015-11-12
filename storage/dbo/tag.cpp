@@ -21,6 +21,8 @@ Tag::Tag()
 
 bool Tag::Initialize(Poco::UInt32 id)
 {
+	Reset();
+
 	Poco::Data::Session* session;
 	if (!DB.CreateSession(session))
 		return false;

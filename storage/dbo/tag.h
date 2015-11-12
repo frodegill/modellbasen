@@ -90,7 +90,10 @@ public: //For PoCo::Data
 
 public:
 	Tag();
+
 	bool Initialize(Poco::UInt32 id);
+	void Reset() {m_id=0;}
+	bool IsValid() const {return 0!=m_id;}
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}

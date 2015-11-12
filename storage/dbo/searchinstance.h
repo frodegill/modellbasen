@@ -3,10 +3,7 @@
 
 /* This is not a persisted object */
 
-//#include "classes.h"
-//#include "../poco_glue.h"
-//#include <string>
-//#include <Poco/Timestamp.h>
+#include "../../app/application.h"
 #include "tag.h"
 
 
@@ -16,7 +13,7 @@ namespace modellbasen
 class SearchInstance {
 
 public:
-	SearchInstance(Poco::UInt32 tag_id, Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype);
+	SearchInstance(WebApplication* app, Poco::UInt32 tag_id, Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype);
 	~SearchInstance();
 
 public:
@@ -31,6 +28,11 @@ public:
 	void SetSelectionValues(const std::list<Poco::UInt32>& selectionvalues);
 
 private:
+	void DateAsString(std::string& str) const;
+	void SelectionAsString(std::string& str) const;
+
+private:
+	WebApplication* m_app;
 	Poco::UInt32 m_tag_id;
 	Tag::TagDataType m_insert_datatype;
 	Tag::TagDataType m_query_datatype;

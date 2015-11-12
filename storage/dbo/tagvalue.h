@@ -18,11 +18,19 @@ public: //For PoCo::Data
 public:
 	TagValue();
 
+	bool Initialize(Poco::UInt32 id);
+	void Reset() {m_id=0;}
+	bool IsValid() const {return 0!=m_id;}
+
 public:
 	Poco::UInt32       GetId() const {return m_id;}
-	const std::string& GetValue() const {return m_value;}
 	Poco::UInt32       GetPos() const {return m_pos;}
 	Poco::UInt32       GetTagId() const {return m_tag_id;}
+
+	bool               GetTagValueText(Wt::WLocalizedStrings* localized_strings, std::string& text) const;
+
+private:
+	const std::string& GetValue() const {return m_value;}
 
 private:
 	Poco::UInt32 m_id;

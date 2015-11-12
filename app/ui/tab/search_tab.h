@@ -30,7 +30,7 @@ private:
 private:
 	WebApplication* m_app;
 	
-	Search m_search;
+	Search* m_search;
 
 	Wt::WContainerWidget* m_tags_container;
 	Wt::WContainerWidget* m_results_container;

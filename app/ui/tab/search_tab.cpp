@@ -19,6 +19,8 @@ SearchTab::SearchTab(WebApplication* app)
   m_search_tags(NULL),
   m_available_tags(NULL)
 {
+	m_search = new Search(m_app);
+
 	Wt::WHBoxLayout* tab_container_hbox = new Wt::WHBoxLayout();
 	tab_container_hbox->setContentsMargins(0, 9, 0, 0);
 	setLayout(tab_container_hbox);
@@ -32,6 +34,7 @@ SearchTab::SearchTab(WebApplication* app)
 
 SearchTab::~SearchTab()
 {
+	delete m_search;
 }
 
 Wt::WContainerWidget* SearchTab::CreateTagsContainer()
@@ -63,7 +66,7 @@ void SearchTab::PopulateTagsContainers()
 {
 	m_search_tags->clear();
 	std::list<std::shared_ptr<SearchInstance>> searched_instances;
-	if (m_search.GetSearchedTags(searched_instances))
+	if (m_search->GetSearchedTags(searched_instances))
 	{
 		for(std::list<std::shared_ptr<SearchInstance>>::const_iterator it = searched_instances.begin(); it!=searched_instances.end(); ++it)
 		{
@@ -82,7 +85,7 @@ void SearchTab::PopulateTagsContainers()
 
 	m_available_tags->clear();
 	std::list<Tag> tags;
-	if (m_search.GetAvailableTags(tags))
+	if (m_search->GetAvailableTags(tags))
 	{
 		for(std::list<Tag>::const_iterator it = tags.begin(); it!=tags.end(); ++it)
 		{
@@ -119,7 +122,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			if (!dialogs.GetInt(Wt::WString::tr("tag.query.title"),
 			                    Wt::WString::tr("tag.query.integer.label"),
 			                    value)) return;
-			m_search.AddIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
+			m_search->AddIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
 		case Tag::STRING:
@@ -129,7 +132,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			if (!dialogs.GetString(Wt::WString::tr("tag.query.title"),
 			                       Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.string.label":"tag.query.location.label"),
 			                       value)) return;
-			m_search.AddStringSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
+			m_search->AddStringSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
 		case Tag::DATETIME:
@@ -138,12 +141,12 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			if (!dialogs.GetDatetime(Wt::WString::tr("tag.query.title"),
 			                         Wt::WString::tr("tag.query.datetime.label"),
 			                         value)) return;
-			m_search.AddDatetimeSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
+			m_search->AddDatetimeSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
 			break;
 		}
 		case Tag::BOOLEAN:
 		{
-			m_search.AddBooleanSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType());
+			m_search->AddBooleanSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType());
 			break;
 		}
 		case Tag::SINGLESELECT:
@@ -156,7 +159,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			                       multiselect,
 			                       tag,
 			                       values)) return;
-			m_search.AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
+			m_search->AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
 			break;
 		}
 		case Tag::HEIGHT_RANGE:
@@ -184,7 +187,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			                     label1,
 			                     label2,
 			                     value1, value2)) return;
-			m_search.AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
+			m_search->AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}
 		case Tag::DISTANCE:
@@ -195,7 +198,7 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 			                          Wt::WString::tr("tag.query.distance.label1"),
 			                          Wt::WString::tr("tag.query.distance.label2"),
 			                          value1, value2)) return;
-			m_search.AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
+			m_search->AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}
 		default: break;

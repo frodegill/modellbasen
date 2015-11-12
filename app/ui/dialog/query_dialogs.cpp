@@ -124,7 +124,11 @@ bool QueryDialogs::GetSelect(const Wt::WString& title, const Wt::WString& label,
 	for(std::list<TagValue>::const_iterator it = tag_values.begin(); it!=tag_values.end(); ++it)
 	{
 		TagValue tag_value = *it;
-		select_box->insertItem(index++, tag_value.GetValue());
+		std::string value_text;
+		if (tag_value.GetTagValueText(m_app->localizedStrings(), value_text))
+		{
+			select_box->insertItem(index++, value_text);
+		}
 	}
 
 	dlg_grid_layout->addWidget(select_box, row++, 0, Wt::AlignLeft);
@@ -137,11 +141,11 @@ bool QueryDialogs::GetSelect(const Wt::WString& title, const Wt::WString& label,
 	selected_values.clear();
 	if (multiselect)
 	{
-		select_box->selectedIndexes();
+		select_box->selectedIndexes(); //TODO
 	}
 	else
 	{
-		select_box->currentIndex();
+		select_box->currentIndex(); //TODO
 	}
 
 	return true;

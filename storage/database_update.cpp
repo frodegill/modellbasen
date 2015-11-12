@@ -38,8 +38,8 @@ static DatabaseUpdateItem update_items[] = {
 
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (4, 'tag.sex', 6, 6, NULL, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (1, 'female', 1, 4);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (2, 'male', 2, 4);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (1, 'tagvalue.female', 1, 4);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (2, 'tagvalue.male', 2, 4);"},
 
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (5, 'tag.birthday', 3, 10, NULL, false);"},
@@ -60,17 +60,17 @@ static DatabaseUpdateItem update_items[] = {
 	   "VALUE (10, 'tag.photographer', 4, 4, NULL, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (11, 'tag.photographer.experience', 7, 7, 10, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (3, 'none', 1, 11);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (4, 'some', 2, 11);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (5, 'a lot', 3, 11);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (6, 'professional', 4, 11);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (3, 'tagvalue.none', 1, 11);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (4, 'tagvalue.some', 2, 11);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (5, 'tagvalue.a_lot', 3, 11);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (6, 'tagvalue.professional', 4, 11);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (12, 'tag.photographer.ownstudio', 4, 4, 10, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (13, 'tag.photographer.preferredlocation', 7, 7, 10, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (7, 'studio', 1, 13);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (8, 'nature', 2, 13);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (9, 'ceremony', 3, 13);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (7, 'tagvalue.studio', 1, 13);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (8, 'tagvalue.nature', 2, 13);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (9, 'tagvalue.ceremony', 3, 13);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (14, 'tag.photographer.tfp', 4, 4, 10, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
@@ -90,39 +90,39 @@ static DatabaseUpdateItem update_items[] = {
 	   "VALUE (21, 'tag.model.height', 1, 8, 20, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (22, 'tag.model.haircolour', 7, 7, 20, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (10, 'lightblonde', 1, 22);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (11, 'darkblonde', 2, 22);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (12, 'black', 3, 22);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (13, 'red', 4, 22);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (10, 'tagvalue.lightblonde', 1, 22);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (11, 'tagvalue.darkblonde', 2, 22);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (12, 'tagvalue.black', 3, 22);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (13, 'tagvalue.red', 4, 22);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (23, 'tag.model.hairlength', 7, 7, 20, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (14, 'short', 1, 23);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (15, 'medium', 2, 23);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (16, 'long', 3, 23);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (14, 'tagvalue.short', 1, 23);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (15, 'tagvalue.medium', 2, 23);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (16, 'tagvalue.long', 3, 23);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (24, 'tag.model.tattoo', 4, 4, 20, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (25, 'tag.model.piercing', 4, 4, 20, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (26, 'tag.model.experience', 7, 7, 20, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (17, 'none', 1, 26);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (18, 'some', 2, 26);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (19, 'a lot', 3, 26);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (20, 'professional', 4, 26);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (17, 'tagvalue.none', 1, 26);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (18, 'tagvalue.some', 2, 26);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (19, 'tagvalue.a_lot', 3, 26);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (20, 'tagvalue.professional', 4, 26);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (27, 'tag.model.tfp', 7, 7, 20, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (21, 'advertise', 1, 27);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (22, 'location', 2, 27);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (23, 'studio', 3, 27);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (24, 'lingerie', 4, 27);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (25, 'nude/art', 5, 27);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (21, 'tagvalue.advertise', 1, 27);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (22, 'tagvalue.location', 2, 27);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (23, 'tagvalue.studio', 3, 27);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (24, 'tagvalue.lingerie', 4, 27);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (25, 'tagvalue.nude_art', 5, 27);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (28, 'tag.model.paid', 7, 7, 20, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (26, 'advertise', 1, 28);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (27, 'location', 2, 28);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (28, 'studio', 3, 28);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (29, 'lingerie', 4, 28);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (30, 'nude/art', 5, 28);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (26, 'tagvalue.advertise', 1, 28);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (27, 'tagvalue.location', 2, 28);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (28, 'tagvalue.studio', 3, 28);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (29, 'tagvalue.lingerie', 4, 28);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (30, 'tagvalue.nude_art', 5, 28);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (29, 'tag.model.companyname', 2, 2, 20, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
@@ -138,10 +138,10 @@ static DatabaseUpdateItem update_items[] = {
 	   "VALUE (34, 'tag.mua', 4, 4, NULL, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (35, 'tag.mua.experience', 7, 7, 34, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (31, 'none', 1, 35);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (32, 'some', 2, 35);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (33, 'a lot', 3, 35);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (34, 'professional', 4, 35);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (31, 'tagvalue.none', 1, 35);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (32, 'tagvalue.some', 2, 35);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (33, 'tagvalue.a_lot', 3, 35);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (34, 'tagvalue.professional', 4, 35);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (36, 'tag.mua.tfp', 4, 4, 34, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
@@ -159,10 +159,10 @@ static DatabaseUpdateItem update_items[] = {
 	   "VALUE (42, 'tag.hairdresser', 4, 4, NULL, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (43, 'tag.hairdresser.experience', 7, 7, 42, false);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (35, 'none', 1, 43);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (36, 'some', 2, 43);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (37, 'a lot', 3, 43);"},
-{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (38, 'professional', 4, 43);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (35, 'tagvalue.none', 1, 43);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (36, 'tagvalue.some', 2, 43);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (37, 'tagvalue.a_lot', 3, 43);"},
+{ 1, "INSERT INTO `modellbasen`.`tagvalue` (`id`, `value`, `pos`, `tag`) VALUE (38, 'tagvalue.professional', 4, 43);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\
 	   "VALUE (44, 'tag.hairdresser.tfp', 4, 4, 42, false);"},
 { 1, "INSERT INTO `modellbasen`.`tag` (`id`, `name`, `insert_datatype`, `query_datatype`, `parent`, `query_only`) "\

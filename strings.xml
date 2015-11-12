@@ -4,6 +4,20 @@
 	<message id="ODBCConnectionString">DSN=modellbasen</message>
 	<message id="MySQLConnectionString">host=localhost;port=3306;db=modellbasen;user=modellbasen;password=modellbasen;compress=true;auto-reconnect=true</message>
 
+	<message id="DateFormat">dd.mm.yyyy</message>
+
+	<message id="ArgInteger">{1} ({2})</message>
+	<message id="ArgString">{1} ({2})</message>
+	<message id="ArgDate">{1} ({2})</message>
+	<message id="ArgBoolean">{1}</message>
+	<message id="ArgLocation">{1} ({2})</message>
+	<message id="ArgSingleselect">{1} ({2})</message>
+	<message id="ArgMultiselect">{1} ({2})</message>
+	<message id="ArgHeightRange">{1} ({2}-{3} cm)</message>
+	<message id="ArgDayRange">{1} ({2}-{3} days)</message>
+	<message id="ArgAgeRange">{1} ({2}-{3} years)</message>
+	<message id="ArgDistance">{1} ({2} km from {3})</message>
+
 	<message id="Username">Username</message>
 	<message id="Password">Password</message>
 	<message id="LoginButton">Log in</message>
@@ -78,6 +92,28 @@
 	<message id="tag.agency.webpage">(Agency) Web Page</message>
 	<message id="tag.agency.publicemail">(Agency) Public E-Mail</message>
 	<message id="tag.agency.phone">(Agency) Phone Number</message>
+
+	<message id="tagvalue.female">Female</message>
+	<message id="tagvalue.male">Male</message>
+	<message id="tagvalue.none">None</message>
+	<message id="tagvalue.some">Some</message>
+	<message id="tagvalue.a_lot">A Lot</message>
+	<message id="tagvalue.professional">Professional</message>
+	<message id="tagvalue.studio">Studio</message>
+	<message id="tagvalue.nature">Nature</message>
+	<message id="tagvalue.ceremony">Ceremony</message>
+	<message id="tagvalue.lightblonde">Light Blonde</message>
+	<message id="tagvalue.darkblonde">Dark Blonde</message>
+	<message id="tagvalue.black">Black</message>
+	<message id="tagvalue.red">Ginger</message>
+	<message id="tagvalue.short">Short</message>
+	<message id="tagvalue.medium">Medium</message>
+	<message id="tagvalue.long">Long</message>
+	<message id="tagvalue.advertise">Adverts</message>
+	<message id="tagvalue.location">Location</message>
+	<message id="tagvalue.studio">Studio</message>
+	<message id="tagvalue.lingerie">Lingerie</message>
+	<message id="tagvalue.nude_art">Nude/Art</message>
 
 	<message id="tag.query.title">Query filter</message>
 	<message id="tag.query.integer.label">Number:</message>
