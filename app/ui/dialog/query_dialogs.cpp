@@ -9,6 +9,7 @@
 # include <Wt/WLineEdit>
 # include <Wt/WPushButton>
 # include <Wt/WSelectionBox>
+# include <Wt/WStringListModel>
 #endif
 
 #include "query_dialogs.h"
@@ -111,6 +112,8 @@ bool QueryDialogs::GetSelect(const Wt::WString& title, const Wt::WString& label,
 
 	dlg_grid_layout->addWidget(new Wt::WText(label), row++, 0, Wt::AlignLeft);
 	Wt::WSelectionBox* select_box = new Wt::WSelectionBox();
+	Wt::WStringListModel* select_box_model = new Wt::WStringListModel();
+	select_box->setModel(select_box_model);
 	select_box->setSelectionMode(multiselect ? Wt::ExtendedSelection : Wt::SingleSelection);
 
 	std::list<TagValue> tag_values;
@@ -120,14 +123,16 @@ bool QueryDialogs::GetSelect(const Wt::WString& title, const Wt::WString& label,
 	select_box->setVerticalSize(MIN(10, tag_values.size()));
 	select_box->setMinimumSize(Wt::WLength(10.0, Wt::WLength::FontEm), Wt::WLength::Auto);
 
-	int index = 0;
+	int model_row = 0;
 	for(std::list<TagValue>::const_iterator it = tag_values.begin(); it!=tag_values.end(); ++it)
 	{
 		TagValue tag_value = *it;
 		std::string value_text;
 		if (tag_value.GetTagValueText(m_app->localizedStrings(), value_text))
 		{
-			select_box->insertItem(index++, value_text);
+			select_box_model->insertString(model_row, value_text);
+			Wt::WModelIndex index = select_box_model->index(model_row, 0);
+			select_box_model->setData(index, tag_value.GetId(), Wt::UserRole);
 		}
 	}
 
@@ -141,11 +146,22 @@ bool QueryDialogs::GetSelect(const Wt::WString& title, const Wt::WString& label,
 	selected_values.clear();
 	if (multiselect)
 	{
-		select_box->selectedIndexes(); //TODO
+		const std::set<int> selected_rows = select_box->selectedIndexes();
+		for(std::set<int>::const_iterator it = selected_rows.begin(); it!=selected_rows.end(); ++it)
+		{
+			int selected_row = *it;
+			Wt::WModelIndex model_index = select_box_model->index(selected_row, 0);
+			selected_values.push_back(boost::any_cast<Poco::UInt32>(select_box_model->data(model_index, Wt::UserRole)));
+		}
 	}
 	else
 	{
-		select_box->currentIndex(); //TODO
+		int selected_row = select_box->currentIndex();
+		if (-1 != selected_row)
+		{
+			Wt::WModelIndex model_index = select_box_model->index(selected_row, 0);
+			selected_values.push_back(boost::any_cast<Poco::UInt32>(select_box_model->data(model_index, Wt::UserRole)));
+		}
 	}
 
 	return true;

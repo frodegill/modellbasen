@@ -41,7 +41,7 @@ bool Search::GetAvailableTags(std::list<Tag>& tags) const
 		{
 			parent_ids += ",";
 		}
-		parent_ids += *it;
+		parent_ids += std::to_string(*it);
 	}
 
 	Poco::Data::Session* session;
@@ -55,8 +55,8 @@ bool Search::GetAvailableTags(std::list<Tag>& tags) const
 	}
 	else
 	{
-		*session << "SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE parent IS NULL OR parent IN (?) ORDER BY parent,id;",
-			Poco::Data::Keywords::use(parent_ids), Poco::Data::Keywords::into(tags), Poco::Data::Keywords::now;
+		*session << "SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE id NOT IN ("+parent_ids+") AND (parent IS NULL OR parent IN ("+parent_ids+")) ORDER BY parent,id;",
+			Poco::Data::Keywords::into(tags), Poco::Data::Keywords::now;
 	}
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);

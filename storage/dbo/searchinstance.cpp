@@ -34,7 +34,9 @@ bool SearchInstance::ToString(std::string& str) const
 	if (!tag.IsValid())
 		return false;
 
-	const std::string tag_name = tag.GetName();
+	std::string tag_name;
+	if (!tag.GetTagText(m_app->localizedStrings(), true, tag_name))
+		return false;
 
 	switch(m_query_datatype)
 	{
@@ -74,7 +76,7 @@ bool SearchInstance::ToString(std::string& str) const
 
 void SearchInstance::SetIntValue(Poco::UInt32 intvalue)
 {
-	if (Tag::INTEGER==m_query_datatype || Tag::LOCATION==m_query_datatype)
+	if (Tag::INTEGER==m_query_datatype || Tag::LOCATION==m_query_datatype || Tag::DISTANCE==m_query_datatype)
 	{
 		m_intvalue = intvalue;
 	}
@@ -83,7 +85,7 @@ void SearchInstance::SetIntValue(Poco::UInt32 intvalue)
 void SearchInstance::SetIntValues(Poco::UInt32 intvalue, Poco::UInt32 intvalue2)
 {
 	if (Tag::HEIGHT_RANGE==m_query_datatype || Tag::DAY_RANGE==m_query_datatype ||
-	    Tag::AGE_RANGE==m_query_datatype || Tag::DISTANCE==m_query_datatype)
+	    Tag::AGE_RANGE==m_query_datatype)
 	{
 		m_intvalue = intvalue;
 		m_intvalue2 = intvalue2;
@@ -92,7 +94,7 @@ void SearchInstance::SetIntValues(Poco::UInt32 intvalue, Poco::UInt32 intvalue2)
 
 void SearchInstance::SetStringValue(const std::string& stringvalue)
 {
-	if (Tag::STRING==m_query_datatype)
+	if (Tag::STRING==m_query_datatype || Tag::LOCATION==m_query_datatype || Tag::DISTANCE==m_query_datatype)
 	{
 		m_stringvalue = stringvalue;
 	}

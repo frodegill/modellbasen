@@ -45,6 +45,7 @@
 	<message id="tag.lastvisitedtime">Last Visited Time</message>
 	<message id="tag.lastvisitedtime.query">Days Since Last Visit</message>
 	<message id="tag.postcode">Zip Code</message>
+	<message id="tag.postcode.query">Home Location</message>
 	<message id="tag.confirmedby">Confirmed By User</message>
 	<message id="tag.photographer">Is Photographer</message>
 	<message id="tag.photographer.experience">(Photographer) Experience</message>

@@ -23,6 +23,7 @@
 #include <Wt/WPushButton>
 #include <Wt/WSelectionBox>
 #include <Wt/WString>
+#include <Wt/WStringListModel>
 #include <Wt/WTabWidget>
 #include <Wt/WText>
 #include <Wt/WVBoxLayout>

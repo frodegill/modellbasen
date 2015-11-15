@@ -97,7 +97,6 @@ public:
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}
-	const std::string& GetName() const {return m_name;}
 	TagDataType        GetInsertDataType() const {return static_cast<TagDataType>(m_insert_datatype);}
 	TagDataType        GetQueryDataType() const {return static_cast<TagDataType>(m_query_datatype);}
 	Poco::UInt32       GetParentId() const {return m_parent_id;}
@@ -106,6 +105,9 @@ public:
 	bool               GetTagValues(std::list<TagValue>& tag_values) const;
 
 	bool               GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const;
+
+private:
+	const std::string& GetName() const {return m_name;}
 
 private:
 	Poco::UInt32 m_id;
