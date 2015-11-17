@@ -1,10 +1,6 @@
-#ifdef USE_PCH
-# include "../../../pch.h"
-#else
-# include <Wt/WPushButton>
-# include <Wt/WHBoxLayout>
-# include <Wt/WVBoxLayout>
-#endif
+#include <Wt/WPushButton>
+#include <Wt/WHBoxLayout>
+#include <Wt/WVBoxLayout>
 
 #include "search_tab.h"
 #include "../dialog/query_dialogs.h"
@@ -194,10 +190,10 @@ void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 		{
 			std::string value1;
 			Poco::UInt32 value2;
-			if (!dialogs.GetStringInt(Wt::WString::tr("tag.query.title"),
-			                          Wt::WString::tr("tag.query.distance.label1"),
-			                          Wt::WString::tr("tag.query.distance.label2"),
-			                          value1, value2)) return;
+			if (!dialogs.GetDistance(Wt::WString::tr("tag.query.title"),
+			                         Wt::WString::tr("tag.query.distance.label1"),
+			                         Wt::WString::tr("tag.query.distance.label2"),
+			                         value1, value2)) return;
 			m_search->AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
 			break;
 		}

@@ -1,9 +1,5 @@
-#ifdef USE_PCH
-# include "../../pch.h"
-#else
-# include <Wt/WString>
-# include <Wt/WDateTime>
-#endif
+#include <Wt/WString>
+#include <Wt/WDateTime>
 
 #include "searchinstance.h"
 #include "tagvalue.h"

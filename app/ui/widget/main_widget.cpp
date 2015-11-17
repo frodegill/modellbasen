@@ -1,9 +1,5 @@
-#ifdef USE_PCH
-# include "../../../pch.h"
-#else
-# include <Wt/WImage>
-# include <Wt/WHBoxLayout>
-#endif
+#include <Wt/WImage>
+#include <Wt/WHBoxLayout>
 
 #include "main_widget.h"
 #include "../tab/administrator_tab.h"

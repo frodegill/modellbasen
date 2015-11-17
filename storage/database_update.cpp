@@ -1,8 +1,3 @@
-#ifdef USE_PCH
-# include "../pch.h"
-#else
-#endif
-
 #include "database_update.h"
 #include "../app/global.h"
 

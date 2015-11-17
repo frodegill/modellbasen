@@ -4,6 +4,7 @@
 #include "classes.h"
 #include "../poco_glue.h"
 #include <string>
+#include <Wt/WLocalizedStrings>
 
 
 namespace modellbasen

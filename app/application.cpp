@@ -1,8 +1,3 @@
-#ifdef USE_PCH
-# include "../pch.h"
-#else
-#endif
-
 #include "application.h"
 #include "global.h"
 #include "../storage/poco_glue.h"

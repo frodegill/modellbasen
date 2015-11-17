@@ -1,16 +1,13 @@
-#ifdef USE_PCH
-# include "../../../pch.h"
-#else
-# include <Wt/WDatePicker>
-# include <Wt/WHBoxLayout>
-# include <Wt/WVBoxLayout>
-# include <Wt/WGridLayout>
-# include <Wt/WLength>
-# include <Wt/WLineEdit>
-# include <Wt/WPushButton>
-# include <Wt/WSelectionBox>
-# include <Wt/WStringListModel>
-#endif
+#include <Wt/WDatePicker>
+#include <Wt/WHBoxLayout>
+#include <Wt/WVBoxLayout>
+#include <Wt/WGoogleMap>
+#include <Wt/WGridLayout>
+#include <Wt/WLength>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
+#include <Wt/WSelectionBox>
+#include <Wt/WStringListModel>
 
 #include "query_dialogs.h"
 
@@ -222,6 +219,50 @@ bool QueryDialogs::GetStringInt(const Wt::WString& title, const Wt::WString& lab
 	value1 = string1_edit->text().toUTF8();
 	value2 = atoi(int2_edit->text().toUTF8().c_str());
 
+	return true;
+}
+
+bool QueryDialogs::GetDistance(const Wt::WString& title, const Wt::WString& UNUSED(location_label), const Wt::WString& UNUSED(distance_label),
+															 std::string& UNUSED(postcode), Poco::UInt32& UNUSED(distance)) const
+{
+	Wt::WDialog dialog(title);
+
+#if 1
+	dialog.setHeight(600);
+
+	Wt::WVBoxLayout* dlg_grid_layout = new Wt::WVBoxLayout();
+	dlg_grid_layout->setContentsMargins(DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING);
+
+	Wt::WGoogleMap* location_gmap = new Wt::WGoogleMap(Wt::WGoogleMap::Version3);
+	location_gmap->setMapTypeControl(Wt::WGoogleMap::DefaultControl);
+	location_gmap->enableScrollWheelZoom();
+	dlg_grid_layout->addWidget(location_gmap);
+	dialog.contents()->setLayout(dlg_grid_layout);
+	dialog.exec();
+#else
+	Wt::WGridLayout* dlg_grid_layout = new Wt::WGridLayout();
+	dlg_grid_layout->setContentsMargins(DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING);
+
+	int row = 0;
+
+	dlg_grid_layout->addWidget(new Wt::WText(location_label), row, 0, Wt::AlignRight);
+	Wt::WGoogleMap* location_gmap = new Wt::WGoogleMap(Wt::WGoogleMap::Version3);
+	location_gmap->setMapTypeControl(Wt::WGoogleMap::DefaultControl);
+	location_gmap->enableScrollWheelZoom();
+	dlg_grid_layout->addWidget(location_gmap, row++, 1, Wt::AlignLeft);
+
+	dlg_grid_layout->addWidget(new Wt::WText(distance_label), row, 0, Wt::AlignRight);
+	Wt::WLineEdit* distance_edit = new Wt::WLineEdit();
+	dlg_grid_layout->addWidget(distance_edit, row++, 1, Wt::AlignLeft);
+
+	AppendCommonDialogCode(dialog, dlg_grid_layout, row);
+
+	if (Wt::WDialog::Accepted != dialog.exec())
+		return false;
+
+	postcode = "string1_edit->text().toUTF8()";
+	distance = atoi(distance_edit->text().toUTF8().c_str());
+#endif
 	return true;
 }
 

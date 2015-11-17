@@ -1,10 +1,6 @@
-#ifdef USE_PCH
-# include "../pch.h"
-#else
-# include <boost/algorithm/string.hpp>
-# include <fstream>
-# include <stdlib.h>
-#endif
+#include <boost/algorithm/string.hpp>
+#include <fstream>
+#include <stdlib.h>
 
 #include "import_postcodes.h"
 #include "dbo/postcode.h"

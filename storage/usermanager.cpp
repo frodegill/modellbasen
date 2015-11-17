@@ -1,9 +1,5 @@
-#ifdef USE_PCH
-# include "../pch.h"
-#else
-# include <boost/locale.hpp>
-# include "Wt/Auth/HashFunction"
-#endif
+#include <boost/locale.hpp>
+#include "Wt/Auth/HashFunction"
 
 #include "usermanager.h"
 #include "dbo/tag.h"

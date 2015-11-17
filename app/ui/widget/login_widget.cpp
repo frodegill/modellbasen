@@ -1,8 +1,4 @@
-#ifdef USE_PCH
-# include "../../../pch.h"
-#else
-# include <Wt/WGridLayout>
-#endif
+#include <Wt/WGridLayout>
 
 #include "login_widget.h"
 #include "../../application.h"

@@ -1,9 +1,5 @@
-#ifdef USE_PCH
-# include "../pch.h"
-#else
-# include <boost/locale.hpp>
-# include <Wt/WString>
-#endif
+#include <boost/locale.hpp>
+#include <Wt/WString>
 
 #include "application.h"
 #include "defines.h"

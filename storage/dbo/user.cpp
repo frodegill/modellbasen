@@ -1,8 +1,3 @@
-#ifdef USE_PCH
-# include "../../pch.h"
-#else
-#endif
-
 #include "user.h"
 #include "../../app/defines.h"
 #include "../../app/global.h"
