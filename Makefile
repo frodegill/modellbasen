@@ -9,7 +9,7 @@ all:    $(PROGRAM)
 # source files
 DEBUG_INFO = YES
 #USE_ODBC_CONNECTION = YES
-SOURCES = $(shell find -L . -name '*.cpp'|grep -v "/example/")
+SOURCES = $(shell find -L . -name '*.cpp'|grep -v "/example/"|sort)
 OBJECTS = $(SOURCES:.cpp=.o)
 DEPS = $(OBJECTS:.o=.dep)
 
