@@ -17,7 +17,8 @@ QueryDialogs::QueryDialogs(WebApplication* app, SearchTab* search_tab)
   m_int2_edit(NULL),
   m_string_edit(NULL),
   m_datetime_edit(NULL),
-  m_select_box(NULL),
+  m_singleselect_box(NULL),
+  m_multiselect_box(NULL),
   m_select_box_model(NULL),
   m_location_gmap(NULL),
   m_ok_button(NULL),
@@ -80,12 +81,17 @@ bool QueryDialogs::ExecuteAsync()
 			return true;
 		}
 		case Tag::SINGLESELECT:
+		{
+			ret = AddSingleSelectControls(container_vbox_layout,
+			                              Wt::WString::tr("tag.query.title"),
+			                              Wt::WString::tr("tag.query.singleselect.label"));
+			break;
+		}
 		case Tag::MULTISELECT:
 		{
-			ret = AddSelectControls(container_vbox_layout,
-			                        Wt::WString::tr("tag.query.title"),
-			                        Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.singleselect.label":"tag.query.multiselect.label"),
-			                        Tag::MULTISELECT==query_datatype);
+			ret = AddMultiSelectControls(container_vbox_layout,
+			                             Wt::WString::tr("tag.query.title"),
+			                             Wt::WString::tr("tag.query.multiselect.label"));
 			break;
 		}
 		case Tag::HEIGHT_RANGE:
@@ -154,11 +160,21 @@ bool QueryDialogs::GetDatetime(Poco::UInt64& value) const
 	return true;
 }
 
-bool QueryDialogs::GetSelect(std::list<Poco::UInt32>& selected_values) const
+bool QueryDialogs::GetSingleSelect(Poco::UInt32& selected_value) const
+{
+	selected_value = 0;
+
+	int selected_row = m_singleselect_box->currentIndex();
+	Wt::WModelIndex model_index = m_select_box_model->index(selected_row, 0);
+	selected_value = boost::any_cast<Poco::UInt32>(m_select_box_model->data(model_index, Wt::UserRole));
+	return true;
+}
+
+bool QueryDialogs::GetMultiSelect(std::list<Poco::UInt32>& selected_values) const
 {
 	selected_values.clear();
 
-	const std::set<int> selected_rows = m_select_box->selectedIndexes();
+	const std::set<int> selected_rows = m_multiselect_box->selectedIndexes();
 	for(std::set<int>::const_iterator it = selected_rows.begin(); it!=selected_rows.end(); ++it)
 	{
 		int selected_row = *it;
@@ -246,7 +262,7 @@ bool QueryDialogs::AddDatetimeControls(Wt::WVBoxLayout* layout, const Wt::WStrin
 	return true;
 }
 
-bool QueryDialogs::AddSelectControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label, bool multiselect)
+bool QueryDialogs::AddSingleSelectControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label)
 {
 	Wt::WContainerWidget* controls_container = new Wt::WContainerWidget();
 	Wt::WGridLayout* grid_layout = new Wt::WGridLayout();
@@ -261,30 +277,48 @@ bool QueryDialogs::AddSelectControls(Wt::WVBoxLayout* layout, const Wt::WString&
 	if (!m_query_tag->GetTagValues(tag_values))
 		return false;
 
-	m_select_box = new Wt::WSelectionBox();
+	m_singleselect_box = new Wt::WComboBox();
 	m_select_box_model = new Wt::WStringListModel();
-	m_select_box->setModel(m_select_box_model);
-	m_select_box->setSelectionMode(multiselect ? Wt::ExtendedSelection : Wt::SingleSelection);
-	m_select_box->setVerticalSize(MIN(10, tag_values.size()));
-	m_select_box->setMinimumSize(Wt::WLength(10.0, Wt::WLength::FontEm), Wt::WLength::Auto);
+	m_singleselect_box->setModel(m_select_box_model);
+	m_singleselect_box->setMinimumSize(Wt::WLength(10.0, Wt::WLength::FontEm), Wt::WLength::Auto);
 
-	int model_row = 0;
-	for(std::list<TagValue>::const_iterator it = tag_values.begin(); it!=tag_values.end(); ++it)
-	{
-		TagValue tag_value = *it;
-		std::string value_text;
-		if (tag_value.GetTagValueText(m_app->localizedStrings(), value_text))
-		{
-			m_select_box_model->insertString(model_row, value_text);
-			Wt::WModelIndex index = m_select_box_model->index(model_row, 0);
-			m_select_box_model->setData(index, tag_value.GetId(), Wt::UserRole);
-		}
-	}
+	PopulateSelectModel(tag_values);
 
-	grid_layout->addWidget(m_select_box, 2, 0, Wt::AlignLeft);
+	grid_layout->addWidget(m_singleselect_box, 2, 0, Wt::AlignLeft);
 
 	layout->addWidget(controls_container);
-	m_select_box->setFocus();
+	m_singleselect_box->setFocus();
+	return true;
+}
+
+bool QueryDialogs::AddMultiSelectControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label)
+{
+	Wt::WContainerWidget* controls_container = new Wt::WContainerWidget();
+	Wt::WGridLayout* grid_layout = new Wt::WGridLayout();
+	grid_layout->setContentsMargins(DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING);
+	controls_container->setLayout(grid_layout);
+
+	grid_layout->addWidget(new Wt::WText(title), 0, 0, 1, 2, Wt::AlignCenter);
+
+	grid_layout->addWidget(new Wt::WText(label), 1, 0, Wt::AlignLeft);
+
+	std::list<TagValue> tag_values;
+	if (!m_query_tag->GetTagValues(tag_values))
+		return false;
+
+	m_multiselect_box = new Wt::WSelectionBox();
+	m_select_box_model = new Wt::WStringListModel();
+	m_multiselect_box->setModel(m_select_box_model);
+	m_multiselect_box->setSelectionMode(Wt::ExtendedSelection);
+	m_multiselect_box->setVerticalSize(MIN(10, tag_values.size()));
+	m_multiselect_box->setMinimumSize(Wt::WLength(10.0, Wt::WLength::FontEm), Wt::WLength::Auto);
+
+	PopulateSelectModel(tag_values);
+
+	grid_layout->addWidget(m_multiselect_box, 2, 0, Wt::AlignLeft);
+
+	layout->addWidget(controls_container);
+	m_multiselect_box->setFocus();
 	return true;
 }
 
@@ -362,4 +396,22 @@ void QueryDialogs::OnOK()
 void QueryDialogs::OnCancel()
 {
 	m_search_tab->OnQueryCancelled();
+}
+
+void QueryDialogs::PopulateSelectModel(const std::list<TagValue>& tag_values)
+{
+	m_select_box_model->removeRows(0, m_select_box_model->rowCount());
+
+	int model_row = 0;
+	for(std::list<TagValue>::const_iterator it = tag_values.begin(); it!=tag_values.end(); ++it)
+	{
+		TagValue tag_value = *it;
+		std::string value_text;
+		if (tag_value.GetTagValueText(m_app->localizedStrings(), value_text))
+		{
+			m_select_box_model->insertString(model_row, value_text);
+			Wt::WModelIndex index = m_select_box_model->index(model_row, 0);
+			m_select_box_model->setData(index, tag_value.GetId(), Wt::UserRole);
+		}
+	}
 }

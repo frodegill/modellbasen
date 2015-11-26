@@ -104,10 +104,17 @@ void SearchTab::OnQueryConfirmed()
 			break;
 		}
 		case Tag::SINGLESELECT:
+		{
+			Poco::UInt32 value;
+			if (m_current_query_dialog->GetSingleSelect(value))
+				m_search->AddIntegerSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value);
+
+			break;
+		}
 		case Tag::MULTISELECT:
 		{
 			std::list<Poco::UInt32> values;
-			if (m_current_query_dialog->GetSelect(values))
+			if (m_current_query_dialog->GetMultiSelect(values))
 				m_search->AddStringListSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), values);
 
 			break;

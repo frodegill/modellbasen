@@ -29,7 +29,8 @@ public:
 
 private:
 	void DateAsString(std::string& str) const;
-	void SelectionAsString(std::string& str) const;
+	void SingleselectAsString(std::string& str) const;
+	void MultiselectAsString(std::string& str) const;
 
 private:
 	WebApplication* m_app;

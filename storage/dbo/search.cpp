@@ -123,6 +123,6 @@ bool Search::AddStringIntegerSearchInstance(Poco::UInt32 tag_id, //height_range,
 
 bool Search::AddSearchInstance(std::shared_ptr<SearchInstance>& search_instance)
 {
-	m_searchinstances.push_front(search_instance);
-	return false;
+	m_searchinstances.push_back(search_instance);
+	return true;
 }
