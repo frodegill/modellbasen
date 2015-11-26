@@ -3,7 +3,9 @@
 
 #include <Wt/WContainerWidget>
 #include <Wt/WGroupBox>
+#include <Wt/WHBoxLayout>
 
+#include "../dialog/query_dialogs.h"
 #include "../../../storage/dbo/search.h"
 
 
@@ -18,6 +20,15 @@ public:
 	SearchTab(WebApplication* app);
 	~SearchTab();
 
+public:
+	Wt::WContainerWidget* GetPageContainer() const {return m_page_container;}
+	Wt::WContainerWidget* GetDialogContainer() const {return m_dialog_container;}
+	Wt::WVBoxLayout*      GetDialogLayout() const {return m_dialog_container_vbox;}
+
+public:
+	void OnQueryConfirmed();
+	void OnQueryCancelled();
+
 private:
 	Wt::WContainerWidget* CreateTagsContainer();
 	Wt::WContainerWidget* CreateResultsContainer() const;
@@ -31,6 +42,12 @@ private:
 	WebApplication* m_app;
 	
 	Search* m_search;
+
+	std::shared_ptr<QueryDialogs> m_current_query_dialog;
+
+	Wt::WContainerWidget* m_page_container;
+	Wt::WContainerWidget* m_dialog_container;
+	Wt::WVBoxLayout*      m_dialog_container_vbox;
 
 	Wt::WContainerWidget* m_tags_container;
 	Wt::WContainerWidget* m_results_container;

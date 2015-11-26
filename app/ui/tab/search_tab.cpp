@@ -3,7 +3,6 @@
 #include <Wt/WVBoxLayout>
 
 #include "search_tab.h"
-#include "../dialog/query_dialogs.h"
 #include "../../application.h"
 
 
@@ -16,21 +15,135 @@ SearchTab::SearchTab(WebApplication* app)
   m_available_tags(NULL)
 {
 	m_search = new Search(m_app);
+	m_current_query_dialog.reset();
 
-	Wt::WHBoxLayout* tab_container_hbox = new Wt::WHBoxLayout();
-	tab_container_hbox->setContentsMargins(0, 9, 0, 0);
-	setLayout(tab_container_hbox);
+	Wt::WVBoxLayout* tab_container_vbox = new Wt::WVBoxLayout();
+	tab_container_vbox->setContentsMargins(0, 9, 0, 0);
+	setLayout(tab_container_vbox);
+
+	/*
+	 * Actual page
+	 */
+	m_page_container = new Wt::WContainerWidget();
+	Wt::WHBoxLayout* page_container_hbox = new Wt::WHBoxLayout();
+	page_container_hbox->setContentsMargins(0, 0, 0, 0);
+	m_page_container->setLayout(page_container_hbox);
 
 	m_tags_container = CreateTagsContainer();
-	tab_container_hbox->addWidget(m_tags_container);
+	page_container_hbox->addWidget(m_tags_container, 1, Wt::AlignLeft);
 
 	m_results_container = CreateResultsContainer();
-	tab_container_hbox->addWidget(m_results_container);
+	page_container_hbox->addWidget(m_results_container);
+
+	tab_container_vbox->addWidget(m_page_container, 10, Wt::AlignRight);
+
+	/*
+	 * Dialog hack
+	 */
+	m_dialog_container = new Wt::WContainerWidget();
+	m_dialog_container_vbox = new Wt::WVBoxLayout();
+	m_dialog_container_vbox->setContentsMargins(0, 0, 0, 0);
+	m_dialog_container->setLayout(m_dialog_container_vbox);
+
+	tab_container_vbox->addWidget(m_dialog_container, 0, Wt::AlignCenter);
+
+	/* Show page, hide dialog */
+	m_page_container->setHidden(false);
+	m_dialog_container->setHidden(true);
 }
 
 SearchTab::~SearchTab()
 {
 	delete m_search;
+}
+
+void SearchTab::OnQueryConfirmed()
+{
+	if (!m_current_query_dialog.get())
+		return;
+
+	Tag* query_tag = m_current_query_dialog->GetQueryTag();
+	if (!query_tag)
+		return;
+
+	Poco::UInt32 tag_id = query_tag->GetId();
+	if (!tag_id)
+		return;
+
+	Tag::TagDataType query_datatype = query_tag->GetQueryDataType();
+	switch(query_datatype)
+	{
+		case Tag::INTEGER:
+		{
+			Poco::UInt32 value;
+			if (m_current_query_dialog->GetInt(value))
+				m_search->AddIntegerSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value);
+
+			break;
+		}
+		case Tag::STRING:
+		case Tag::LOCATION:
+		{
+			std::string value;
+			if (m_current_query_dialog->GetString(value))
+				m_search->AddStringSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value);
+
+			break;
+		}
+		case Tag::DATETIME:
+		{
+			Poco::UInt64 value;
+			if (m_current_query_dialog->GetDatetime(value))
+				m_search->AddDatetimeSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value);
+
+			break;
+		}
+		case Tag::BOOLEAN:
+		{
+			m_search->AddBooleanSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType());
+			break;
+		}
+		case Tag::SINGLESELECT:
+		case Tag::MULTISELECT:
+		{
+			std::list<Poco::UInt32> values;
+			if (m_current_query_dialog->GetSelect(values))
+				m_search->AddStringListSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), values);
+
+			break;
+		}
+		case Tag::HEIGHT_RANGE:
+		case Tag::DAY_RANGE:
+		case Tag::AGE_RANGE:
+		{
+			Poco::UInt32 value1, value2;
+			if (m_current_query_dialog->GetInts(value1, value2))
+				m_search->AddIntegerIntegerSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value1, value2);
+
+			break;
+		}
+		case Tag::DISTANCE:
+		{
+			std::string value1;
+			Poco::UInt32 value2;
+			if (m_current_query_dialog->GetDistance(value1, value2))
+				m_search->AddStringIntegerSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value1, value2);
+
+			break;
+		}
+		default: break;
+	}
+	m_current_query_dialog.reset();
+	PopulateTagsContainers();
+	m_page_container->setHidden(false);
+	m_dialog_container->setHidden(true);
+}
+
+void SearchTab::OnQueryCancelled()
+{
+	m_current_query_dialog.reset();
+	m_page_container->setHidden(false);
+	m_dialog_container->setHidden(true);
 }
 
 Wt::WContainerWidget* SearchTab::CreateTagsContainer()
@@ -103,102 +216,11 @@ void SearchTab::OnSearchInstanceTagButtonClicked(Poco::UInt32 UNUSED(tag_id))
 
 void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
 {
-	Tag tag;
-	if (!tag.Initialize(tag_id))
-		return;
-
-	QueryDialogs dialogs(m_app);
-
-	Tag::TagDataType query_datatype = tag.GetQueryDataType();
-	switch(query_datatype)
+	m_current_query_dialog = std::shared_ptr<QueryDialogs>(new QueryDialogs(m_app, this));
+	if (!m_current_query_dialog->Initialize(tag_id) ||
+	    !m_current_query_dialog->ExecuteAsync())
 	{
-		case Tag::INTEGER:
-		{
-			Poco::UInt32 value;
-			if (!dialogs.GetInt(Wt::WString::tr("tag.query.title"),
-			                    Wt::WString::tr("tag.query.integer.label"),
-			                    value)) return;
-			m_search->AddIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
-			break;
-		}
-		case Tag::STRING:
-		case Tag::LOCATION:
-		{
-			std::string value;
-			if (!dialogs.GetString(Wt::WString::tr("tag.query.title"),
-			                       Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.string.label":"tag.query.location.label"),
-			                       value)) return;
-			m_search->AddStringSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
-			break;
-		}
-		case Tag::DATETIME:
-		{
-			Poco::UInt64 value;
-			if (!dialogs.GetDatetime(Wt::WString::tr("tag.query.title"),
-			                         Wt::WString::tr("tag.query.datetime.label"),
-			                         value)) return;
-			m_search->AddDatetimeSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value);
-			break;
-		}
-		case Tag::BOOLEAN:
-		{
-			m_search->AddBooleanSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType());
-			break;
-		}
-		case Tag::SINGLESELECT:
-		case Tag::MULTISELECT:
-		{
-			bool multiselect = Tag::MULTISELECT==query_datatype;
-			std::list<Poco::UInt32> values;
-			if (!dialogs.GetSelect(Wt::WString::tr("tag.query.title"),
-			                       Wt::WString::tr(Tag::STRING==query_datatype?"tag.query.singleselect.label":"tag.query.multiselect.label"),
-			                       multiselect,
-			                       tag,
-			                       values)) return;
-			m_search->AddStringListSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), values);
-			break;
-		}
-		case Tag::HEIGHT_RANGE:
-		case Tag::DAY_RANGE:
-		case Tag::AGE_RANGE:
-		{
-			Wt::WString label1, label2;
-			if (Tag::HEIGHT_RANGE==query_datatype)
-			{
-				label1 = Wt::WString::tr("tag.query.heightrange.label1");
-				label2 = Wt::WString::tr("tag.query.heightrange.label2");
-			}
-			else if (Tag::DAY_RANGE==query_datatype)
-			{
-				label1 = Wt::WString::tr("tag.query.dayrange.label1");
-				label2 = Wt::WString::tr("tag.query.dayrange.label2");
-			}
-			else
-			{
-				label1 = Wt::WString::tr("tag.query.agerange.label1");
-				label2 = Wt::WString::tr("tag.query.agerange.label2");
-			}
-			Poco::UInt32 value1, value2;
-			if (!dialogs.GetInts(Wt::WString::tr("tag.query.title"),
-			                     label1,
-			                     label2,
-			                     value1, value2)) return;
-			m_search->AddIntegerIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
-			break;
-		}
-		case Tag::DISTANCE:
-		{
-			std::string value1;
-			Poco::UInt32 value2;
-			if (!dialogs.GetDistance(Wt::WString::tr("tag.query.title"),
-			                         Wt::WString::tr("tag.query.distance.label1"),
-			                         Wt::WString::tr("tag.query.distance.label2"),
-			                         value1, value2)) return;
-			m_search->AddStringIntegerSearchInstance(tag_id, tag.GetInsertDataType(), tag.GetQueryDataType(), value1, value2);
-			break;
-		}
-		default: break;
+		OnQueryCancelled();
+		return;
 	}
-
-	PopulateTagsContainers();
 }

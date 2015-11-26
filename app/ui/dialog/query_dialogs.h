@@ -1,7 +1,14 @@
 #ifndef _QUERY_DIALOGS_H_
 #define _QUERY_DIALOGS_H_
 
-#include <Wt/WDialog>
+#include <Wt/WDatePicker>
+#include <Wt/WGoogleMap>
+#include <Wt/WLineEdit>
+#include <Wt/WObject>
+#include <Wt/WPushButton>
+#include <Wt/WSelectionBox>
+#include <Wt/WStringListModel>
+#include <Wt/WVBoxLayout>
 #include "../../application.h"
 #include "../../../storage/dbo/tag.h"
 #include "../../../storage/dbo/tagvalue.h"
@@ -10,26 +17,59 @@
 namespace modellbasen
 {
 
-class QueryDialogs
+class SearchTab;
+
+class QueryDialogs : public Wt::WObject
 {
 public:
-	QueryDialogs(WebApplication* app);
+	QueryDialogs(WebApplication* app, SearchTab* search_tab);
+	~QueryDialogs();
+
+	bool Initialize(Poco::UInt32 tag_id);
+
+	bool ExecuteAsync();
+
+	Tag* GetQueryTag() const {return m_query_tag.get();}
 
 public:
-	bool GetInt(const Wt::WString& title, const Wt::WString& label, Poco::UInt32& value) const;
-	bool GetString(const Wt::WString& title, const Wt::WString& label, std::string& value) const;
-	bool GetDatetime(const Wt::WString& title, const Wt::WString& label, Poco::UInt64& value) const;
-	bool GetSelect(const Wt::WString& title, const Wt::WString& label, bool multiselect,
-	               const Tag& tag, std::list<Poco::UInt32>& selected_values) const;
-	bool GetInts(const Wt::WString& title, const Wt::WString& label1, const Wt::WString& label2, Poco::UInt32& value1, Poco::UInt32& value2) const;
-	bool GetStringInt(const Wt::WString& title, const Wt::WString& label1, const Wt::WString& label2, std::string& value1, Poco::UInt32& value2) const;
-	bool GetDistance(const Wt::WString& title, const Wt::WString& location_label, const Wt::WString& distance_label, std::string& postcode, Poco::UInt32& distance) const;
+	bool GetInt(Poco::UInt32& value) const;
+	bool GetString(std::string& value) const;
+	bool GetDatetime(Poco::UInt64& value) const;
+	bool GetSelect(std::list<Poco::UInt32>& selected_values) const;
+	bool GetInts(Poco::UInt32& value1, Poco::UInt32& value2) const;
+	bool GetStringInt(std::string& value1, Poco::UInt32& value2) const;
+	bool GetDistance(std::string& postcode, Poco::UInt32& distance) const;
 
 private:
-	void AppendCommonDialogCode(Wt::WDialog& dialog, Wt::WGridLayout* layout, int row) const;
+	bool AddIntControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label);
+	bool AddStringControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label);
+	bool AddDatetimeControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label);
+	bool AddSelectControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label, bool multiselect);
+	bool AddIntIntControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& label1, const Wt::WString& label2);
+	bool AddDistanceControls(Wt::WVBoxLayout* layout, const Wt::WString& title, const Wt::WString& location_label, const Wt::WString& distance_label);
+
+	bool AppendCommonControls(Wt::WVBoxLayout* layout);
+
+	void OnOK();
+	void OnCancel();
 
 private:
 	WebApplication* m_app;
+	SearchTab* m_search_tab;
+	std::shared_ptr<Tag>  m_query_tag;
+
+	Wt::WLineEdit* m_int_edit;
+	Wt::WLineEdit* m_int2_edit;
+	Wt::WLineEdit* m_string_edit;
+	Wt::WDatePicker* m_datetime_edit;
+
+	Wt::WSelectionBox* m_select_box;
+	Wt::WStringListModel* m_select_box_model;
+
+	Wt::WGoogleMap* m_location_gmap;
+
+	Wt::WPushButton* m_ok_button;
+	Wt::WPushButton* m_cancel_button;
 };
 
 } // namespace modellbasen
