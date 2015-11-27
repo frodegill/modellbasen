@@ -25,17 +25,18 @@ SearchTab::SearchTab(WebApplication* app)
 	 * Actual page
 	 */
 	m_page_container = new Wt::WContainerWidget();
-	Wt::WHBoxLayout* page_container_hbox = new Wt::WHBoxLayout();
-	page_container_hbox->setContentsMargins(0, 0, 0, 0);
-	m_page_container->setLayout(page_container_hbox);
+	Wt::WGridLayout* page_container_grid = new Wt::WGridLayout();
+	page_container_grid->setContentsMargins(0, 0, 0, 0);
+	m_page_container->setLayout(page_container_grid);
 
 	m_tags_container = CreateTagsContainer();
-	page_container_hbox->addWidget(m_tags_container, 1, Wt::AlignLeft);
+	m_tags_container->setMaximumSize(Wt::WLength(33.3, Wt::WLength::Percentage), Wt::WLength::Auto);
+	page_container_grid->addWidget(m_tags_container, 0, 0, Wt::AlignLeft);
 
 	m_results_container = CreateResultsContainer();
-	page_container_hbox->addWidget(m_results_container);
+	page_container_grid->addWidget(m_results_container, 0, 1, Wt::AlignJustify);
 
-	tab_container_vbox->addWidget(m_page_container, 10, Wt::AlignRight);
+	tab_container_vbox->addWidget(m_page_container);
 
 	/*
 	 * Dialog hack
@@ -157,12 +158,15 @@ Wt::WContainerWidget* SearchTab::CreateTagsContainer()
 {
 	Wt::WContainerWidget* tags_container = new Wt::WContainerWidget();
 	Wt::WVBoxLayout* tags_container_vbox = new Wt::WVBoxLayout();
+	tags_container_vbox->setContentsMargins(0, 0, 0, 0);
 	tags_container->setLayout(tags_container_vbox);
 
 	m_search_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.SearchTags"));
+	m_search_tags->setMaximumSize(Wt::WLength::Auto, Wt::WLength(50.0, Wt::WLength::Percentage));
 	tags_container_vbox->addWidget(m_search_tags, 1);
 
 	m_available_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.AvailableTags"));
+	m_available_tags->setMaximumSize(Wt::WLength::Auto, Wt::WLength(50.0, Wt::WLength::Percentage));
 	tags_container_vbox->addWidget(m_available_tags, 1);
 	
 	PopulateTagsContainers();
@@ -174,6 +178,7 @@ Wt::WContainerWidget* SearchTab::CreateResultsContainer() const
 {
 	Wt::WContainerWidget* results_container = new Wt::WContainerWidget();
 	Wt::WGridLayout* results_container_grid = new Wt::WGridLayout();
+	results_container_grid->setContentsMargins(0, 0, 0, 0);
 	results_container->setLayout(results_container_grid);
 	return results_container;
 }
