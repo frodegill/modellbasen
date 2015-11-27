@@ -47,6 +47,8 @@ public:
 	bool AddStringIntegerSearchInstance(Poco::UInt32 tag_id, //distance
 	                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::string& stringvalue, Poco::UInt32 intvalue);
 
+	bool InvertOrRemoveSearchInstance(Poco::UInt32 tag_id);
+
 private:
 	bool AddSearchInstance(std::shared_ptr<SearchInstance>& search_instance);
 

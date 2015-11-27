@@ -20,6 +20,9 @@ public:
 	Poco::UInt32 GetTagId() const {return m_tag_id;}
 	bool ToString(std::string& str) const;
 
+	bool IsInverted() const {return m_inverted;}
+	void Invert() {m_inverted = !m_inverted;}
+
 public:
 	void SetIntValue(Poco::UInt32 intvalue);
 	void SetIntValues(Poco::UInt32 intvalue, Poco::UInt32 intvalue2);
@@ -37,6 +40,8 @@ private:
 	Poco::UInt32 m_tag_id;
 	Tag::TagDataType m_insert_datatype;
 	Tag::TagDataType m_query_datatype;
+
+	bool m_inverted;
 
 	Poco::UInt32 m_intvalue;
 	Poco::UInt32 m_intvalue2;

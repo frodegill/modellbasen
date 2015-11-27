@@ -121,6 +121,28 @@ bool Search::AddStringIntegerSearchInstance(Poco::UInt32 tag_id, //height_range,
 	return AddSearchInstance(search_instance);
 }
 
+bool Search::InvertOrRemoveSearchInstance(Poco::UInt32 tag_id)
+{
+	for(std::list<std::shared_ptr<SearchInstance>>::const_iterator it = m_searchinstances.begin(); it!=m_searchinstances.end(); ++it)
+	{
+		std::shared_ptr<SearchInstance> search_instance = *it;
+		if (search_instance->GetTagId() != tag_id)
+			continue;
+
+		if (!search_instance->IsInverted())
+		{
+			search_instance->Invert();
+			return true;
+		}
+		else
+		{
+			m_searchinstances.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Search::AddSearchInstance(std::shared_ptr<SearchInstance>& search_instance)
 {
 	m_searchinstances.push_back(search_instance);

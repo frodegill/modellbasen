@@ -14,6 +14,7 @@ SearchInstance::SearchInstance(WebApplication* app, Poco::UInt32 tag_id, Tag::Ta
   m_tag_id(tag_id),
   m_insert_datatype(insert_datatype),
   m_query_datatype(query_datatype),
+  m_inverted(false),
   m_intvalue(0),
   m_intvalue2(0),
   m_datetimevalue(0)
@@ -37,27 +38,27 @@ bool SearchInstance::ToString(std::string& str) const
 
 	switch(m_query_datatype)
 	{
-		case Tag::INTEGER: str = Wt::WString::tr("ArgInteger").arg(tag_name).arg(m_intvalue).toUTF8(); break;
+		case Tag::INTEGER: str = Wt::WString::tr(m_inverted?"ArgInvInteger":"ArgInteger").arg(tag_name).arg(m_intvalue).toUTF8(); break;
 
-		case Tag::STRING: str = Wt::WString::tr("ArgString").arg(tag_name).arg(m_stringvalue).toUTF8(); break;
+		case Tag::STRING: str = Wt::WString::tr(m_inverted?"ArgInvString":"ArgString").arg(tag_name).arg(m_stringvalue).toUTF8(); break;
 
 		case Tag::DATETIME:
 		{
 			std::string date_str;
 			DateAsString(date_str);
-			str = Wt::WString::tr("ArgDate").arg(tag_name).arg(date_str).toUTF8();
+			str = Wt::WString::tr(m_inverted?"ArgInvDate":"ArgDate").arg(tag_name).arg(date_str).toUTF8();
 			break;
 		}
 
-		case Tag::BOOLEAN: str = Wt::WString::tr("ArgBoolean").arg(tag_name).toUTF8(); break;
+		case Tag::BOOLEAN: str = Wt::WString::tr(m_inverted?"ArgInvBoolean":"ArgBoolean").arg(tag_name).toUTF8(); break;
 
-		case Tag::LOCATION: str = Wt::WString::tr("ArgLocation").arg(tag_name).arg(m_stringvalue).toUTF8(); break;
+		case Tag::LOCATION: str = Wt::WString::tr(m_inverted?"ArgInvLocation":"ArgLocation").arg(tag_name).arg(m_stringvalue).toUTF8(); break;
 
 		case Tag::SINGLESELECT:
 		{
 			std::string selection_str;
 			SingleselectAsString(selection_str);
-			str = Wt::WString::tr("ArgSingleselect").arg(tag_name).arg(selection_str).toUTF8();
+			str = Wt::WString::tr(m_inverted?"ArgInvSingleselect":"ArgSingleselect").arg(tag_name).arg(selection_str).toUTF8();
 			break;
 		}
 
@@ -65,17 +66,17 @@ bool SearchInstance::ToString(std::string& str) const
 		{
 			std::string selection_str;
 			MultiselectAsString(selection_str);
-			str = Wt::WString::tr("ArgMultiselect").arg(tag_name).arg(selection_str).toUTF8();
+			str = Wt::WString::tr(m_inverted?"ArgInvMultiselect":"ArgMultiselect").arg(tag_name).arg(selection_str).toUTF8();
 			break;
 		}
 
-		case Tag::HEIGHT_RANGE: str = Wt::WString::tr("ArgHeightRange").arg(tag_name).arg(m_intvalue).arg(m_intvalue2).toUTF8(); break;
+		case Tag::HEIGHT_RANGE: str = Wt::WString::tr(m_inverted?"ArgInvHeightRange":"ArgHeightRange").arg(tag_name).arg(m_intvalue).arg(m_intvalue2).toUTF8(); break;
 
-		case Tag::DAY_RANGE: str = Wt::WString::tr("ArgDayRange").arg(tag_name).arg(m_intvalue).arg(m_intvalue2).toUTF8(); break;
+		case Tag::DAY_RANGE: str = Wt::WString::tr(m_inverted?"ArgInvDayRange":"ArgDayRange").arg(tag_name).arg(m_intvalue).arg(m_intvalue2).toUTF8(); break;
 
-		case Tag::AGE_RANGE: str = Wt::WString::tr("ArgAgeRange").arg(tag_name).arg(m_intvalue).arg(m_intvalue2).toUTF8(); break;
+		case Tag::AGE_RANGE: str = Wt::WString::tr(m_inverted?"ArgInvAgeRange":"ArgAgeRange").arg(tag_name).arg(m_intvalue).arg(m_intvalue2).toUTF8(); break;
 
-		case Tag::DISTANCE: str = Wt::WString::tr("ArgDistance").arg(tag_name).arg(m_intvalue).arg(m_stringvalue).toUTF8(); break;
+		case Tag::DISTANCE: str = Wt::WString::tr(m_inverted?"ArgInvDistance":"ArgDistance").arg(tag_name).arg(m_intvalue).arg(m_stringvalue).toUTF8(); break;
 
 		default: str=tag_name; break;
 	}

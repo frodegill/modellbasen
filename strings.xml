@@ -12,11 +12,23 @@
 	<message id="ArgBoolean">{1}</message>
 	<message id="ArgLocation">{1} ({2})</message>
 	<message id="ArgSingleselect">{1} ({2})</message>
-	<message id="ArgMultiselect">{1} ({2})</message>
+	<message id="ArgMultiselect">{1} one of ({2})</message>
 	<message id="ArgHeightRange">{1} ({2}-{3} cm)</message>
 	<message id="ArgDayRange">{1} ({2}-{3} days)</message>
 	<message id="ArgAgeRange">{1} ({2}-{3} years)</message>
-	<message id="ArgDistance">{1} ({2} km from {3})</message>
+	<message id="ArgDistance">{1} (max {2} km from {3})</message>
+
+	<message id="ArgInvInteger">{1} not ({2})</message>
+	<message id="ArgInvString">{1} not ({2})</message>
+	<message id="ArgInvDate">{1} not ({2})</message>
+	<message id="ArgInvBoolean">not {1}</message>
+	<message id="ArgInvLocation">{1} not ({2})</message>
+	<message id="ArgInvSingleselect">{1} not ({2})</message>
+	<message id="ArgInvMultiselect">{1} none of ({2})</message>
+	<message id="ArgInvHeightRange">{1} not ({2}-{3} cm)</message>
+	<message id="ArgInvDayRange">{1} not ({2}-{3} days)</message>
+	<message id="ArgInvAgeRange">{1} not ({2}-{3} years)</message>
+	<message id="ArgInvDistance">{1} (min {2} km from {3})</message>
 
 	<message id="Username">Username</message>
 	<message id="Password">Password</message>

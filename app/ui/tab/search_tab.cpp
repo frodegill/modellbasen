@@ -217,8 +217,10 @@ void SearchTab::PopulateTagsContainers()
 	}
 }
 
-void SearchTab::OnSearchInstanceTagButtonClicked(Poco::UInt32 UNUSED(tag_id))
+void SearchTab::OnSearchInstanceTagButtonClicked(Poco::UInt32 tag_id)
 {
+	if (m_search->InvertOrRemoveSearchInstance(tag_id))
+		PopulateTagsContainers();
 }
 
 void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
