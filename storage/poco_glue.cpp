@@ -36,7 +36,10 @@ bool PocoGlue::Initialize(const std::string& connection_string)
 #endif
 	m_pool = new Poco::Data::SessionPool(DB_CONNECTION_TYPE, connection_string);
 
-	return UpdateDatabaseIfNeeded();
+	if (!UpdateDatabaseIfNeeded())
+		return false;
+
+	return ::InitializePersistedGlobalResources();
 }
 
 bool PocoGlue::CreateSession(Poco::Data::Session*& session)

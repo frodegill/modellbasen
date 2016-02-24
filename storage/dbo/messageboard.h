@@ -18,6 +18,9 @@ public: //For PoCo::Data
 public:
 	MessageBoard();
 
+	static bool InitializeGlobalMessageboardList();
+	static bool AddMessage(Poco::UInt32 user_id, const std::string& message);
+
 public:
 	Poco::UInt32       GetId() const {return m_id;}
 

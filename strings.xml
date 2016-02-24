@@ -43,6 +43,7 @@
 	<message id="Tab.SearchTab">Search</message>
 	<message id="Tab.AdministratorTab">Administrator</message>
 
+	<message id="Widget.SubmitButton">Submit</message>
 	<message id="Widget.SearchTags">Search tags</message>
 	<message id="Widget.AvailableTags">Available tags</message>
 	

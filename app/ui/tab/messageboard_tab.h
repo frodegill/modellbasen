@@ -2,6 +2,9 @@
 #define _MESSAGEBOARD_TAB_H_
 
 #include <Wt/WContainerWidget>
+#include <Wt/WLineEdit>
+#include <Wt/WPushButton>
+#include <Wt/WTableView>
 
 
 namespace modellbasen
@@ -16,7 +19,14 @@ public:
 	~MessageBoardTab();
 
 private:
-	WebApplication* m_app;
+	void OnSubmitButtonClicked(const Wt::WMouseEvent& mouse);
+
+private:
+	WebApplication*  m_app;
+
+	Wt::WTableView*  m_table_view;
+	Wt::WLineEdit*   m_submit_text;
+	Wt::WPushButton* m_submit_button;
 };
 
 } // namespace modellbasen

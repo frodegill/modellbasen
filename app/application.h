@@ -25,6 +25,9 @@ public:
 	void ActivateMainWidget();
 
 public:
+	void serverPush();
+
+public:
 	UserManager*           GetUserManager() const {return m_usermanager;}
 
 private:

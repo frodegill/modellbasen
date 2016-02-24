@@ -13,7 +13,8 @@ WebApplication::WebApplication(const Wt::WEnvironment& environment)
 	messageResourceBundle().use(appRoot() + "strings");
 	useStyleSheet(Wt::WLink("modellbasen.css"));
 	setTitle(Wt::WString::tr("AppName"));
-	enableUpdates();
+	enableUpdates(true);
+	::connect(this, boost::bind(&WebApplication::serverPush, this));
 }
 
 WebApplication::~WebApplication()
@@ -22,6 +23,9 @@ WebApplication::~WebApplication()
 	delete m_main_widget;
 
 	delete m_usermanager;
+
+	::disconnect(this);
+	enableUpdates(false);
 }
 
 bool WebApplication::Initialize()
@@ -58,4 +62,10 @@ void WebApplication::ActivateMainWidget()
 	}
 
 	m_main_widget->ActivateMainWidget();
+}
+
+void WebApplication::serverPush()
+{
+	boost::mutex::scoped_lock lock(g_global_mutex);
+	Wt::WApplication::instance()->triggerUpdate();
 }
