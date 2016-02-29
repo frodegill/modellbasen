@@ -39,8 +39,14 @@
 	<message id="Cancel">Cancel</message>
 	
 	<message id="Tab.ProfileTab">Profile</message>
+
 	<message id="Tab.MessageBoardTab">Messageboard</message>
+	<message id="PostedTimeHeader">Time</message>
+	<message id="UsernameHeader">Username</message>
+	<message id="MessageHeader">Message</message>
+
 	<message id="Tab.SearchTab">Search</message>
+
 	<message id="Tab.AdministratorTab">Administrator</message>
 
 	<message id="Widget.SubmitButton">Submit</message>
