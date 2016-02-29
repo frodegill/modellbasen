@@ -1,6 +1,7 @@
 #include "messageboard.h"
 
 #include "../../app/global.h"
+#include "../../utils/time.h"
 
 #include <Wt/WStandardItem>
 
@@ -41,9 +42,11 @@ bool MessageBoard::InitializeGlobalMessageboardList()
 		Poco::Data::Keywords::range<Poco::Data::Limit::SizeT>(0,1);
 
 	int row = 0;
+	std::string posted_time;
 	while (!statement.done() && 0<statement.execute())
 	{
-		g_messageboard_model.setItem(row, 0, new Wt::WStandardItem(Wt::WString::fromUTF8("PostedTime"))); //TODO
+		Time::ToString(timestamp, posted_time);
+		g_messageboard_model.setItem(row, 0, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
 		g_messageboard_model.setItem(row, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(username)));
 		g_messageboard_model.setItem(row++, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(message)));
 	}
@@ -62,7 +65,7 @@ bool MessageBoard::AddMessage(Poco::UInt32 user_id, const std::string& message)
 	if (!DB.CreateSession(session_in_transaction))
 		return false;
 
-	Poco::UInt64 now = ::GetTimeUTC();
+	Poco::UInt64 now = Time::NowUTC();
 	
 	*session_in_transaction << "INSERT INTO messageboard (message, posted_time, user) "\
 														"VALUE (?, ?, ?)",

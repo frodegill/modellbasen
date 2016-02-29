@@ -8,6 +8,7 @@
 #include "global.h"
 #include "../storage/dbo/messageboard.h"
 #include "../storage/dbo/user.h"
+#include "../utils/time.h"
 
 
 boost::mutex g_global_mutex;
@@ -43,9 +44,11 @@ bool PostMessageToBoard(const modellbasen::WebApplication* application, const st
 	const modellbasen::User* current_user = application->GetUserManager()->GetCurrentUser();
 	if (!current_user || !modellbasen::MessageBoard::AddMessage(current_user->GetId(), message))
 		return false;
-		
+
+	std::string posted_time;
+	modellbasen::Time::ToString(modellbasen::Time::NowUTC(), posted_time);
 	int row = g_messageboard_model.rowCount();
-	g_messageboard_model.setItem(row, 0, new Wt::WStandardItem(Wt::WString::fromUTF8("Time")));
+	g_messageboard_model.setItem(row, 0, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
 	g_messageboard_model.setItem(row, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(current_user->GetUsername())));
 	g_messageboard_model.setItem(row, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(message)));
 	if (MAX_MESSAGEBOARD_ROWS <= row)
@@ -69,11 +72,6 @@ Wt::WLogEntry Log(const std::string& type)
 	return g_logger.entry(type);
 }
 
-//Time
-Poco::UInt64 GetTimeUTC()
-{
-	return 0L;
-}
 
 // Database
 modellbasen::PocoGlue DB;

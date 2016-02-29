@@ -33,9 +33,6 @@ bool PostMessageToBoard(const modellbasen::WebApplication* application, const st
 extern Wt::WLogger g_logger;
 Wt::WLogEntry Log(const std::string& type);
 
-//Time
-Poco::UInt64 GetTimeUTC();
-
 // Database
 extern modellbasen::PocoGlue DB;
 
