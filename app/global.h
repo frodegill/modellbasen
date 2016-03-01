@@ -6,8 +6,6 @@
 #include <Wt/WApplication>
 #include <Wt/WStandardItemModel>
 
-#define MAX_MESSAGEBOARD_ROWS (25)
-
 
 namespace modellbasen
 {

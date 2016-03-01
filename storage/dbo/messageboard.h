@@ -5,6 +5,8 @@
 #include "../poco_glue.h"
 #include <string>
 
+#define MAX_MESSAGEBOARD_ROWS (25)
+
 
 namespace modellbasen
 {

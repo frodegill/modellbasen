@@ -4,7 +4,7 @@
 	<message id="ODBCConnectionString">DSN=modellbasen</message>
 	<message id="MySQLConnectionString">host=localhost;port=3306;db=modellbasen;user=modellbasen;password=modellbasen;compress=true;auto-reconnect=true</message>
 
-	<message id="DateFormat">dd.mm.yyyy</message>
+	<message id="DateFormat">d.MMM yyyy HH:mm</message>
 
 	<message id="ArgInteger">{1} ({2})</message>
 	<message id="ArgString">{1} ({2})</message>

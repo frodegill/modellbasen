@@ -45,17 +45,19 @@ bool PostMessageToBoard(const modellbasen::WebApplication* application, const st
 	if (!current_user || !modellbasen::MessageBoard::AddMessage(current_user->GetId(), message))
 		return false;
 
+  if (!g_messageboard_model.insertRows(0, 1))
+		return false;
+
 	std::string posted_time;
 	modellbasen::Time::ToString(modellbasen::Time::NowUTC(), posted_time);
-	int row = g_messageboard_model.rowCount();
-	g_messageboard_model.setItem(row, 0, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
-	g_messageboard_model.setItem(row, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(current_user->GetUsername())));
-	g_messageboard_model.setItem(row, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(message)));
-	if (MAX_MESSAGEBOARD_ROWS <= row)
+	g_messageboard_model.setItem(0, 0, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
+	g_messageboard_model.setItem(0, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(current_user->GetUsername())));
+	g_messageboard_model.setItem(0, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(message)));
+	if (MAX_MESSAGEBOARD_ROWS < g_messageboard_model.rowCount())
 	{
 		g_messageboard_model.removeRows(0, 1);
 	}
-	
+
 	std::size_t i;
 	for (i=0; i<g_client_connections.size(); ++i) {
 		ClientConnection& application_connection = g_client_connections[i];

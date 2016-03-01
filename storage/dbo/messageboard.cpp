@@ -35,7 +35,7 @@ bool MessageBoard::InitializeGlobalMessageboardList()
 	Poco::UInt64 timestamp;
 	std::string username;
 	Poco::Data::Statement statement(*session);
-	statement << "SELECT m.message, m.posted_time, u.username FROM messageboard m, user u WHERE m.user=u.id ORDER BY m.posted_time",
+	statement << "SELECT m.message, m.posted_time, u.username FROM messageboard m, user u WHERE m.user=u.id ORDER BY m.posted_time DESC LIMIT 25", //25=MAX_MESSAGEBOARD_ROWS
 		Poco::Data::Keywords::into(message),
 		Poco::Data::Keywords::into(timestamp),
 		Poco::Data::Keywords::into(username),
