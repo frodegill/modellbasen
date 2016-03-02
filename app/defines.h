@@ -9,6 +9,8 @@
 namespace modellbasen
 {
 
+#define SERVER_LOCALE "nb_NO"
+
 #define PI (3.1415926535897932385) 
 #define DEG2RAD(d)	((d) * PI/180.0)
 
