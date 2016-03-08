@@ -3,6 +3,7 @@
 
 #include "messageboard_tab.h"
 #include "../../application.h"
+#include "../../defines.h"
 #include "../../global.h"
 
 
@@ -23,6 +24,7 @@ MessageBoardTab::MessageBoardTab(WebApplication* app)
 	submit_container->setLayout(submit_container_hbox);
 	
 	m_submit_text = new Wt::WLineEdit();
+	m_submit_text->enterPressed().connect(this, &MessageBoardTab::OnSubmitTextSubmit);
 	submit_container_hbox->addWidget(m_submit_text, 1);
 	m_submit_button = new Wt::WPushButton(Wt::WString::tr("Widget.SubmitButton"));
 	m_submit_button->clicked().connect(this, &MessageBoardTab::OnSubmitButtonClicked);
@@ -46,7 +48,24 @@ MessageBoardTab::~MessageBoardTab()
 {
 }
 
+void MessageBoardTab::OnSubmitTextSubmit()
+{
+	const std::string submit_text = m_submit_text->text().toUTF8();
+	if (!submit_text.empty())
+	{
+		::PostMessageToBoard(m_app, submit_text);
+	}
+}
+
 void MessageBoardTab::OnSubmitButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 {
-	::PostMessageToBoard(m_app, m_submit_text->text().toUTF8());
+	OnSubmitTextSubmit();
+}
+
+void MessageBoardTab::OnLoggedIn()
+{
+}
+
+void MessageBoardTab::OnLoggedOut()
+{
 }

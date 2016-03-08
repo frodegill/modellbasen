@@ -15,6 +15,10 @@ public:
 	ProfileTab(WebApplication* app);
 	~ProfileTab();
 
+public:
+	void OnLoggedIn();
+	void OnLoggedOut();
+
 private:
 	WebApplication* m_app;
 };

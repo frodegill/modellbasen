@@ -5,6 +5,7 @@
 
 #include "query_dialogs.h"
 #include "../tab/search_tab.h"
+#include "../../defines.h"
 
 
 using namespace modellbasen;
@@ -13,16 +14,16 @@ QueryDialogs::QueryDialogs(WebApplication* app, SearchTab* search_tab)
 : Wt::WObject(),
   m_app(app),
   m_search_tab(search_tab),
-  m_int_edit(NULL),
-  m_int2_edit(NULL),
-  m_string_edit(NULL),
-  m_datetime_edit(NULL),
-  m_singleselect_box(NULL),
-  m_multiselect_box(NULL),
-  m_select_box_model(NULL),
-  m_location_gmap(NULL),
-  m_ok_button(NULL),
-  m_cancel_button(NULL)
+  m_int_edit(nullptr),
+  m_int2_edit(nullptr),
+  m_string_edit(nullptr),
+  m_datetime_edit(nullptr),
+  m_singleselect_box(nullptr),
+  m_multiselect_box(nullptr),
+  m_select_box_model(nullptr),
+  m_location_gmap(nullptr),
+  m_ok_button(nullptr),
+  m_cancel_button(nullptr)
 {
 	m_query_tag.reset();
 }

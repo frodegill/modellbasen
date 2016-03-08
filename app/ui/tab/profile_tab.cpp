@@ -19,3 +19,11 @@ ProfileTab::ProfileTab(WebApplication* app)
 ProfileTab::~ProfileTab()
 {
 }
+
+void ProfileTab::OnLoggedIn()
+{
+}
+
+void ProfileTab::OnLoggedOut()
+{
+}

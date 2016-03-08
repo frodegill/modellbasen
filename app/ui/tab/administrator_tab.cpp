@@ -4,6 +4,7 @@
 #include "administrator_tab.h"
 #include "../../application.h"
 #include "../../../storage/import_postcodes.h"
+#include "../../../storage/usermanager.h"
 #include "../../../storage/dbo/tag.h"
 
 
@@ -12,15 +13,16 @@ using namespace modellbasen;
 AdministratorTab::AdministratorTab(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
-  m_postcodes_fileupload(NULL),
-  m_import_postcodes_button(NULL),
-  m_import_progressbar(NULL)
+  m_postcodes_fileupload(nullptr),
+  m_import_postcodes_button(nullptr),
+  m_import_progressbar(nullptr)
 {
 	Wt::WVBoxLayout* tab_container_vbox = new Wt::WVBoxLayout();
 	tab_container_vbox->setContentsMargins(0, 9, 0, 0);
 	setLayout(tab_container_vbox);
 
-	if (m_app->GetUserManager()->GetCurrentUser()->HasTag(TAG_ADMINISTRATOR))
+	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
+	if (current_user && current_user->HasTag(TAG_ADMINISTRATOR))
 	{
 		m_postcodes_fileupload = new Wt::WFileUpload();
 		m_postcodes_fileupload->setMultiple(false);
@@ -74,4 +76,12 @@ bool AdministratorTab::ImportPostCodeFile(const std::string& filename)
 	bool ret = importer.Import(filename, m_app, m_import_progressbar, status_text);
 	m_import_progressbar->setFormat(status_text);
 	return ret;
+}
+
+void AdministratorTab::OnLoggedIn()
+{
+}
+
+void AdministratorTab::OnLoggedOut()
+{
 }

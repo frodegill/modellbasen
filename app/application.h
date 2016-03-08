@@ -1,16 +1,15 @@
 #ifndef _APPLICATION_H_
 #define _APPLICATION_H_
 
-#include "ui/widget/login_widget.h"
-#include "ui/widget/main_widget.h"
-#include "../storage/usermanager.h"
-
 #include <Wt/WApplication>
 #include <Wt/WEnvironment>
 
 
 namespace modellbasen
 {
+
+class MainWidget;
+class UserManager;
 
 class WebApplication : public Wt::WApplication
 {
@@ -21,8 +20,8 @@ public:
 	bool Initialize();
 
 public:
-	void ActivateLoginWidget();
-	void ActivateMainWidget();
+	void OnLoggedIn();
+	void OnLoggedOut();
 
 public:
 	void serverPush();
@@ -31,7 +30,6 @@ public:
 	UserManager*           GetUserManager() const {return m_usermanager;}
 
 private:
-	LoginWidget*           m_login_widget;
 	MainWidget*            m_main_widget;
 
 	UserManager*           m_usermanager;

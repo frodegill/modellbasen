@@ -2,11 +2,13 @@
 #include <Wt/WHBoxLayout>
 
 #include "main_widget.h"
+#include "login_widget.h"
 #include "../tab/administrator_tab.h"
 #include "../tab/messageboard_tab.h"
 #include "../tab/profile_tab.h"
 #include "../tab/search_tab.h"
 #include "../../application.h"
+#include "../../../storage/usermanager.h"
 
 
 using namespace modellbasen;
@@ -15,11 +17,11 @@ MainWidget::MainWidget(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
   m_initialized(false),
-  m_tab_widget(NULL),
-  m_profile_tab(NULL),
-  m_messageboard_tab(NULL),
-  m_search_tab(NULL),
-  m_administrator_tab(NULL)
+  m_tab_widget(nullptr),
+  m_profile_tab(nullptr),
+  m_messageboard_tab(nullptr),
+  m_search_tab(nullptr),
+  m_administrator_tab(nullptr)
 {
 }
 
@@ -34,6 +36,7 @@ void MainWidget::Initialize()
 
 	Wt::WVBoxLayout* main_vbox_layout = new Wt::WVBoxLayout();
 	main_vbox_layout->setContentsMargins(15, 15, 15, 15);
+	setLayout(main_vbox_layout);
 
 	AddHeader(main_vbox_layout);
 
@@ -45,8 +48,17 @@ void MainWidget::Initialize()
 	CreateAdministratorTab(m_tab_widget);
 	main_vbox_layout->addWidget(m_tab_widget);
 
-	//Build layout
-	setLayout(main_vbox_layout);
+	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
+	bool is_administrator = current_user && current_user->HasTag(TAG_ADMINISTRATOR);
+	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_administrator_tab), !is_administrator);
+
+	//Replace root()
+	while (0 < m_app->root()->count())
+	{
+		Wt::WWidget* widget = m_app->root()->widget(0);
+		m_app->root()->removeWidget(widget);
+	}
+	m_app->root()->addWidget(this);
 
 	m_initialized = true;
 }
@@ -66,14 +78,9 @@ void MainWidget::AddHeader(Wt::WVBoxLayout* layout)
 	appname_text->setStyleClass("modellbasen-appname");
 	header_hbox->addWidget(appname_text, 0, Wt::AlignCenter|Wt::AlignMiddle);
 
-	Wt::WContainerWidget* profile_widget = new Wt::WContainerWidget();
-	Wt::WVBoxLayout* profile_vbox = new Wt::WVBoxLayout();
-	profile_vbox->setContentsMargins(0, 0, 0, 0);
-	profile_widget->setLayout(profile_vbox);
-	Wt::WPushButton* logout_button = new Wt::WPushButton(Wt::WString::tr("LogoutButton"));
-	logout_button->clicked().connect(this, &MainWidget::LogOut);
-	profile_vbox->addWidget(logout_button);
-	header_hbox->addWidget(profile_widget, 0, Wt::AlignRight|Wt::AlignTop);
+	LoginWidget* login_widget = new LoginWidget(m_app);
+	login_widget->Initialize();
+	header_hbox->addWidget(login_widget, 0, Wt::AlignRight|Wt::AlignTop);
 
 	layout->addWidget(header_widget);
 }
@@ -102,23 +109,18 @@ void MainWidget::CreateAdministratorTab(Wt::WTabWidget* tab_widget)
 	tab_widget->addTab(m_administrator_tab, Wt::WString::tr("Tab.AdministratorTab"));
 }
 
-void MainWidget::ActivateMainWidget()
+void MainWidget::OnLoggedIn()
 {
-	if (!m_initialized)
-		Initialize();
-
-	while (0 < m_app->root()->count())
-	{
-		Wt::WWidget* widget = m_app->root()->widget(0);
-		m_app->root()->removeWidget(widget);
-	}
-	m_app->root()->addWidget(this);
-
-	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_administrator_tab), !m_app->GetUserManager()->GetCurrentUser()->HasTag(TAG_ADMINISTRATOR));
+	m_profile_tab->OnLoggedIn();
+	m_messageboard_tab->OnLoggedIn();
+	m_search_tab->OnLoggedIn();
+	m_administrator_tab->OnLoggedIn();
 }
 
-void MainWidget::LogOut()
+void MainWidget::OnLoggedOut()
 {
-	m_app->GetUserManager()->LogOut();
-	m_app->ActivateLoginWidget();
+	m_profile_tab->OnLoggedOut();
+	m_messageboard_tab->OnLoggedOut();
+	m_search_tab->OnLoggedOut();
+	m_administrator_tab->OnLoggedOut();
 }

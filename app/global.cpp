@@ -6,6 +6,7 @@
 #include "application.h"
 #include "defines.h"
 #include "global.h"
+#include "../storage/usermanager.h"
 #include "../storage/dbo/messageboard.h"
 #include "../storage/dbo/user.h"
 #include "../utils/time.h"
@@ -93,7 +94,7 @@ Wt::WApplication* createApplication(const Wt::WEnvironment& env)
 	if (!app->Initialize())
 	{
 		delete app;
-		app = NULL;
+		app = nullptr;
 	}
 	return app;
 }

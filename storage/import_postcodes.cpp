@@ -76,8 +76,8 @@ bool PostCodesImporter::Import(const std::string& filename, WebApplication* app,
 			continue; //Skip postcodes where people do not live
 		}
 
-		double latitude = strtod(values[9].c_str(), NULL);
-		double longitude = strtod(values[10].c_str(), NULL);
+		double latitude = strtod(values[9].c_str(), nullptr);
+		double longitude = strtod(values[10].c_str(), nullptr);
 		if (!StorePostCode(session_in_transaction, values[0],
 		                                           values[1],
 		                                           latitude,

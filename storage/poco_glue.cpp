@@ -6,7 +6,7 @@
 using namespace modellbasen;
 
 PocoGlue::PocoGlue()
-: m_pool(NULL)
+: m_pool(nullptr)
 {
 }
 
@@ -15,7 +15,7 @@ PocoGlue::~PocoGlue()
 	if (m_pool)
 	{
 		delete m_pool;
-		m_pool=NULL;
+		m_pool=nullptr;
 #ifdef USE_ODBC_CONNECTION
 		Poco::Data::ODBC::Connector::unregisterConnector();
 #else

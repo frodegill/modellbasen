@@ -3,13 +3,15 @@
 
 #include "usermanager.h"
 #include "dbo/tag.h"
+#include "../app/application.h"
 #include "../app/global.h"
 
 
 using namespace modellbasen;
 
-UserManager::UserManager()
-: m_current_user(NULL)
+UserManager::UserManager(WebApplication* app)
+: m_app(app),
+  m_current_user(nullptr)
 {
 }
 
@@ -51,13 +53,16 @@ bool UserManager::LogIn(const std::string& username, const std::string& password
 
 	delete m_current_user;
 	m_current_user = user;
+	
+	m_app->OnLoggedIn();
 	return true;
 }
 
 bool UserManager::LogOut()
 {
 	delete m_current_user;
-	m_current_user = NULL;
+	m_current_user = nullptr;
+	m_app->OnLoggedOut();
 	return true;
 }
 

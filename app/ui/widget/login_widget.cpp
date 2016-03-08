@@ -11,11 +11,10 @@ using namespace modellbasen;
 LoginWidget::LoginWidget(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
-  m_initialized(false),
-  m_username_edit(NULL),
-  m_password_edit(NULL),
-  m_login_button(NULL),
-  m_login_feedback_text(NULL)
+  m_username_edit(nullptr),
+  m_password_edit(nullptr),
+  m_login_button(nullptr),
+  m_login_feedback_text(nullptr)
 {
 }
 
@@ -25,9 +24,6 @@ LoginWidget::~LoginWidget()
 
 void LoginWidget::Initialize()
 {
-	if (m_initialized)
-		return;
-
 	Wt::WGridLayout* login_grid_layout = new Wt::WGridLayout();
 	login_grid_layout->setContentsMargins(50, 50, 50, 50);
 
@@ -78,10 +74,9 @@ void LoginWidget::Initialize()
 
 	//Build layout
 	setLayout(login_grid_layout);
-
-	m_initialized = true;
 }
 
+#if 0
 void LoginWidget::ActivateLoginWidget()
 {
 	if (!m_initialized)
@@ -105,6 +100,7 @@ void LoginWidget::ActivateLoginWidget()
 #endif
 	m_username_edit->setFocus();
 }
+#endif
 
 void LoginWidget::UsernameEnterPressed()
 {
@@ -160,14 +156,13 @@ void LoginWidget::RequestLogin()
 	std::string password = m_password_edit->text().toUTF8();
 
 	m_app->GetUserManager()->LogIn(username, password);
-	if (!m_app->GetUserManager()->GetCurrentUser())
+	if (!m_app->GetUserManager()->IsLoggedIn())
 	{
 		LoginFailed();
 	}
 	else
 	{
 		m_login_feedback_text->hide();
-		m_app->ActivateMainWidget();
 	}
 }
 
@@ -176,4 +171,9 @@ void LoginWidget::LoginFailed()
 	m_login_feedback_text->setText(Wt::WString::tr("InvalidUsernameOrPassword"));
 	m_login_feedback_text->show();
 	m_username_edit->setFocus();
+}
+
+void LoginWidget::LogOut()
+{
+	m_app->GetUserManager()->LogOut();
 }

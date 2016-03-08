@@ -19,7 +19,12 @@ public:
 	~MessageBoardTab();
 
 private:
+	void OnSubmitTextSubmit();
 	void OnSubmitButtonClicked(const Wt::WMouseEvent& mouse);
+
+public:
+	void OnLoggedIn();
+	void OnLoggedOut();
 
 private:
 	WebApplication*  m_app;

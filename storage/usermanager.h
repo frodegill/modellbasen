@@ -13,9 +13,11 @@ namespace modellbasen
 #define ROLE_ADMIN    "Administrator"
 
 
+class WebApplication;
+
 class UserManager {
 public:
-	UserManager();
+	UserManager(WebApplication* app);
 	~UserManager();
 
 public:
@@ -23,6 +25,8 @@ public:
 	const User* GetCurrentUser() const {return m_current_user;}
 	bool LogOut();
 
+	bool IsLoggedIn() const {return nullptr!=m_current_user;}
+	
 	bool ChangePassword(const std::string& old_password, const std::string& new_password);
 	bool AdminChangePassword(const std::string& username, const std::string& new_password);
 
@@ -30,6 +34,7 @@ public:
 	static void ComputeHash(const std::string& username, const std::string& password, std::string& hash);
 
 private:
+	WebApplication* m_app;
 	User* m_current_user;
 };
 

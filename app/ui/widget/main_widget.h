@@ -10,6 +10,10 @@
 namespace modellbasen
 {
 
+class AdministratorTab;
+class MessageBoardTab;
+class ProfileTab;
+class SearchTab;
 class WebApplication;
 
 class MainWidget : public Wt::WContainerWidget
@@ -18,8 +22,9 @@ public:
 	MainWidget(WebApplication* app);
 	~MainWidget();
 
-private:
 	void Initialize();
+
+private:
 	void AddHeader(Wt::WVBoxLayout* layout);
 	void CreateProfileTab(Wt::WTabWidget* tab_widget);
 	void CreateMessageBoardTab(Wt::WTabWidget* tab_widget);
@@ -27,9 +32,8 @@ private:
 	void CreateAdministratorTab(Wt::WTabWidget* tab_widget);
 
 public:
-	void ActivateMainWidget();
-
-	void LogOut();
+	void OnLoggedIn();
+	void OnLoggedOut();
 
 private:
 
@@ -37,11 +41,11 @@ private:
 	WebApplication* m_app;
 	bool            m_initialized;
 
-	Wt::WTabWidget*           m_tab_widget;
-	Wt::WContainerWidget*     m_profile_tab;
-	Wt::WContainerWidget*     m_messageboard_tab;
-	Wt::WContainerWidget*     m_search_tab;
-	Wt::WContainerWidget*     m_administrator_tab;
+	Wt::WTabWidget*   m_tab_widget;
+	ProfileTab*       m_profile_tab;
+	MessageBoardTab*  m_messageboard_tab;
+	SearchTab*        m_search_tab;
+	AdministratorTab* m_administrator_tab;
 };
 
 } // namespace modellbasen

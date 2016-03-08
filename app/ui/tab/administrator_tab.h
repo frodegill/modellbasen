@@ -24,6 +24,10 @@ private:
 	void OnFileTooLarge();
 	bool ImportPostCodeFile(const std::string& filename);
 
+public:
+	void OnLoggedIn();
+	void OnLoggedOut();
+
 private:
 	WebApplication* m_app;
 

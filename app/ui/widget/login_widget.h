@@ -18,11 +18,7 @@ public:
 	LoginWidget(WebApplication* app);
 	~LoginWidget();
 
-private:
 	void Initialize();
-
-public:
-	void ActivateLoginWidget();
 
 private:
 	void UsernameEnterPressed();
@@ -30,10 +26,10 @@ private:
 	void OnLoginButtonClicked(const Wt::WMouseEvent& mouse);
 	void RequestLogin();
 	void LoginFailed();
+	void LogOut();
 
 private:
 	WebApplication*  m_app;
-	bool             m_initialized;
 	Wt::WLineEdit*   m_username_edit;
 	Wt::WLineEdit*   m_password_edit;
 	Wt::WPushButton* m_login_button;

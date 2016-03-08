@@ -11,8 +11,8 @@ using namespace modellbasen;
 SearchTab::SearchTab(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
-  m_search_tags(NULL),
-  m_available_tags(NULL)
+  m_search_tags(nullptr),
+  m_available_tags(nullptr)
 {
 	m_search = new Search(m_app);
 	m_current_query_dialog.reset();
@@ -56,6 +56,14 @@ SearchTab::SearchTab(WebApplication* app)
 SearchTab::~SearchTab()
 {
 	delete m_search;
+}
+
+void SearchTab::OnLoggedIn()
+{
+}
+
+void SearchTab::OnLoggedOut()
+{
 }
 
 void SearchTab::OnQueryConfirmed()

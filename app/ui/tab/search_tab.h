@@ -26,6 +26,8 @@ public:
 	Wt::WVBoxLayout*      GetDialogLayout() const {return m_dialog_container_vbox;}
 
 public:
+	void OnLoggedIn();
+	void OnLoggedOut();
 	void OnQueryConfirmed();
 	void OnQueryCancelled();
 

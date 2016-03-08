@@ -1,14 +1,15 @@
 #include "application.h"
 #include "global.h"
+#include "ui/widget/main_widget.h"
 #include "../storage/poco_glue.h"
+#include "../storage/usermanager.h"
 
 
 using namespace modellbasen;
 
 WebApplication::WebApplication(const Wt::WEnvironment& environment)
 : Wt::WApplication(environment),
-  m_login_widget(NULL),
-  m_main_widget(NULL)
+  m_main_widget(nullptr)
 {
 	messageResourceBundle().use(appRoot() + "strings");
 	useStyleSheet(Wt::WLink("modellbasen.css"));
@@ -19,7 +20,6 @@ WebApplication::WebApplication(const Wt::WEnvironment& environment)
 
 WebApplication::~WebApplication()
 {
-	delete m_login_widget;
 	delete m_main_widget;
 
 	delete m_usermanager;
@@ -33,35 +33,29 @@ bool WebApplication::Initialize()
 	if (!DB.Initialize(Wt::WString::tr(DB_CONNECTION_STRING_KEY).toUTF8()))
 		return false;
 
-	m_usermanager = new UserManager();
+	m_usermanager = new UserManager(this);
 	if (!m_usermanager)
 		return false;
 
-	if (!m_usermanager->GetCurrentUser())
-	{
-		ActivateLoginWidget();
-	}
-	return true;
-}
-
-void WebApplication::ActivateLoginWidget()
-{
-	if (!m_login_widget)
-	{
-		m_login_widget = new LoginWidget(this);
-	}
-
-	m_login_widget->ActivateLoginWidget();
-}
-
-void WebApplication::ActivateMainWidget()
-{
 	if (!m_main_widget)
 	{
 		m_main_widget = new MainWidget(this);
 	}
+	m_main_widget->Initialize();
 
-	m_main_widget->ActivateMainWidget();
+	return true;
+}
+
+void WebApplication::OnLoggedIn()
+{
+	if (m_main_widget)
+		m_main_widget->OnLoggedIn();
+}
+
+void WebApplication::OnLoggedOut()
+{
+	if (m_main_widget)
+		m_main_widget->OnLoggedIn();
 }
 
 void WebApplication::serverPush()
