@@ -1,5 +1,6 @@
 #include "search.h"
-#include "../../app/global.h"
+
+#include "../../singleton/db.h"
 
 
 using namespace modellbasen;

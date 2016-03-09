@@ -1,9 +1,12 @@
 #include "messageboard.h"
 
-#include "../../app/global.h"
+#include "../../singleton/db.h"
+#include "../../singleton/lock.h"
+#include "../../singleton/models.h"
 #include "../../utils/time.h"
 
 #include <Wt/WStandardItem>
+#include <Wt/WString>
 
 
 using namespace modellbasen;

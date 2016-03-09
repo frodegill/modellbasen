@@ -4,7 +4,8 @@
 #include "messageboard_tab.h"
 #include "../../application.h"
 #include "../../defines.h"
-#include "../../global.h"
+#include "../../../singleton/models.h"
+#include "../../../singleton/push.h"
 
 
 using namespace modellbasen;

@@ -1,20 +1,17 @@
-#include <boost/locale.hpp>
-#include <Wt/WServer>
-#include <Wt/WStandardItem>
-#include <Wt/WString>
-
-#include "application.h"
-#include "defines.h"
-#include "global.h"
+#include "push.h"
+#include "lock.h"
+#include "models.h"
+#include "../app/application.h"
 #include "../storage/usermanager.h"
 #include "../storage/dbo/messageboard.h"
 #include "../storage/dbo/user.h"
 #include "../utils/time.h"
 
+#include <Wt/WServer>
+#include <Wt/WStandardItem>
 
-boost::mutex g_global_mutex;
+
 std::vector<ClientConnection> g_client_connections;
-
 
 ClientConnection::ClientConnection(const std::string& session_id, modellbasen::WebApplication* application, const boost::function<void()>& function)
 	: m_session_id(session_id), m_application(application), m_function(function)
@@ -65,49 +62,4 @@ bool PostMessageToBoard(const modellbasen::WebApplication* application, const st
 		Wt::WServer::instance()->post(application_connection.m_session_id, application_connection.m_function);
 	}
 	return true;
-}
-
-
-// Logging
-Wt::WLogger g_logger;
-Wt::WLogEntry Log(const std::string& type)
-{
-	return g_logger.entry(type);
-}
-
-
-// Database
-modellbasen::PocoGlue DB;
-
-
-// Global state
-Wt::WStandardItemModel g_messageboard_model;
-bool InitializePersistedGlobalResources()
-{
-	return modellbasen::MessageBoard::InitializeGlobalMessageboardList();
-}
-
-// Application
-Wt::WApplication* createApplication(const Wt::WEnvironment& env)
-{
-	modellbasen::WebApplication* app = new modellbasen::WebApplication(env);
-	if (!app->Initialize())
-	{
-		delete app;
-		app = nullptr;
-	}
-	return app;
-}
-
-int main(int argc, char** argv)
-{
-	g_logger.addField("message", true);
-	Wt::WString::setDefaultEncoding(Wt::UTF8);
-
-	// Create Norwegian locale
-	boost::locale::generator gen;
-	std::locale loc = gen("nb_NO.UTF-8"); 
-	std::locale::global(loc);
-
-	return Wt::WRun(argc, argv, &createApplication);
 }

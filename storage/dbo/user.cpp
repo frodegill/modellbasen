@@ -1,6 +1,6 @@
 #include "user.h"
 #include "../../app/defines.h"
-#include "../../app/global.h"
+#include "../../singleton/db.h"
 
 
 using namespace modellbasen;

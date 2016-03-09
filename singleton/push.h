@@ -1,18 +1,15 @@
-#ifndef _GLOBAL_H_
-#define _GLOBAL_H_
+#ifndef _SINGLETON_PUSH_H_
+#define _SINGLETON_PUSH_H_
 
-#include "../storage/poco_glue.h"
-#include <boost/thread/mutex.hpp>
-#include <Wt/WApplication>
-#include <Wt/WStandardItemModel>
+#include <boost/function.hpp>
+#include <string>
+#include <vector>
 
 
 namespace modellbasen
 {
 class WebApplication;
 };
-
-extern boost::mutex g_global_mutex;
 
 struct ClientConnection {
 	ClientConnection(const std::string& session_id, modellbasen::WebApplication* application, const boost::function<void()>& function);
@@ -26,20 +23,4 @@ void connect(modellbasen::WebApplication* application, const boost::function<voi
 void disconnect(modellbasen::WebApplication* application);
 bool PostMessageToBoard(const modellbasen::WebApplication* application, const std::string& message);
 
-
-// Logging
-extern Wt::WLogger g_logger;
-Wt::WLogEntry Log(const std::string& type);
-
-// Database
-extern modellbasen::PocoGlue DB;
-
-// Global state
-extern Wt::WStandardItemModel g_messageboard_model;
-bool InitializePersistedGlobalResources();
-
-// Application
-Wt::WApplication* createApplication(const Wt::WEnvironment& env);
-int main(int argc, char** argv);
-
-#endif // _GLOBAL_H_
+#endif // _SINGLETON_PUSH_H_

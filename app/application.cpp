@@ -1,8 +1,10 @@
 #include "application.h"
-#include "global.h"
 #include "ui/widget/main_widget.h"
 #include "../storage/poco_glue.h"
 #include "../storage/usermanager.h"
+#include "../singleton/db.h"
+#include "../singleton/lock.h"
+#include "../singleton/push.h"
 
 
 using namespace modellbasen;

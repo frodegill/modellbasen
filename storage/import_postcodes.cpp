@@ -5,7 +5,7 @@
 #include "import_postcodes.h"
 #include "dbo/postcode.h"
 #include "../app/defines.h"
-#include "../app/global.h"
+#include "../singleton/db.h"
 
 
 #define FILEBUFFER_SIZE (10*1024)

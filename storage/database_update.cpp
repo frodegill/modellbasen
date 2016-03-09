@@ -1,5 +1,6 @@
 #include "database_update.h"
-#include "../app/global.h"
+
+#include "../singleton/logging.h"
 
 
 using namespace modellbasen;

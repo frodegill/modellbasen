@@ -3,7 +3,7 @@
 
 #include "searchinstance.h"
 #include "tagvalue.h"
-#include "../../app/global.h"
+#include "../../singleton/logging.h"
 
 
 using namespace modellbasen;

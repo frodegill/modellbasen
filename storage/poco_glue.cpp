@@ -1,6 +1,8 @@
-#include "database_update.h"
 #include "poco_glue.h"
-#include "../app/global.h"
+#include "database_update.h"
+#include "../singleton/db.h"
+#include "../singleton/logging.h"
+#include "../singleton/models.h"
 
 
 using namespace modellbasen;

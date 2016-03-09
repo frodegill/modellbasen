@@ -4,7 +4,7 @@
 #include "usermanager.h"
 #include "dbo/tag.h"
 #include "../app/application.h"
-#include "../app/global.h"
+#include "../singleton/db.h"
 
 
 using namespace modellbasen;
