@@ -33,6 +33,8 @@ private:
 	Wt::WLineEdit*   m_username_edit;
 	Wt::WLineEdit*   m_password_edit;
 	Wt::WPushButton* m_login_button;
+	Wt::WAnchor*     m_register_profile_anchor;
+	Wt::WAnchor*     m_forgot_password_anchor;
 	Wt::WText*       m_login_feedback_text;
 };
 

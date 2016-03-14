@@ -20,6 +20,8 @@ public:
 	bool Initialize();
 
 public:
+	void onInternalPathChange(const std::string& url);
+
 	void OnLoggedIn();
 	void OnLoggedOut();
 

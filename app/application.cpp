@@ -16,6 +16,7 @@ WebApplication::WebApplication(const Wt::WEnvironment& environment)
 	messageResourceBundle().use(appRoot() + "strings");
 	useStyleSheet(Wt::WLink("modellbasen.css"));
 	setTitle(Wt::WString::tr("AppName"));
+	internalPathChanged().connect(this, &WebApplication::onInternalPathChange);
 	enableUpdates(true);
 	::connect(this, boost::bind(&WebApplication::serverPush, this));
 }
@@ -46,6 +47,17 @@ bool WebApplication::Initialize()
 	m_main_widget->Initialize();
 
 	return true;
+}
+
+void WebApplication::onInternalPathChange(const std::string& url)
+{
+	if (EQUAL == url.compare(Wt::WString("RegisterProfileInternalLink").toUTF8()))
+	{
+	}
+	else if (EQUAL == url.compare(Wt::WString("ForgotPasswordInternalLink").toUTF8()))
+	{
+	}
+	setInternalPath("/");
 }
 
 void WebApplication::OnLoggedIn()

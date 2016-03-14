@@ -34,6 +34,8 @@
 	<message id="Password">Password</message>
 	<message id="LoginButton">Log in</message>
 	<message id="LogoutButton">Log out</message>
+	<message id="RegisterProfile">Register profile</message>
+	<message id="ForgotPassword">Forgot password</message>
 	<message id="ProfileButton">Profile</message>
 	<message id="Ok">Ok</message>
 	<message id="Cancel">Cancel</message>

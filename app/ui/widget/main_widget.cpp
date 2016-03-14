@@ -35,7 +35,7 @@ void MainWidget::Initialize()
 		return;
 
 	Wt::WVBoxLayout* main_vbox_layout = new Wt::WVBoxLayout();
-	main_vbox_layout->setContentsMargins(15, 15, 15, 15);
+	main_vbox_layout->setContentsMargins(0, 0, 0, 0);
 	setLayout(main_vbox_layout);
 
 	AddHeader(main_vbox_layout);

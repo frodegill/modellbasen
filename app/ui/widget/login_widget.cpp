@@ -14,6 +14,8 @@ LoginWidget::LoginWidget(WebApplication* app)
   m_username_edit(nullptr),
   m_password_edit(nullptr),
   m_login_button(nullptr),
+  m_register_profile_anchor(nullptr),
+  m_forgot_password_anchor(nullptr),
   m_login_feedback_text(nullptr)
 {
 }
@@ -25,52 +27,46 @@ LoginWidget::~LoginWidget()
 void LoginWidget::Initialize()
 {
 	Wt::WGridLayout* login_grid_layout = new Wt::WGridLayout();
-	login_grid_layout->setContentsMargins(50, 50, 50, 50);
+	login_grid_layout->setContentsMargins(0, 0, 0, 0);
 
 	//Create username widget
 	login_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Username")), 0, 0, Wt::AlignRight);
-	if (!m_username_edit)
-	{
-		m_username_edit = new Wt::WLineEdit();
-		m_username_edit->setObjectName("username");
-		m_username_edit->setAutoComplete(true);
-		m_username_edit->setTextSize(20);
-		m_username_edit->setWidth(Wt::WLength(20, Wt::WLength::FontEm));
-		m_username_edit->enterPressed().connect(this, &LoginWidget::UsernameEnterPressed);
-	}
+
+	m_username_edit = new Wt::WLineEdit();
+	m_username_edit->setObjectName("username");
+	m_username_edit->setAutoComplete(true);
+	m_username_edit->setTextSize(8);
+	m_username_edit->enterPressed().connect(this, &LoginWidget::UsernameEnterPressed);
 	login_grid_layout->addWidget(m_username_edit, 0, 1, Wt::AlignLeft);
 
 	//Create password widget
-	login_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Password")), 1, 0, Wt::AlignRight);
-	if (!m_password_edit)
-	{
-		m_password_edit = new Wt::WLineEdit();
-		m_username_edit->setObjectName("password");
-		m_username_edit->setAutoComplete(true);
-		m_password_edit->setTextSize(20);
-		m_password_edit->setWidth(Wt::WLength(20, Wt::WLength::FontEm));
-		m_password_edit->setEchoMode(Wt::WLineEdit::Password);
-		m_password_edit->enterPressed().connect(this, &LoginWidget::PasswordEnterPressed);
-	}
+	login_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Password")), 0, 2, Wt::AlignRight);
+
+	m_password_edit = new Wt::WLineEdit();
+	m_username_edit->setObjectName("password");
+	m_username_edit->setAutoComplete(true);
+	m_password_edit->setTextSize(8);
+	m_password_edit->setEchoMode(Wt::WLineEdit::Password);
+	m_password_edit->enterPressed().connect(this, &LoginWidget::PasswordEnterPressed);
 	m_password_edit->setText("");
-	login_grid_layout->addWidget(m_password_edit, 1, 1, Wt::AlignLeft);
+	login_grid_layout->addWidget(m_password_edit, 0, 3, Wt::AlignLeft);
 
 	//Create login button
-	if (!m_login_button)
-	{
-		m_login_button = new Wt::WPushButton(Wt::WString::tr("LoginButton"));
-		m_login_button->clicked().connect(this, &LoginWidget::OnLoginButtonClicked);
-	}
-	login_grid_layout->addWidget(m_login_button, 2, 1, Wt::AlignLeft);
+	m_login_button = new Wt::WPushButton(Wt::WString::tr("LoginButton"));
+	m_login_button->clicked().connect(this, &LoginWidget::OnLoginButtonClicked);
+	login_grid_layout->addWidget(m_login_button, 0, 4, 2, 1, Wt::AlignLeft);
+
+	m_register_profile_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString::tr("RegisterProfileInternalLink").toUTF8()), Wt::WString::tr("RegisterProfile"));
+	login_grid_layout->addWidget(m_register_profile_anchor, 1, 0, 1, 2, Wt::AlignLeft);
+
+	m_forgot_password_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString("ForgotPasswordInternalLink").toUTF8()), Wt::WString::tr("ForgotPassword"));
+	login_grid_layout->addWidget(m_forgot_password_anchor, 1, 2, 1, 2, Wt::AlignRight);
 
 	//Create login feedback text
-	if (!m_login_feedback_text)
-	{
-		m_login_feedback_text = new Wt::WText();
-		m_login_feedback_text->setWidth(Wt::WLength(20, Wt::WLength::FontEm));
-	}
+	m_login_feedback_text = new Wt::WText();
+	m_login_feedback_text->setWidth(Wt::WLength(20, Wt::WLength::FontEm));
 	m_login_feedback_text->hide();
-	login_grid_layout->addWidget(m_login_feedback_text, 3, 1, Wt::AlignLeft);
+	login_grid_layout->addWidget(m_login_feedback_text, 2, 0, 1, 5, Wt::AlignLeft);
 
 	//Build layout
 	setLayout(login_grid_layout);
