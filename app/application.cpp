@@ -11,7 +11,8 @@ using namespace modellbasen;
 
 WebApplication::WebApplication(const Wt::WEnvironment& environment)
 : Wt::WApplication(environment),
-  m_main_widget(nullptr)
+  m_main_widget(nullptr),
+  m_usermanager(nullptr)
 {
 	messageResourceBundle().use(appRoot() + "strings");
 	useStyleSheet(Wt::WLink("modellbasen.css"));
@@ -23,12 +24,12 @@ WebApplication::WebApplication(const Wt::WEnvironment& environment)
 
 WebApplication::~WebApplication()
 {
+	enableUpdates(false);
+	::disconnect(this);
+
 	delete m_main_widget;
 
 	delete m_usermanager;
-
-	::disconnect(this);
-	enableUpdates(false);
 }
 
 bool WebApplication::Initialize()
@@ -40,10 +41,10 @@ bool WebApplication::Initialize()
 	if (!m_usermanager)
 		return false;
 
+	m_main_widget = new MainWidget(this);
 	if (!m_main_widget)
-	{
-		m_main_widget = new MainWidget(this);
-	}
+		return false;
+
 	m_main_widget->Initialize();
 
 	return true;

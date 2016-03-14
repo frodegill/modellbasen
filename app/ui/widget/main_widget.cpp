@@ -75,12 +75,15 @@ void MainWidget::AddHeader(Wt::WVBoxLayout* layout)
 	header_hbox->addWidget(logo, 0, Wt::AlignLeft|Wt::AlignTop);
 
 	Wt::WText* appname_text = new Wt::WText(Wt::WString::tr("AppName"));
-	appname_text->setStyleClass("modellbasen-appname");
+	appname_text->setStyleClass("appname");
 	header_hbox->addWidget(appname_text, 0, Wt::AlignCenter|Wt::AlignMiddle);
 
 	LoginWidget* login_widget = new LoginWidget(m_app);
-	login_widget->Initialize();
-	header_hbox->addWidget(login_widget, 0, Wt::AlignRight|Wt::AlignTop);
+	if (login_widget)
+	{
+		login_widget->Initialize();
+		header_hbox->addWidget(login_widget, 0, Wt::AlignRight|Wt::AlignTop);
+	}
 
 	layout->addWidget(header_widget);
 }

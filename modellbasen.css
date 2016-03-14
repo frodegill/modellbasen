@@ -1,5 +1,5 @@
-modellbasen-appname {
-  font-size: 32pt !important;
+.appname {
+  font-size: 24px !important;
 }
 
 * {
