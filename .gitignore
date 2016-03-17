@@ -9,9 +9,10 @@
 
 # Executables
 modellbasen
-*.exe
 *.out
-*.app
+
+postnummer.csv
+resources
 
 .kdev4
 *.kdev4
