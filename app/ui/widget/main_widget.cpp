@@ -48,10 +48,6 @@ void MainWidget::Initialize()
 	CreateAdministratorTab(m_tab_widget);
 	main_vbox_layout->addWidget(m_tab_widget);
 
-	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
-	bool is_administrator = current_user && current_user->HasTag(TAG_ADMINISTRATOR);
-	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_administrator_tab), !is_administrator);
-
 	//Replace root()
 	while (0 < m_app->root()->count())
 	{
@@ -60,6 +56,7 @@ void MainWidget::Initialize()
 	}
 	m_app->root()->addWidget(this);
 
+	UpdateTabVisibility();
 	m_initialized = true;
 }
 
@@ -112,16 +109,28 @@ void MainWidget::CreateAdministratorTab(Wt::WTabWidget* tab_widget)
 	tab_widget->addTab(m_administrator_tab, Wt::WString::tr("Tab.AdministratorTab"));
 }
 
+void MainWidget::UpdateTabVisibility()
+{
+	bool is_logged_in = m_app->GetUserManager()->IsLoggedIn();
+	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
+	bool is_administrator = current_user && current_user->HasTag(TAG_ADMINISTRATOR);
+	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_profile_tab), !is_logged_in);
+	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_administrator_tab), !is_administrator);
+
+}
+
 void MainWidget::OnLoggedIn()
 {
 	m_profile_tab->OnLoggedIn();
 	m_messageboard_tab->OnLoggedIn();
 	m_search_tab->OnLoggedIn();
 	m_administrator_tab->OnLoggedIn();
+	UpdateTabVisibility();
 }
 
 void MainWidget::OnLoggedOut()
 {
+	UpdateTabVisibility();
 	m_profile_tab->OnLoggedOut();
 	m_messageboard_tab->OnLoggedOut();
 	m_search_tab->OnLoggedOut();

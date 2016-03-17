@@ -30,12 +30,11 @@ private:
 	void CreateMessageBoardTab(Wt::WTabWidget* tab_widget);
 	void CreateSearchTab(Wt::WTabWidget* tab_widget);
 	void CreateAdministratorTab(Wt::WTabWidget* tab_widget);
+	void UpdateTabVisibility();
 
 public:
 	void OnLoggedIn();
 	void OnLoggedOut();
-
-private:
 
 private:
 	WebApplication* m_app;
