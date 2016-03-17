@@ -1,4 +1,5 @@
 #include <Wt/WGridLayout>
+#include <Wt/WHBoxLayout>
 
 #include "login_widget.h"
 #include "../../application.h"
@@ -11,12 +12,15 @@ using namespace modellbasen;
 LoginWidget::LoginWidget(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
+	m_not_logged_in_container(nullptr),
+	m_logged_in_container(nullptr),
   m_username_edit(nullptr),
   m_password_edit(nullptr),
   m_login_button(nullptr),
   m_register_profile_anchor(nullptr),
   m_forgot_password_anchor(nullptr),
-  m_login_feedback_text(nullptr)
+  m_login_feedback_text(nullptr),
+  m_logout_button(nullptr)
 {
 }
 
@@ -26,8 +30,29 @@ LoginWidget::~LoginWidget()
 
 void LoginWidget::Initialize()
 {
+	Wt::WHBoxLayout* login_hbox_layout = new Wt::WHBoxLayout();
+	login_hbox_layout->setContentsMargins(0, 0, 0, 0);
+	setLayout(login_hbox_layout);
+
+	InitializeNotLoggedInContainer();
+	InitializeLoggedInContainer();
+
+	login_hbox_layout->addWidget(m_not_logged_in_container);
+	login_hbox_layout->addWidget(m_logged_in_container);
+
+	m_not_logged_in_container->show();
+	m_logged_in_container->hide();
+
+	//Set focus
+	m_username_edit->setFocus();
+}
+
+void LoginWidget::InitializeNotLoggedInContainer()
+{
+	m_not_logged_in_container = new Wt::WContainerWidget();
 	Wt::WGridLayout* login_grid_layout = new Wt::WGridLayout();
 	login_grid_layout->setContentsMargins(0, 0, 0, 0);
+	m_not_logged_in_container->setLayout(login_grid_layout);
 
 	//Create username widget
 	login_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Username")), 0, 0, Wt::AlignRight);
@@ -54,13 +79,13 @@ void LoginWidget::Initialize()
 	//Create login button
 	m_login_button = new Wt::WPushButton(Wt::WString::tr("LoginButton"));
 	m_login_button->clicked().connect(this, &LoginWidget::OnLoginButtonClicked);
-	login_grid_layout->addWidget(m_login_button, 0, 4, 2, 1, Wt::AlignLeft);
+	login_grid_layout->addWidget(m_login_button, 0, 4, Wt::AlignLeft);
 
 	m_register_profile_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString::tr("RegisterProfileInternalLink").toUTF8()), Wt::WString::tr("RegisterProfile"));
-	login_grid_layout->addWidget(m_register_profile_anchor, 1, 0, 1, 2, Wt::AlignLeft);
+	login_grid_layout->addWidget(m_register_profile_anchor, 1, 0, 1, 2);
 
 	m_forgot_password_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString("ForgotPasswordInternalLink").toUTF8()), Wt::WString::tr("ForgotPassword"));
-	login_grid_layout->addWidget(m_forgot_password_anchor, 1, 2, 1, 2, Wt::AlignRight);
+	login_grid_layout->addWidget(m_forgot_password_anchor, 1, 2, 1, 3);
 
 	//Create login feedback text
 	m_login_feedback_text = new Wt::WText();
@@ -68,25 +93,6 @@ void LoginWidget::Initialize()
 	m_login_feedback_text->hide();
 	login_grid_layout->addWidget(m_login_feedback_text, 2, 0, 1, 5, Wt::AlignLeft);
 
-	//Build layout
-	setLayout(login_grid_layout);
-}
-
-#if 0
-void LoginWidget::ActivateLoginWidget()
-{
-	if (!m_initialized)
-		Initialize();
-
-	while (0 < m_app->root()->count())
-	{
-		Wt::WWidget* widget = m_app->root()->widget(0);
-		m_app->root()->removeWidget(widget);
-	}
-
-	m_app->root()->addWidget(this);
-
-	//Set focus
 #ifdef DEBUG
 	m_username_edit->setText("admin");
 	m_password_edit->setText("admin");
@@ -94,9 +100,22 @@ void LoginWidget::ActivateLoginWidget()
 	m_username_edit->setText("");
 	m_password_edit->setText("");
 #endif
+	//Set focus
 	m_username_edit->setFocus();
 }
-#endif
+
+void LoginWidget::InitializeLoggedInContainer()
+{
+	m_logged_in_container = new Wt::WContainerWidget();
+	Wt::WGridLayout* logout_grid_layout = new Wt::WGridLayout();
+	logout_grid_layout->setContentsMargins(0, 0, 0, 0);
+	m_logged_in_container->setLayout(logout_grid_layout);
+
+	//Create logout button
+	m_logout_button = new Wt::WPushButton(Wt::WString::tr("LogoutButton"));
+	m_logout_button->clicked().connect(this, &LoginWidget::OnLogoutButtonClicked);
+	logout_grid_layout->addWidget(m_logout_button, 0, 0, Wt::AlignLeft);
+}
 
 void LoginWidget::UsernameEnterPressed()
 {
@@ -146,6 +165,11 @@ void LoginWidget::OnLoginButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 	}
 }
 
+void LoginWidget::OnLogoutButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
+{
+	LogOut();
+}
+
 void LoginWidget::RequestLogin()
 {
 	std::string username = m_username_edit->text().toUTF8();
@@ -159,6 +183,8 @@ void LoginWidget::RequestLogin()
 	else
 	{
 		m_login_feedback_text->hide();
+		m_not_logged_in_container->hide();
+		m_logged_in_container->show();
 	}
 }
 
@@ -171,5 +197,9 @@ void LoginWidget::LoginFailed()
 
 void LoginWidget::LogOut()
 {
-	m_app->GetUserManager()->LogOut();
+	if (m_app->GetUserManager()->LogOut())
+	{
+		m_not_logged_in_container->show();
+		m_logged_in_container->hide();
+	}
 }
