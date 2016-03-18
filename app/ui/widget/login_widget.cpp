@@ -81,10 +81,10 @@ void LoginWidget::InitializeNotLoggedInContainer()
 	m_login_button->clicked().connect(this, &LoginWidget::OnLoginButtonClicked);
 	login_grid_layout->addWidget(m_login_button, 0, 4, Wt::AlignLeft);
 
-	m_register_profile_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString::tr("RegisterProfileInternalLink").toUTF8()), Wt::WString::tr("RegisterProfile"));
+	m_register_profile_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString("/RegisterProfileInternalLink").toUTF8()), Wt::WString::tr("RegisterProfile"));
 	login_grid_layout->addWidget(m_register_profile_anchor, 1, 0, 1, 2);
 
-	m_forgot_password_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString("ForgotPasswordInternalLink").toUTF8()), Wt::WString::tr("ForgotPassword"));
+	m_forgot_password_anchor = new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, Wt::WString("/ForgotPasswordInternalLink").toUTF8()), Wt::WString::tr("ForgotPassword"));
 	login_grid_layout->addWidget(m_forgot_password_anchor, 1, 2, 1, 3);
 
 	//Create login feedback text

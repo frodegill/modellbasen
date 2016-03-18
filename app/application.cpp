@@ -52,10 +52,11 @@ bool WebApplication::Initialize()
 
 void WebApplication::onInternalPathChange(const std::string& url)
 {
-	if (EQUAL == url.compare(Wt::WString("RegisterProfileInternalLink").toUTF8()))
+	if (EQUAL == url.compare(Wt::WString("/RegisterProfileInternalLink").toUTF8()))
 	{
+		m_main_widget->ActivateTab(MainWidget::REGISTER_PROFILE);
 	}
-	else if (EQUAL == url.compare(Wt::WString("ForgotPasswordInternalLink").toUTF8()))
+	else if (EQUAL == url.compare(Wt::WString("/ForgotPasswordInternalLink").toUTF8()))
 	{
 	}
 	setInternalPath("/");
