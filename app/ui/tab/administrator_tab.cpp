@@ -21,21 +21,20 @@ AdministratorTab::AdministratorTab(WebApplication* app)
 	tab_container_vbox->setContentsMargins(0, 9, 0, 0);
 	setLayout(tab_container_vbox);
 
-	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
-	if (current_user && current_user->HasTag(TAG_ADMINISTRATOR))
-	{
-		m_postcodes_fileupload = new Wt::WFileUpload();
-		m_postcodes_fileupload->setMultiple(false);
-		m_postcodes_fileupload->setFileTextSize(MAX_UPLOAD_SIZE);
-		m_postcodes_fileupload->setMargin(10, Wt::Right);
-		m_import_progressbar = new Wt::WProgressBar();
-		m_postcodes_fileupload->setProgressBar(m_import_progressbar);
-		tab_container_vbox->addWidget(m_postcodes_fileupload);
+	m_postcodes_fileupload = new Wt::WFileUpload();
+	m_postcodes_fileupload->setMultiple(false);
+	m_postcodes_fileupload->setFileTextSize(MAX_UPLOAD_SIZE);
+	m_postcodes_fileupload->setMargin(10, Wt::Right);
+	m_import_progressbar = new Wt::WProgressBar();
+	m_postcodes_fileupload->setProgressBar(m_import_progressbar);
+	tab_container_vbox->addWidget(m_postcodes_fileupload);
 
-		m_import_postcodes_button = new Wt::WPushButton(Wt::WString::tr("Import.PostCodes"));
-		m_import_postcodes_button->clicked().connect(this, &AdministratorTab::OnImportButtonClicked);
-		tab_container_vbox->addWidget(m_import_postcodes_button);
-	}
+	m_import_postcodes_button = new Wt::WPushButton(Wt::WString::tr("Import.PostCodes"));
+	m_import_postcodes_button->clicked().connect(this, &AdministratorTab::OnImportButtonClicked);
+	tab_container_vbox->addWidget(m_import_postcodes_button);
+
+	m_postcodes_fileupload->hide();
+	m_import_postcodes_button->hide();
 }
 
 AdministratorTab::~AdministratorTab()
@@ -80,8 +79,14 @@ bool AdministratorTab::ImportPostCodeFile(const std::string& filename)
 
 void AdministratorTab::OnLoggedIn()
 {
+	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
+	bool is_administrator = (current_user && current_user->HasTag(TAG_ADMINISTRATOR));
+	m_postcodes_fileupload->setHidden(!is_administrator);
+	m_import_postcodes_button->setHidden(!is_administrator);
 }
 
 void AdministratorTab::OnLoggedOut()
 {
+	m_postcodes_fileupload->hide();
+	m_import_postcodes_button->hide();
 }
