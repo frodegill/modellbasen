@@ -6,6 +6,7 @@ namespace modellbasen
 {
 
 //Forward-declare
+class Banner;
 class Event;
 class EventParticipant;
 class Message;
