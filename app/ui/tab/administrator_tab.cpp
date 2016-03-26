@@ -1,5 +1,6 @@
 #include <Wt/WHBoxLayout>
 #include <Wt/WVBoxLayout>
+#include <Wt/WMessageBox>
 
 #include "administrator_tab.h"
 #include "../../application.h"
@@ -73,7 +74,9 @@ bool AdministratorTab::ImportPostCodeFile(const std::string& filename)
 	Wt::WString status_text;
 	PostCodesImporter importer;
 	bool ret = importer.Import(filename, m_app, m_import_progressbar, status_text);
-	m_import_progressbar->setFormat(status_text);
+	m_postcodes_fileupload->hide();
+	m_import_postcodes_button->hide();
+	Wt::WMessageBox::show("Importer", status_text, Wt::Ok); 
 	return ret;
 }
 
