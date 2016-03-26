@@ -54,8 +54,8 @@
 	<message id="Tab.AdministratorTab">Administrator</message>
 
 	<message id="Widget.SubmitButton">Submit</message>
-	<message id="Widget.SearchTags">Search tags</message>
-	<message id="Widget.AvailableTags">Available tags</message>
+	<message id="Widget.SearchTags">Search tags (click to invert/remove)</message>
+	<message id="Widget.AvailableTags">Available tags (click to add)</message>
 	
 	<message id="tag.administrator">Is Administrator</message>
 	<message id="tag.name">Name</message>

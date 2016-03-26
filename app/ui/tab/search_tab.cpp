@@ -11,6 +11,7 @@ using namespace modellbasen;
 SearchTab::SearchTab(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
+  m_dialog_container(nullptr),
   m_search_tags(nullptr),
   m_available_tags(nullptr)
 {
@@ -36,7 +37,7 @@ SearchTab::SearchTab(WebApplication* app)
 	m_results_container = CreateResultsContainer();
 	page_container_grid->addWidget(m_results_container, 0, 1, Wt::AlignJustify);
 
-	tab_container_vbox->addWidget(m_page_container);
+	tab_container_vbox->addWidget(m_page_container, 1, Wt::AlignJustify);
 
 	/*
 	 * Dialog hack
@@ -170,12 +171,10 @@ Wt::WContainerWidget* SearchTab::CreateTagsContainer()
 	tags_container->setLayout(tags_container_vbox);
 
 	m_search_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.SearchTags"));
-	m_search_tags->setMaximumSize(Wt::WLength::Auto, Wt::WLength(50.0, Wt::WLength::Percentage));
-	tags_container_vbox->addWidget(m_search_tags, 1);
+	tags_container_vbox->addWidget(m_search_tags);
 
 	m_available_tags = new Wt::WGroupBox(Wt::WString::tr("Widget.AvailableTags"));
-	m_available_tags->setMaximumSize(Wt::WLength::Auto, Wt::WLength(50.0, Wt::WLength::Percentage));
-	tags_container_vbox->addWidget(m_available_tags, 1);
+	tags_container_vbox->addWidget(m_available_tags);
 	
 	PopulateTagsContainers();
 
