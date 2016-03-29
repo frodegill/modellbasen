@@ -219,6 +219,7 @@ bool QueryDialogs::AddIntControls(Wt::WVBoxLayout* layout, const Wt::WString& ti
 	m_int_edit = new Wt::WLineEdit();
 	m_int_edit->setTextSize(10);
 	m_int_edit->setInputMask("000000009");
+	m_int_edit->enterPressed().connect(this, &QueryDialogs::LastControlEnterPressed);
 	grid_layout->addWidget(m_int_edit, 1, 1, Wt::AlignLeft);
 
 	layout->addWidget(controls_container);
@@ -239,6 +240,7 @@ bool QueryDialogs::AddStringControls(Wt::WVBoxLayout* layout, const Wt::WString&
 	m_string_edit = new Wt::WLineEdit();
 	m_string_edit->setTextSize(25);
 	m_string_edit->setMaxLength(255);
+	m_string_edit->enterPressed().connect(this, &QueryDialogs::LastControlEnterPressed);
 	grid_layout->addWidget(m_string_edit, 1, 1, Wt::AlignLeft);
 
 	layout->addWidget(controls_container);
@@ -282,6 +284,7 @@ bool QueryDialogs::AddSingleSelectControls(Wt::WVBoxLayout* layout, const Wt::WS
 	m_select_box_model = new Wt::WStringListModel();
 	m_singleselect_box->setModel(m_select_box_model);
 	m_singleselect_box->setMinimumSize(Wt::WLength(10.0, Wt::WLength::FontEm), Wt::WLength::Auto);
+	m_singleselect_box->enterPressed().connect(this, &QueryDialogs::LastControlEnterPressed);
 
 	PopulateSelectModel(tag_values);
 
@@ -313,6 +316,7 @@ bool QueryDialogs::AddMultiSelectControls(Wt::WVBoxLayout* layout, const Wt::WSt
 	m_multiselect_box->setSelectionMode(Wt::ExtendedSelection);
 	m_multiselect_box->setVerticalSize(MIN(10, tag_values.size()));
 	m_multiselect_box->setMinimumSize(Wt::WLength(10.0, Wt::WLength::FontEm), Wt::WLength::Auto);
+	m_multiselect_box->enterPressed().connect(this, &QueryDialogs::LastControlEnterPressed);
 
 	PopulateSelectModel(tag_values);
 
@@ -334,10 +338,12 @@ bool QueryDialogs::AddIntIntControls(Wt::WVBoxLayout* layout, const Wt::WString&
 
 	grid_layout->addWidget(new Wt::WText(label1), 1, 0, Wt::AlignRight);
 	m_int_edit = new Wt::WLineEdit();
+	m_int_edit->enterPressed().connect(this, &QueryDialogs::FirstControlEnterPressed);
 	grid_layout->addWidget(m_int_edit, 1, 1, Wt::AlignLeft);
 
 	grid_layout->addWidget(new Wt::WText(label2), 2, 0, Wt::AlignRight);
 	m_int2_edit = new Wt::WLineEdit();
+	m_int2_edit->enterPressed().connect(this, &QueryDialogs::LastControlEnterPressed);
 	grid_layout->addWidget(m_int2_edit, 2, 1, Wt::AlignLeft);
 
 	layout->addWidget(controls_container);
@@ -363,6 +369,7 @@ bool QueryDialogs::AddDistanceControls(Wt::WVBoxLayout* layout, const Wt::WStrin
 	
 	vbox_layout->addWidget(new Wt::WText(distance_label), Wt::AlignCenter);
 	m_int_edit = new Wt::WLineEdit();
+	m_int_edit->enterPressed().connect(this, &QueryDialogs::LastControlEnterPressed);
 	vbox_layout->addWidget(m_int_edit, Wt::AlignLeft);
 
 	layout->addWidget(controls_container);
@@ -387,6 +394,26 @@ bool QueryDialogs::AppendCommonControls(Wt::WVBoxLayout* layout)
 
 	layout->addWidget(buttons_container, 0, Wt::AlignCenter);
 	return true;
+}
+
+void QueryDialogs::FirstControlEnterPressed()
+{
+	Tag::TagDataType query_datatype = m_query_tag->GetQueryDataType();
+	switch(query_datatype)
+	{
+		case Tag::HEIGHT_RANGE:
+		case Tag::DAY_RANGE:
+		case Tag::AGE_RANGE:
+		{
+			m_int2_edit->setFocus();
+		}
+		default: break;
+	}
+}
+
+void QueryDialogs::LastControlEnterPressed()
+{
+	OnOK();
 }
 
 void QueryDialogs::OnOK()

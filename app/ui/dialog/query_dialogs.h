@@ -53,6 +53,9 @@ private:
 
 	bool AppendCommonControls(Wt::WVBoxLayout* layout);
 
+	void FirstControlEnterPressed();
+	void LastControlEnterPressed();
+
 	void OnOK();
 	void OnCancel();
 
