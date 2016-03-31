@@ -1,7 +1,21 @@
 .appname {
-  font-size: 24px !important;
+  font-size: 24px;
 }
 
 * {
-  font-size: 16px !important;
+  font-size: 16px;
+}
+
+.banner {
+	background: red;
+	border: 1px solid yellow;
+}
+.banner a, .banner a:link, .banner a:visited {
+ color: white;
+}
+.banner a:hover, .banner a:link:hover, .banner a:visited:hover {
+ color: gray;
+}
+.banner button {
+  font-size: 10px;
 }

@@ -29,6 +29,7 @@ public:
 
 private:
 	void AddHeader(Wt::WVBoxLayout* layout);
+	void AddBanner(Wt::WVBoxLayout* layout);
 	void CreateProfileTab(Wt::WTabWidget* tab_widget);
 	void CreateRegisterProfileTab(Wt::WTabWidget* tab_widget);
 	void CreateMessageBoardTab(Wt::WTabWidget* tab_widget);
@@ -41,10 +42,13 @@ public:
 	void OnLoggedIn();
 	void OnLoggedOut();
 	void OnRegisterNewProfile();
+	void OnCloseBannerButtonClicked();
 
 private:
 	WebApplication* m_app;
 	bool            m_initialized;
+
+	Wt::WContainerWidget* m_banner_widget;
 
 	Wt::WTabWidget*     m_tab_widget;
 	ProfileTab*         m_profile_tab;

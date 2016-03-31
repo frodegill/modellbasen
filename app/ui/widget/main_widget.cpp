@@ -9,6 +9,7 @@
 #include "../tab/register_profile_tab.h"
 #include "../tab/search_tab.h"
 #include "../../application.h"
+#include "../../../storage/dbo/banner.h"
 #include "../../../storage/usermanager.h"
 
 
@@ -18,6 +19,7 @@ MainWidget::MainWidget(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
   m_initialized(false),
+  m_banner_widget(nullptr),
   m_tab_widget(nullptr),
   m_profile_tab(nullptr),
   m_register_profile_tab(nullptr),
@@ -41,6 +43,8 @@ void MainWidget::Initialize()
 	setLayout(main_vbox_layout);
 
 	AddHeader(main_vbox_layout);
+
+	AddBanner(main_vbox_layout);
 
 	//Tabs
 	m_tab_widget = new Wt::WTabWidget();
@@ -86,6 +90,30 @@ void MainWidget::AddHeader(Wt::WVBoxLayout* layout)
 	}
 
 	layout->addWidget(header_widget);
+}
+
+void MainWidget::AddBanner(Wt::WVBoxLayout* layout)
+{
+	Banner banner;
+	if (Banner::GetDisplayBanner(banner) && !banner.GetText().empty())
+	{
+		m_banner_widget = new Wt::WContainerWidget();
+		Wt::WHBoxLayout* banner_hbox = new Wt::WHBoxLayout();
+		banner_hbox->setContentsMargins(0, 0, 0, 0);
+		m_banner_widget->setLayout(banner_hbox);
+		m_banner_widget->setStyleClass("banner");
+
+		Wt::WAnchor* banner_anchor = new Wt::WAnchor(Wt::WLink(banner.GetURL()), banner.GetText());
+		banner_anchor->setTarget(Wt::TargetNewWindow);
+		banner_anchor->setTextFormat(Wt::PlainText);
+		banner_hbox->addWidget(banner_anchor, 1, Wt::AlignCenter|Wt::AlignMiddle);
+
+		Wt::WPushButton* close_banner_button = new Wt::WPushButton(Wt::WString::tr("CloseBannerButton"));
+		close_banner_button->clicked().connect(this, &MainWidget::OnCloseBannerButtonClicked);
+		banner_hbox->addWidget(close_banner_button, 0, Wt::AlignRight);
+
+		layout->addWidget(m_banner_widget, 1, Wt::AlignJustify);
+	}
 }
 
 void MainWidget::CreateProfileTab(Wt::WTabWidget* tab_widget)
@@ -170,4 +198,9 @@ void MainWidget::OnLoggedOut()
 
 void MainWidget::OnRegisterNewProfile()
 {
+}
+
+void MainWidget::OnCloseBannerButtonClicked()
+{
+	m_banner_widget->hide();
 }

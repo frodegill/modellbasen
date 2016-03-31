@@ -47,7 +47,7 @@ SearchTab::SearchTab(WebApplication* app)
 	m_dialog_container_vbox->setContentsMargins(0, 0, 0, 0);
 	m_dialog_container->setLayout(m_dialog_container_vbox);
 
-	tab_container_vbox->addWidget(m_dialog_container, 0, Wt::AlignCenter);
+	tab_container_vbox->addWidget(m_dialog_container, 1, Wt::AlignJustify);
 
 	/* Show page, hide dialog */
 	m_page_container->setHidden(false);

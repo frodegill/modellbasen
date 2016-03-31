@@ -40,6 +40,8 @@
 	<message id="Ok">Ok</message>
 	<message id="Cancel">Cancel</message>
 	
+	<message id="CloseBannerButton">Hide Ad</message>
+
 	<message id="Tab.ProfileTab">Profile</message>
 
 	<message id="Tab.RegisterProfileTab">New Profile</message>

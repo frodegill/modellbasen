@@ -18,8 +18,15 @@ public: //For PoCo::Data
 public:
 	Banner();
 
+	void Reset() {m_id = 0;}
+	bool IsValid() const {return 0!=m_id;}
+
+	static bool GetDisplayBanner(Banner& banner);
+
 public:
 	Poco::UInt32       GetId() const {return m_id;}
+	std::string        GetText() const {return m_text;}
+	std::string        GetURL() const {return m_url;}
 
 private:
 	Poco::UInt32 m_id;
