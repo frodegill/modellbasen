@@ -20,6 +20,27 @@ UserManager::~UserManager()
 	delete m_current_user;
 }
 
+bool UserManager::Exists(const std::string& username)
+{
+	std::string username_lowercase = boost::locale::to_lower(username);
+
+	Poco::Data::Session* session;
+	if (!DB.CreateSession(session))
+	{
+		return true; //We probably have bigger problems now, but true seems to be the safest return value
+	}
+
+	int exist_count = 0;
+	*session << "SELECT COUNT(*) FROM user WHERE username=?",
+		Poco::Data::Keywords::into(exist_count),
+		Poco::Data::Keywords::use(username_lowercase),
+		Poco::Data::Keywords::now;
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+
+	return 0 != exist_count;
+}
+
 bool UserManager::LogIn(const std::string& username, const std::string& password)
 {
 	std::string username_lowercase = boost::locale::to_lower(username);
