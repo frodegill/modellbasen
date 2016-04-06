@@ -19,6 +19,7 @@ MainWidget::MainWidget(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app),
   m_initialized(false),
+  m_login_widget(nullptr),
   m_banner_widget(nullptr),
   m_tab_widget(nullptr),
   m_profile_tab(nullptr),
@@ -82,11 +83,11 @@ void MainWidget::AddHeader(Wt::WVBoxLayout* layout)
 	appname_text->setStyleClass("appname");
 	header_hbox->addWidget(appname_text, 0, Wt::AlignCenter|Wt::AlignMiddle);
 
-	LoginWidget* login_widget = new LoginWidget(m_app);
-	if (login_widget)
+	m_login_widget = new LoginWidget(m_app);
+	if (m_login_widget)
 	{
-		login_widget->Initialize();
-		header_hbox->addWidget(login_widget, 0, Wt::AlignRight|Wt::AlignTop);
+		m_login_widget->Initialize();
+		header_hbox->addWidget(m_login_widget, 0, Wt::AlignRight|Wt::AlignTop);
 	}
 
 	layout->addWidget(header_widget);
@@ -180,6 +181,7 @@ void MainWidget::ActivateTab(const TabType& tab_type)
 
 void MainWidget::OnLoggedIn()
 {
+	m_login_widget->OnLoggedIn();
 	m_profile_tab->OnLoggedIn();
 	m_messageboard_tab->OnLoggedIn();
 	m_search_tab->OnLoggedIn();
@@ -190,6 +192,7 @@ void MainWidget::OnLoggedIn()
 void MainWidget::OnLoggedOut()
 {
 	UpdateTabVisibility();
+	m_login_widget->OnLoggedOut();
 	m_profile_tab->OnLoggedOut();
 	m_messageboard_tab->OnLoggedOut();
 	m_search_tab->OnLoggedOut();

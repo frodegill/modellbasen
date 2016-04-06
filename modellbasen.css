@@ -19,3 +19,7 @@
 .banner button {
   font-size: 10px;
 }
+
+.feedback {
+  color: red;
+}

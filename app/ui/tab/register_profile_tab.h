@@ -2,6 +2,7 @@
 #define _REGISTER_PROFILE_TAB_H_
 
 #include <Wt/WContainerWidget>
+#include <Wt/WLineEdit>
 
 
 namespace modellbasen
@@ -16,11 +17,22 @@ public:
 	~RegisterProfileTab();
 
 public:
-	void OnLoggedIn();
-	void OnLoggedOut();
+	void OnRegisterButtonClicked();
+
+	void OnLoggedIn() {}
+	void OnLoggedOut() {}
+
+private:
+	Wt::WFormWidget* GetFirstIncompleteFormElement() const;
 
 private:
 	WebApplication* m_app;
+
+	Wt::WLineEdit* m_username_edit;
+	Wt::WLineEdit* m_password_edit;
+	Wt::WLineEdit* m_email_edit;
+	Wt::WLineEdit* m_postcode_edit;
+	Wt::WText*     m_feedback_text;
 };
 
 } // namespace modellbasen

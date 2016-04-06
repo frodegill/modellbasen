@@ -167,6 +167,11 @@
 	<message id="ErrorSettingPassword">Something failed when updating password</message>
 	<message id="ErrorWritingToDatabase">Something failed when writing to database</message>
 
+	<message id="UserExists">Username is already registered</message>
+	<message id="UserExistsFailed">Username lookup failed</message>
+	<message id="UnknownPostcode">Unknown postcode</message>
+	<message id="PostcodeExistsFailed">Postcode lookup failed</message>
+
 	<message id="Database.FailedToCreateSession">Failed to create database session.</message>
 
 	<message id="Import.PostCodes">Import postcodes.</message>

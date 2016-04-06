@@ -170,22 +170,14 @@ void LoginWidget::OnLogoutButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 	LogOut();
 }
 
+void LoginWidget::LogOut()
+{
+	m_app->GetUserManager()->LogOut();
+}
+
 void LoginWidget::RequestLogin()
 {
-	std::string username = m_username_edit->text().toUTF8();
-	std::string password = m_password_edit->text().toUTF8();
-
-	m_app->GetUserManager()->LogIn(username, password);
-	if (!m_app->GetUserManager()->IsLoggedIn())
-	{
-		LoginFailed();
-	}
-	else
-	{
-		m_login_feedback_text->hide();
-		m_not_logged_in_container->hide();
-		m_logged_in_container->show();
-	}
+	RequestLogin(m_username_edit->text().trim().toUTF8(), m_password_edit->text().toUTF8());
 }
 
 void LoginWidget::LoginFailed()
@@ -195,11 +187,24 @@ void LoginWidget::LoginFailed()
 	m_username_edit->setFocus();
 }
 
-void LoginWidget::LogOut()
+void LoginWidget::RequestLogin(const std::string& username, const std::string& password)
 {
-	if (m_app->GetUserManager()->LogOut())
+	m_app->GetUserManager()->LogIn(username, password);
+	if (!m_app->GetUserManager()->IsLoggedIn())
 	{
-		m_not_logged_in_container->show();
-		m_logged_in_container->hide();
+		LoginFailed();
 	}
+}
+
+void LoginWidget::OnLoggedIn()
+{
+	m_login_feedback_text->hide();
+	m_not_logged_in_container->hide();
+	m_logged_in_container->show();
+}
+
+void LoginWidget::OnLoggedOut()
+{
+	m_not_logged_in_container->show();
+	m_logged_in_container->hide();
 }

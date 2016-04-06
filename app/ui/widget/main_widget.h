@@ -11,6 +11,7 @@ namespace modellbasen
 {
 
 class AdministratorTab;
+class LoginWidget;
 class MessageBoardTab;
 class ProfileTab;
 class RegisterProfileTab;
@@ -48,6 +49,7 @@ private:
 	WebApplication* m_app;
 	bool            m_initialized;
 
+	LoginWidget*          m_login_widget;
 	Wt::WContainerWidget* m_banner_widget;
 
 	Wt::WTabWidget*     m_tab_widget;

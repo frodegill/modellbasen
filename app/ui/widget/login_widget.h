@@ -29,9 +29,14 @@ private:
 	void PasswordEnterPressed();
 	void OnLoginButtonClicked(const Wt::WMouseEvent& mouse);
 	void OnLogoutButtonClicked(const Wt::WMouseEvent& mouse);
+	void LogOut();
 	void RequestLogin();
 	void LoginFailed();
-	void LogOut();
+
+public:
+	void RequestLogin(const std::string& username, const std::string& password);
+	void OnLoggedIn();
+	void OnLoggedOut();
 
 private:
 	WebApplication*  m_app;
