@@ -106,6 +106,14 @@ public:
 
 	bool               GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const;
 
+public:
+	static bool GetId(const std::string& tagname, Poco::UInt32& id);
+	
+	static bool SetUserTag(const std::string& username, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
+	static bool SetEventTag(Poco::UInt32 event_id, Poco::UInt32 participant_id, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
+private:
+	static bool SetTag(Poco::UInt32 user_id, Poco::UInt32 event_participant_id, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
+
 private:
 	const std::string& GetName() const {return m_name;}
 

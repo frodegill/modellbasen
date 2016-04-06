@@ -24,6 +24,9 @@ public:
 	double             GetLatitude() const {return m_latitude;}
 	double             GetLongitude() const {return m_longitude;}
 
+public:
+	static bool Exists(const std::string& postcode, bool& exists);
+
 private:
 	std::string  m_postcode;
 	std::string  m_place;

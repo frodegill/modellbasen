@@ -2,6 +2,7 @@
 #include "Wt/Auth/HashFunction"
 
 #include "usermanager.h"
+#include "dbo/postcode.h"
 #include "dbo/tag.h"
 #include "../app/application.h"
 #include "../singleton/db.h"
@@ -20,15 +21,13 @@ UserManager::~UserManager()
 	delete m_current_user;
 }
 
-bool UserManager::Exists(const std::string& username)
+bool UserManager::Exists(const std::string& username, bool& exists)
 {
 	std::string username_lowercase = boost::locale::to_lower(username);
 
 	Poco::Data::Session* session;
 	if (!DB.CreateSession(session))
-	{
-		return true; //We probably have bigger problems now, but true seems to be the safest return value
-	}
+		return false;
 
 	int exist_count = 0;
 	*session << "SELECT COUNT(*) FROM user WHERE username=?",
@@ -38,7 +37,56 @@ bool UserManager::Exists(const std::string& username)
 	
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
-	return 0 != exist_count;
+	exists = 0<exist_count;
+	return true;
+}
+
+bool UserManager::RegisterUser(const std::string& username, const std::string& password,
+                               const std::string& email, const std::string& postcode)
+{
+	bool username_exists, postcode_exists;
+	if (username.empty() ||
+	    !Exists(username, username_exists) || username_exists ||
+	    !PostCode::Exists(postcode, postcode_exists) || !postcode_exists ||
+	    email.empty())
+		return false;
+
+	Poco::Data::Session* session_in_transaction;
+	if (!DB.CreateSession(session_in_transaction))
+		return false;
+
+	std::string hash;
+	ComputeHash(username, password, hash);
+
+	*session_in_transaction << "INSERT INTO user (username, bcrypt_password_hash, email) VALUE (?, ?, ?)",
+		Poco::Data::Keywords::useRef(username), Poco::Data::Keywords::use(hash), Poco::Data::Keywords::useRef(email), Poco::Data::Keywords::now;
+
+	if(!Tag::SetUserTag(username, TAG_POSTCODE, postcode, 0, 0))
+	{
+		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
+		return false;
+	}
+
+	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
+	return true;
+}
+
+bool UserManager::GetUserId(const std::string& username, Poco::UInt32& user_id)
+{
+	std::string username_lowercase = boost::locale::to_lower(username);
+
+	Poco::Data::Session* session;
+	if (!DB.CreateSession(session))
+		return false;
+
+	*session << "SELECT id FROM user WHERE username=?",
+		Poco::Data::Keywords::into(user_id, Poco::Data::Position(0), INVALID_ID),
+		Poco::Data::Keywords::use(username_lowercase),
+		Poco::Data::Keywords::now;
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+
+	return true;
 }
 
 bool UserManager::LogIn(const std::string& username, const std::string& password)
