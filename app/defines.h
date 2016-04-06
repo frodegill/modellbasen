@@ -25,6 +25,7 @@ namespace modellbasen
 
 #define MAX_UPLOAD_SIZE (-1)
 
+#define INVALID_ID (static_cast<Poco::UInt32>(0))
 
 } // namespace modellbasen
 
