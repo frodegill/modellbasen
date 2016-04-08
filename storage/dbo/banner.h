@@ -3,6 +3,8 @@
 
 #include "classes.h"
 #include "../poco_glue.h"
+#include "../../singleton/db.h"
+
 #include <string>
 
 
@@ -21,7 +23,7 @@ public:
 	void Reset() {m_id = 0;}
 	bool IsValid() const {return 0!=m_id;}
 
-	static bool GetDisplayBanner(Banner& banner);
+	static bool GetDisplayBanner(Poco::Data::Session* session_in_transaction, Banner& banner);
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}

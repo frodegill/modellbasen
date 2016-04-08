@@ -1,6 +1,5 @@
 #include "banner.h"
 
-#include "../../singleton/db.h"
 #include "../../utils/time.h"
 
 
@@ -14,10 +13,9 @@ Banner::Banner()
 {
 }
 
-bool Banner::GetDisplayBanner(Banner& banner)
+bool Banner::GetDisplayBanner(Poco::Data::Session* session_in_transaction, Banner& banner)
 {
-	Poco::Data::Session* session_in_transaction;
-	if (!DB.CreateSession(session_in_transaction))
+	if (!session_in_transaction)
 		return false;
 
 	banner.Reset();
@@ -33,8 +31,6 @@ bool Banner::GetDisplayBanner(Banner& banner)
 				Poco::Data::Keywords::use(id),
 				Poco::Data::Keywords::now;
 	}
-
-	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
 
 	return banner.IsValid();
 }

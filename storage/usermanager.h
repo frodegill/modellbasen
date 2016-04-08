@@ -2,6 +2,7 @@
 #define _USERMANAGER_H_
 
 #include "../app/defines.h"
+#include "../singleton/db.h"
 #include "dbo/user.h"
 
 
@@ -22,7 +23,8 @@ public:
 
 public:
 	static bool Exists(const std::string& username, bool& exists);
-	static bool RegisterUser(const std::string& username, const std::string& password,
+	static bool RegisterUser(Poco::Data::Session* session_in_transaction,
+													 const std::string& username, const std::string& password,
 													 const std::string& email, const std::string& postcode);
 	static bool GetUserId(const std::string& username, Poco::UInt32& user_id);
 	
@@ -33,8 +35,8 @@ public:
 
 	bool IsLoggedIn() const {return nullptr!=m_current_user;}
 	
-	bool ChangePassword(const std::string& old_password, const std::string& new_password);
-	bool AdminChangePassword(const std::string& username, const std::string& new_password);
+	bool ChangePassword(Poco::Data::Session* session_in_transaction, const std::string& old_password, const std::string& new_password);
+	bool AdminChangePassword(Poco::Data::Session* session_in_transaction, const std::string& username, const std::string& new_password);
 
 public:
 	static void ComputeHash(const std::string& username, const std::string& password, std::string& hash);

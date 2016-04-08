@@ -3,6 +3,8 @@
 
 #include "classes.h"
 #include "../poco_glue.h"
+#include "../../singleton/db.h"
+
 #include <string>
 
 #define MAX_MESSAGEBOARD_ROWS (25)
@@ -21,7 +23,7 @@ public:
 	MessageBoard();
 
 	static bool InitializeGlobalMessageboardList();
-	static bool AddMessage(Poco::UInt32 user_id, const std::string& message);
+	static bool AddMessage(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id, const std::string& message);
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}

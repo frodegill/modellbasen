@@ -5,7 +5,6 @@
 #include "import_postcodes.h"
 #include "dbo/postcode.h"
 #include "../app/defines.h"
-#include "../singleton/db.h"
 
 
 #define FILEBUFFER_SIZE (10*1024)
@@ -16,8 +15,15 @@
 
 using namespace modellbasen;
 
-bool PostCodesImporter::Import(const std::string& filename, WebApplication* app, Wt::WProgressBar* progressbar, Wt::WString& import_status)
+bool PostCodesImporter::Import(Poco::Data::Session* session_in_transaction, const std::string& filename,
+                               WebApplication* app, Wt::WProgressBar* progressbar, Wt::WString& import_status)
 {
+	if (!session_in_transaction)
+	{
+		import_status = Wt::WString::tr("Database.FailedToCreateSession");
+		return false;
+	}
+
 	std::ifstream file(filename, std::ios::in|std::ios::binary|std::ios::ate); //ios::ate to seek to end of file (to easily find the file size)
 	if (!file.is_open())
 	{
@@ -39,15 +45,6 @@ bool PostCodesImporter::Import(const std::string& filename, WebApplication* app,
 		return false;
 	}
 
-	Poco::Data::Session* session_in_transaction;
-	if (!DB.CreateSession(session_in_transaction))
-	{
-		delete filebuffer;
-		file.close();
-		import_status = Wt::WString::tr("Database.FailedToCreateSession");
-		return false;
-	}
-
 	progressbar->setRange(0, filesize);
 	progressbar->setValue(0);
 	app->processEvents();
@@ -63,7 +60,6 @@ bool PostCodesImporter::Import(const std::string& filename, WebApplication* app,
 			{
 				delete[] filebuffer;
 				file.close();
-				DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
 				import_status = Wt::WString::tr("Import.UnexpectedFileFormat");
 				return false;
 			}
@@ -85,7 +81,6 @@ bool PostCodesImporter::Import(const std::string& filename, WebApplication* app,
 		{
 			delete[] filebuffer;
 			file.close();
-			DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
 			import_status = Wt::WString::tr("Import.FileParseErrorLine").arg(line);
 			return true;
 		}
@@ -101,12 +96,10 @@ bool PostCodesImporter::Import(const std::string& filename, WebApplication* app,
 
 	if (!CalculatePostCodeDistances(session_in_transaction, app, progressbar))
 	{
-		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
 		import_status = Wt::WString::tr("Import.FailedCalculatingDistances");
 		return false;
 	}
 	
-	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
 	import_status = Wt::WString::tr("Import.Success");
 	return true;
 }

@@ -1,7 +1,6 @@
 #include "tag.h"
 #include "tagvalue.h"
 #include "../usermanager.h"
-#include "../../singleton/db.h"
 
 #include "../../app/defines.h"
 
@@ -73,51 +72,45 @@ bool Tag::GetId(const std::string& tagname, Poco::UInt32& id)
 	return true;
 }
 
-bool Tag::SetUserTag(const std::string& username, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
+bool Tag::SetUserTag(Poco::Data::Session* session_in_transaction,
+										 const std::string& username, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
 {
 	Poco::UInt32 user_id;
 	if (!UserManager::GetUserId(username, user_id) || INVALID_ID==user_id)
 		return false;
 
-	return SetTag(user_id, INVALID_ID, tag_name, string_value, int_value, time_value);
+	return SetTag(session_in_transaction, user_id, INVALID_ID, tag_name, string_value, int_value, time_value);
 }
 
-bool Tag::SetEventTag(Poco::UInt32 event_id, Poco::UInt32 participant_id, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
+bool Tag::SetEventTag(Poco::Data::Session* session_in_transaction,
+											Poco::UInt32 event_id, Poco::UInt32 participant_id, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
 {
-	if (INVALID_ID==event_id || INVALID_ID==participant_id)
-		return false;
-
-	Poco::Data::Session* session;
-	if (!DB.CreateSession(session))
+	if (!session_in_transaction || INVALID_ID==event_id || INVALID_ID==participant_id)
 		return false;
 
 	Poco::UInt32 event_participant_id;
-	*session << "SELECT id FROM eventparticipant WHERE event=? AND participant=?;",
+	*session_in_transaction << "SELECT id FROM eventparticipant WHERE event=? AND participant=?;",
 		Poco::Data::Keywords::use(event_id), Poco::Data::Keywords::use(participant_id),
 		Poco::Data::Keywords::into(event_participant_id, Poco::Data::Position(0), INVALID_ID), Poco::Data::Keywords::now;
-
-	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
 	if (INVALID_ID == event_participant_id)
 		return false;
 
-	return SetTag(INVALID_ID, event_participant_id, tag_name, string_value, int_value, time_value);
+	return SetTag(session_in_transaction, INVALID_ID, event_participant_id, tag_name, string_value, int_value, time_value);
 }
 
-bool Tag::SetTag(Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
+bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
+								 Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
 								 const std::string& tag_name,
 								 const std::string& string_value, int int_value, Poco::UInt64 time_value)
 {
-	if ((INVALID_ID==user_id && INVALID_ID==event_participant_id) || //neither user nor event
+	if (!session_in_transaction ||
+		  (INVALID_ID==user_id && INVALID_ID==event_participant_id) || //neither user nor event
 	    (INVALID_ID!=user_id && INVALID_ID!=event_participant_id)) //both user and event
 		return false;
 
 	Poco::UInt32 tag_id;
 	if (!GetId(tag_name, tag_id) || INVALID_ID==tag_id)
-		return false;
-
-	Poco::Data::Session* session_in_transaction;
-	if (!DB.CreateSession(session_in_transaction))
 		return false;
 
 	//Check if tag already exists
@@ -151,7 +144,6 @@ bool Tag::SetTag(Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
 			Poco::Data::Keywords::use(tag_id), Poco::Data::Keywords::use(user_id), Poco::Data::Keywords::use(event_participant_id),
 			Poco::Data::Keywords::now;
 	}
-	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
 
 	return true;
 }

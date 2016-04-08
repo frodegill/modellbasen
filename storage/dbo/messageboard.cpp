@@ -1,6 +1,6 @@
 #include "messageboard.h"
 
-#include "../../singleton/db.h"
+#include "../../app/defines.h"
 #include "../../singleton/lock.h"
 #include "../../singleton/models.h"
 #include "../../utils/time.h"
@@ -12,9 +12,9 @@
 using namespace modellbasen;
 
 MessageBoard::MessageBoard()
-: m_id(0),
+: m_id(INVALID_ID),
   m_posted_time(0),
-  m_user_id(0)
+  m_user_id(INVALID_ID)
 {
 }
 
@@ -59,13 +59,9 @@ bool MessageBoard::InitializeGlobalMessageboardList()
 	return true;
 }
 
-bool MessageBoard::AddMessage(Poco::UInt32 user_id, const std::string& message)
+bool MessageBoard::AddMessage(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id, const std::string& message)
 {
-	if (0==user_id || message.empty())
-		return false;
-
-	Poco::Data::Session* session_in_transaction;
-	if (!DB.CreateSession(session_in_transaction))
+	if (!session_in_transaction || INVALID_ID==user_id || message.empty())
 		return false;
 
 	Poco::UInt64 now = Time::NowUTC();
@@ -75,8 +71,6 @@ bool MessageBoard::AddMessage(Poco::UInt32 user_id, const std::string& message)
 		Poco::Data::Keywords::useRef(message), Poco::Data::Keywords::use(now), Poco::Data::Keywords::use(user_id), Poco::Data::Keywords::now;
 
 	//TODO
-
-	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
 
 	return true;
 }

@@ -5,7 +5,6 @@
 #include "dbo/postcode.h"
 #include "dbo/tag.h"
 #include "../app/application.h"
-#include "../singleton/db.h"
 
 
 using namespace modellbasen;
@@ -41,18 +40,16 @@ bool UserManager::Exists(const std::string& username, bool& exists)
 	return true;
 }
 
-bool UserManager::RegisterUser(const std::string& username, const std::string& password,
+bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
+															 const std::string& username, const std::string& password,
                                const std::string& email, const std::string& postcode)
 {
 	bool username_exists, postcode_exists;
-	if (username.empty() ||
+	if (!session_in_transaction ||
+		  username.empty() ||
 	    !Exists(username, username_exists) || username_exists ||
 	    !PostCode::Exists(postcode, postcode_exists) || !postcode_exists ||
 	    email.empty())
-		return false;
-
-	Poco::Data::Session* session_in_transaction;
-	if (!DB.CreateSession(session_in_transaction))
 		return false;
 
 	std::string hash;
@@ -61,14 +58,7 @@ bool UserManager::RegisterUser(const std::string& username, const std::string& p
 	*session_in_transaction << "INSERT INTO user (username, bcrypt_password_hash, email) VALUE (?, ?, ?)",
 		Poco::Data::Keywords::useRef(username), Poco::Data::Keywords::use(hash), Poco::Data::Keywords::useRef(email), Poco::Data::Keywords::now;
 
-	if(!Tag::SetUserTag(username, TAG_POSTCODE, postcode, 0, 0))
-	{
-		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
-		return false;
-	}
-
-	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
-	return true;
+	return Tag::SetUserTag(session_in_transaction, username, TAG_POSTCODE, postcode, 0, 0);
 }
 
 bool UserManager::GetUserId(const std::string& username, Poco::UInt32& user_id)
@@ -135,75 +125,52 @@ bool UserManager::LogOut()
 	return true;
 }
 
-bool UserManager::ChangePassword(const std::string& old_password, const std::string& new_password)
+bool UserManager::ChangePassword(Poco::Data::Session* session_in_transaction,
+                                 const std::string& old_password, const std::string& new_password)
 {
-	if (!m_current_user)
-	{
+	if (!session_in_transaction || !m_current_user)
 		return false;
-	}
 
 	std::string hash;
 	ComputeHash(m_current_user->GetUsername(), old_password, hash);
 	if (EQUAL != hash.compare(m_current_user->GetPasswordHash()))
-	{
 		return false;
-	}
-
-	Poco::Data::Session* session;
-	if (!DB.CreateSession(session))
-	{
-		return false;
-	}
 
 	ComputeHash(m_current_user->GetUsername(), new_password, hash);
 
-	*session << "UPDATE user SET bcrypt_password_hash=? WHERE id=?",
+	*session_in_transaction << "UPDATE user SET bcrypt_password_hash=? WHERE id=?",
 			Poco::Data::Keywords::use(hash),
 			Poco::Data::Keywords::use(m_current_user->m_id),
 			Poco::Data::Keywords::now;
-
-	DB.ReleaseSession(session, PocoGlue::COMMIT);
 
 	m_current_user->SetPasswordHash(hash);
 	return true;
 }
 
-bool UserManager::AdminChangePassword(const std::string& username, const std::string& new_password)
+bool UserManager::AdminChangePassword(Poco::Data::Session* session_in_transaction,
+																			const std::string& username, const std::string& new_password)
 {
-	if (!m_current_user || !m_current_user->HasTag(TAG_ADMINISTRATOR))
-	{
+	if (!session_in_transaction || !m_current_user || !m_current_user->HasTag(TAG_ADMINISTRATOR))
 		return false;
-	}
 
 	std::string username_lowercase = boost::locale::to_lower(username);
 
-	Poco::Data::Session* session;
-	if (!DB.CreateSession(session))
-	{
-		return false;
-	}
-
 	uint count;
-	*session << "SELECT COUNT(*) FROM user WHERE username=?",
+	*session_in_transaction << "SELECT COUNT(*) FROM user WHERE username=?",
 			Poco::Data::Keywords::into(count),
 			Poco::Data::Keywords::use(username_lowercase),
 			Poco::Data::Keywords::now;
 
 	if (0 == count)
-	{
-		DB.ReleaseSession(session, PocoGlue::IGNORE);
-		return false;
-	}
+		return true;
 
 	std::string hash;
 	ComputeHash(username_lowercase, new_password, hash);
 
-	*session << "UPDATE user SET bcrypt_password_hash=? WHERE username=?",
+	*session_in_transaction << "UPDATE user SET bcrypt_password_hash=? WHERE username=?",
 			Poco::Data::Keywords::use(hash),
 			Poco::Data::Keywords::use(username_lowercase),
 			Poco::Data::Keywords::now;
-
-	DB.ReleaseSession(session, PocoGlue::COMMIT);
 
 	return true;
 }

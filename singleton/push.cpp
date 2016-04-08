@@ -2,6 +2,7 @@
 #include "lock.h"
 #include "models.h"
 #include "../app/application.h"
+#include "../singleton/db.h"
 #include "../storage/usermanager.h"
 #include "../storage/dbo/messageboard.h"
 #include "../storage/dbo/user.h"
@@ -39,11 +40,24 @@ void disconnect(modellbasen::WebApplication* application)
 bool PostMessageToBoard(const modellbasen::WebApplication* application, const std::string& message)
 {
 	boost::mutex::scoped_lock lock(g_global_mutex);
+
 	const modellbasen::User* current_user = application->GetUserManager()->GetCurrentUser();
-	if (!current_user || !modellbasen::MessageBoard::AddMessage(current_user->GetId(), message))
+	if (!current_user)
 		return false;
 
-  if (!g_messageboard_model.insertRows(0, 1))
+	Poco::Data::Session* session_in_transaction;
+	if (!DB.CreateSession(session_in_transaction))
+		return false;
+
+	if (!modellbasen::MessageBoard::AddMessage(session_in_transaction, current_user->GetId(), message))
+	{
+		DB.ReleaseSession(session_in_transaction, modellbasen::PocoGlue::ROLLBACK);
+		return false;
+	}
+
+	DB.ReleaseSession(session_in_transaction, modellbasen::PocoGlue::COMMIT);
+
+	if (!g_messageboard_model.insertRows(0, 1))
 		return false;
 
 	std::string posted_time;

@@ -4,6 +4,7 @@
 
 #include "register_profile_tab.h"
 #include "../../application.h"
+#include "../../../singleton/db.h"
 #include "../../../storage/usermanager.h"
 #include "../../../storage/dbo/postcode.h"
 
@@ -70,12 +71,21 @@ void RegisterProfileTab::OnRegisterButtonClicked()
 		return;
 	}
 
+	Poco::Data::Session* session_in_transaction;
+	if (!DB.CreateSession(session_in_transaction))
+		return;
+
 	std::string username = m_username_edit->text().trim().toUTF8();
 	std::string password = m_password_edit->text().toUTF8();
-	if (UserManager::RegisterUser(username, password, m_email_edit->text().trim().toUTF8(), m_postcode_edit->text().trim().toUTF8()))
+	if (!UserManager::RegisterUser(session_in_transaction, username, password,
+	                               m_email_edit->text().trim().toUTF8(), m_postcode_edit->text().trim().toUTF8()))
 	{
-		m_app->GetUserManager()->LogIn(username, password);
+		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
+		return;
 	}
+
+	m_app->GetUserManager()->LogIn(username, password);
+	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
 }
 
 Wt::WFormWidget* RegisterProfileTab::GetFirstIncompleteFormElement() const

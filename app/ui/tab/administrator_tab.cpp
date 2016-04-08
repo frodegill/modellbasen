@@ -4,6 +4,7 @@
 
 #include "administrator_tab.h"
 #include "../../application.h"
+#include "../../../singleton/db.h"
 #include "../../../storage/import_postcodes.h"
 #include "../../../storage/usermanager.h"
 #include "../../../storage/dbo/tag.h"
@@ -73,9 +74,21 @@ bool AdministratorTab::ImportPostCodeFile(const std::string& filename)
 {
 	Wt::WString status_text;
 	PostCodesImporter importer;
-	bool ret = importer.Import(filename, m_app, m_import_progressbar, status_text);
-	m_postcodes_fileupload->hide();
-	m_import_postcodes_button->hide();
+
+	bool ret = false;
+	Poco::Data::Session* session_in_transaction;
+	if (!DB.CreateSession(session_in_transaction))
+	{
+		status_text = Wt::WString::tr("Database.FailedToCreateSession");
+	}
+	else
+	{
+		ret = importer.Import(session_in_transaction, filename, m_app, m_import_progressbar, status_text);
+		m_postcodes_fileupload->hide();
+		m_import_postcodes_button->hide();
+
+		DB.ReleaseSession(session_in_transaction, ret ? PocoGlue::COMMIT : PocoGlue::ROLLBACK);
+	}
 	Wt::WMessageBox::show("Importer", status_text, Wt::Ok); 
 	return ret;
 }

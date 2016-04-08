@@ -96,7 +96,20 @@ void MainWidget::AddHeader(Wt::WVBoxLayout* layout)
 void MainWidget::AddBanner(Wt::WVBoxLayout* layout)
 {
 	Banner banner;
-	if (Banner::GetDisplayBanner(banner) && !banner.GetText().empty())
+
+	Poco::Data::Session* session_in_transaction;
+	if (!DB.CreateSession(session_in_transaction))
+		return;
+
+	if (!Banner::GetDisplayBanner(session_in_transaction, banner))
+	{
+		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
+		return;
+	}
+		
+	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
+		
+	if (!banner.GetText().empty())
 	{
 		m_banner_widget = new Wt::WContainerWidget();
 		Wt::WHBoxLayout* banner_hbox = new Wt::WHBoxLayout();

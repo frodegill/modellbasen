@@ -6,6 +6,7 @@
 #include <Wt/WProgressBar>
 #include "poco_glue.h"
 #include "../app/application.h"
+#include "../singleton/db.h"
 
 
 namespace modellbasen
@@ -20,7 +21,8 @@ private:
 	};
 
 public:
-	bool Import(const std::string& filename, WebApplication* app, Wt::WProgressBar* progressbar, Wt::WString& import_status);
+	bool Import(Poco::Data::Session* session_in_transaction, const std::string& filename,
+	            WebApplication* app, Wt::WProgressBar* progressbar, Wt::WString& import_status);
 
 private:
 	ImportStatus ParseCSVLine(std::ifstream& file,
