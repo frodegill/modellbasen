@@ -83,9 +83,14 @@ void RegisterProfileTab::OnRegisterButtonClicked()
 		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
 		return;
 	}
+	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
 
 	m_app->GetUserManager()->LogIn(username, password);
-	DB.ReleaseSession(session_in_transaction, PocoGlue::COMMIT);
+}
+
+void RegisterProfileTab::OnActivateTab()
+{
+	m_username_edit->setFocus();
 }
 
 Wt::WFormWidget* RegisterProfileTab::GetFirstIncompleteFormElement() const

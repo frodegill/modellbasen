@@ -15,6 +15,18 @@
 #include <Poco/Nullable.h>
 #include <Poco/Data/SessionPool.h>
 
+#include "../singleton/logging.h"
+#ifdef DEBUG
+# define DEBUG_TRY_CATCH(...)	try {__VA_ARGS__} \
+                              catch (Poco::Exception e) {::Log("error")<<e.displayText();} \
+                              catch (...) {::Log("error")<<"Got generic exception";}
+#else
+# define DEBUG_TRY_CATCH(...)	__VA_ARGS__
+#endif
+
+#define IF_NO_ROWS(stmt,session,...) Poco::Data::Statement stmt(session);\
+                                     stmt << __VA_ARGS__; \
+                                     if (0==stmt.execute())
 
 namespace modellbasen
 {

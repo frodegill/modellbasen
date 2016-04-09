@@ -176,7 +176,7 @@ void MainWidget::ActivateTab(const TabType& tab_type)
 	switch(tab_type)
 	{
 		case PROFILE:          widget = m_profile_tab; break;
-		case REGISTER_PROFILE: widget = m_register_profile_tab; break;
+		case REGISTER_PROFILE: widget = m_register_profile_tab; m_register_profile_tab->OnActivateTab(); break;
 		case MESSAGEBOARD:     widget = m_messageboard_tab; break;
 		case SEARCH:           widget = m_search_tab; break;
 		case ADMINISTRATOR:    widget = m_administrator_tab; break;

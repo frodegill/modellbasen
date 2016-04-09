@@ -17,14 +17,23 @@ bool PostCode::Exists(const std::string& postcode, bool& exists)
 	if (!DB.CreateSession(session))
 		return false;
 
+	bool ret = Exists(session, postcode, exists);
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+	return ret;
+}
+
+bool PostCode::Exists(Poco::Data::Session* session, const std::string& postcode, bool& exists)
+{
+	if (!session)
+		return false;
+
 	int exist_count = 0;
 	*session << "SELECT COUNT(*) FROM postcode WHERE postcode=?",
 		Poco::Data::Keywords::into(exist_count),
 		Poco::Data::Keywords::useRef(postcode),
 		Poco::Data::Keywords::now;
 	
-	DB.ReleaseSession(session, PocoGlue::IGNORE);
-
 	exists = 0<exist_count;
 	return true;
 }

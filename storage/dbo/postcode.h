@@ -26,6 +26,7 @@ public:
 
 public:
 	static bool Exists(const std::string& postcode, bool& exists);
+	static bool Exists(Poco::Data::Session* session, const std::string& postcode, bool& exists);
 
 private:
 	std::string  m_postcode;

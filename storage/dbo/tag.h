@@ -109,6 +109,7 @@ public:
 
 public:
 	static bool GetId(const std::string& tagname, Poco::UInt32& id);
+	static bool GetId(Poco::Data::Session* session, const std::string& tagname, Poco::UInt32& id);
 	
 	static bool SetUserTag(Poco::Data::Session* session_in_transaction, const std::string& username,
 												 const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);

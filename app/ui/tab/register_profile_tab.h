@@ -19,6 +19,7 @@ public:
 public:
 	void OnRegisterButtonClicked();
 
+	void OnActivateTab();
 	void OnLoggedIn() {}
 	void OnLoggedOut() {}
 

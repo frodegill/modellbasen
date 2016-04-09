@@ -23,10 +23,14 @@ public:
 
 public:
 	static bool Exists(const std::string& username, bool& exists);
+	static bool Exists(Poco::Data::Session* session, const std::string& username, bool& exists);
+
 	static bool RegisterUser(Poco::Data::Session* session_in_transaction,
 													 const std::string& username, const std::string& password,
 													 const std::string& email, const std::string& postcode);
+
 	static bool GetUserId(const std::string& username, Poco::UInt32& user_id);
+	static bool GetUserId(Poco::Data::Session* session, const std::string& username, Poco::UInt32& user_id);
 	
 public:
 	bool LogIn(const std::string& username, const std::string& password);

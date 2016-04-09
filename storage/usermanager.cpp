@@ -22,11 +22,22 @@ UserManager::~UserManager()
 
 bool UserManager::Exists(const std::string& username, bool& exists)
 {
-	std::string username_lowercase = boost::locale::to_lower(username);
-
 	Poco::Data::Session* session;
 	if (!DB.CreateSession(session))
 		return false;
+
+	bool ret = Exists(session, username, exists);
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+	return ret;
+}
+
+bool UserManager::Exists(Poco::Data::Session* session, const std::string& username, bool& exists)
+{
+	if (!session)
+		return false;
+
+	std::string username_lowercase = boost::locale::to_lower(username);
 
 	int exist_count = 0;
 	*session << "SELECT COUNT(*) FROM user WHERE username=?",
@@ -34,8 +45,6 @@ bool UserManager::Exists(const std::string& username, bool& exists)
 		Poco::Data::Keywords::use(username_lowercase),
 		Poco::Data::Keywords::now;
 	
-	DB.ReleaseSession(session, PocoGlue::IGNORE);
-
 	exists = 0<exist_count;
 	return true;
 }
@@ -47,35 +56,44 @@ bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 	bool username_exists, postcode_exists;
 	if (!session_in_transaction ||
 		  username.empty() ||
-	    !Exists(username, username_exists) || username_exists ||
-	    !PostCode::Exists(postcode, postcode_exists) || !postcode_exists ||
+	    !Exists(session_in_transaction, username, username_exists) || username_exists ||
+	    !PostCode::Exists(session_in_transaction, postcode, postcode_exists) || !postcode_exists ||
 	    email.empty())
 		return false;
 
 	std::string hash;
 	ComputeHash(username, password, hash);
 
-	*session_in_transaction << "INSERT INTO user (username, bcrypt_password_hash, email) VALUE (?, ?, ?)",
-		Poco::Data::Keywords::useRef(username), Poco::Data::Keywords::use(hash), Poco::Data::Keywords::useRef(email), Poco::Data::Keywords::now;
+	DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO user (username, bcrypt_password_hash, email) VALUE (?, ?, ?)",
+		Poco::Data::Keywords::useRef(username), Poco::Data::Keywords::use(hash), Poco::Data::Keywords::useRef(email), Poco::Data::Keywords::now;)
 
 	return Tag::SetUserTag(session_in_transaction, username, TAG_POSTCODE, postcode, 0, 0);
 }
 
 bool UserManager::GetUserId(const std::string& username, Poco::UInt32& user_id)
 {
-	std::string username_lowercase = boost::locale::to_lower(username);
-
 	Poco::Data::Session* session;
 	if (!DB.CreateSession(session))
 		return false;
+
+	bool ret = GetUserId(session, username, user_id);
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+	return ret;
+}
+
+bool UserManager::GetUserId(Poco::Data::Session* session, const std::string& username, Poco::UInt32& user_id)
+{
+	if (!session)
+		return false;
+
+	std::string username_lowercase = boost::locale::to_lower(username);
 
 	*session << "SELECT id FROM user WHERE username=?",
 		Poco::Data::Keywords::into(user_id, Poco::Data::Position(0), INVALID_ID),
 		Poco::Data::Keywords::use(username_lowercase),
 		Poco::Data::Keywords::now;
 	
-	DB.ReleaseSession(session, PocoGlue::IGNORE);
-
 	return true;
 }
 

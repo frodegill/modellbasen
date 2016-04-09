@@ -187,8 +187,8 @@ static DatabaseUpdateItem update_items[] = {
 
 { 1, "INSERT INTO `modellbasen`.`postcode` (`postcode`, `place`, `latitude`, `longitude`) "\
 	   "VALUE ('1448', 'Uninitialized', 0.0, 0.0);"},
-{ 1, "INSERT INTO `modellbasen`.`user` (`id`, `username`, `bcrypt_password_hash`, `email`, `profile_picture`, `home_location`) "\
-	   "VALUE (1, 'admin', '$2y$10$ZU7iXUvqWkDxXU3/OSD/OOKp5SSzWfrR12LajHsezpAKpDyIBrvyC', 'admin@localhost', NULL, '1448');"}, //username:admin,password:admin
+{ 1, "INSERT INTO `modellbasen`.`user` (`id`, `username`, `bcrypt_password_hash`, `email`, `profile_picture`) "\
+	   "VALUE (1, 'admin', '$2y$10$ZU7iXUvqWkDxXU3/OSD/OOKp5SSzWfrR12LajHsezpAKpDyIBrvyC', 'admin@localhost', NULL);"}, //username:admin,password:admin
 { 1, "INSERT INTO `modellbasen`.`taginstance` (`id`, `stringvalue`, `intvalue`, `timevalue`, `tag`, `owner`, `eventparticipant`) "\
 	   "VALUE (1, NULL, NULL, NULL, 1, 1, NULL);"},
 
