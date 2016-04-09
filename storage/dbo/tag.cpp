@@ -165,10 +165,18 @@ bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
 	}
 	else //Does not exist. Create
 	{
+		Poco::Nullable<Poco::UInt32> user_id_value;
+		if (INVALID_ID != user_id)
+			user_id_value.assign(user_id);
+
+		Poco::Nullable<Poco::UInt32> event_participant_id_value;
+		if (INVALID_ID != event_participant_id)
+			event_participant_id_value.assign(event_participant_id);
+
 		DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO taginstance (stringvalue, intvalue, timevalue, tag, owner, eventparticipant) "
 		                                           "VALUE (?, ?, ?, ?, ?, ?)",
 			Poco::Data::Keywords::useRef(string_value), Poco::Data::Keywords::use(int_value), Poco::Data::Keywords::use(time_value),
-			Poco::Data::Keywords::use(tag_id), Poco::Data::Keywords::use(user_id), Poco::Data::Keywords::use(event_participant_id),
+			Poco::Data::Keywords::use(tag_id), Poco::Data::Keywords::use(user_id_value), Poco::Data::Keywords::use(event_participant_id_value),
 			Poco::Data::Keywords::now;)
 	}
 
