@@ -29,11 +29,11 @@ bool PostCode::Exists(Poco::Data::Session* session, const std::string& postcode,
 		return false;
 
 	int exist_count = 0;
-	*session << "SELECT COUNT(*) FROM postcode WHERE postcode=?",
+	DEBUG_TRY_CATCH(*session << "SELECT COUNT(*) FROM postcode WHERE postcode=?",
 		Poco::Data::Keywords::into(exist_count),
 		Poco::Data::Keywords::useRef(postcode),
-		Poco::Data::Keywords::now;
-	
+		Poco::Data::Keywords::now;)
+
 	exists = 0<exist_count;
 	return true;
 }

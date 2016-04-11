@@ -1,11 +1,13 @@
 #include "tagvalue.h"
+
+#include "../../app/defines.h"
 #include "../../singleton/db.h"
 
 
 using namespace modellbasen;
 
 TagValue::TagValue()
-: m_id(0),
+: m_id(INVALID_ID),
   m_pos(0),
   m_tag_id(0)
 {
@@ -19,8 +21,12 @@ bool TagValue::Initialize(Poco::UInt32 id)
 	if (!DB.CreateSession(session))
 		return false;
 
-	*session << "SELECT id, value, pos, tag FROM tagvalue WHERE id=?;",
-		Poco::Data::Keywords::use(id), Poco::Data::Keywords::into(*this), Poco::Data::Keywords::now;
+	IF_NO_ROWS(stmt, *session,
+		"SELECT id, value, pos, tag FROM tagvalue WHERE id=?;",
+			Poco::Data::Keywords::use(id), Poco::Data::Keywords::into(*this))
+	{
+		m_id = INVALID_ID;
+	}
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 	return true;

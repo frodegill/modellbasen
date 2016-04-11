@@ -209,26 +209,30 @@ bool DatabaseUpdate::GetDatabaseVersion(Poco::Data::Session* session_in_transact
 {
 	db_version = 0;
 
-	*session_in_transaction << "CREATE TABLE IF NOT EXISTS metadata "\
+	DEBUG_TRY_CATCH(*session_in_transaction << "CREATE TABLE IF NOT EXISTS metadata "\
 	                           "(id CHAR(50) CHARACTER SET utf8 NOT NULL,"\
 	                           " value VARCHAR(4096) CHARACTER SET utf8,"\
 	                           " PRIMARY KEY metadata_pk1 (id))"\
-	                           " engine = InnoDB", Poco::Data::Keywords::now;
+	                           " engine = InnoDB", Poco::Data::Keywords::now;)
 
 	uint16_t count;
-	*session_in_transaction << "SELECT COUNT(*) FROM metadata WHERE id='db_version'",
-			Poco::Data::Keywords::into(count,(const uint16_t)0), Poco::Data::Keywords::now;
+	DEBUG_TRY_CATCH(*session_in_transaction << "SELECT COUNT(*) FROM metadata WHERE id='db_version'",
+			Poco::Data::Keywords::into(count), Poco::Data::Keywords::now;)
 
 	if (0==count)
 	{
-		*session_in_transaction << "INSERT INTO metadata (id, value) VALUE ('db_version',0);", Poco::Data::Keywords::now;
+		DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO metadata (id, value) VALUE ('db_version',0);", Poco::Data::Keywords::now;)
 
 		if (!PocoGlue::CommitTransaction(session_in_transaction)) //Only CREATE TABLE, INSERT will get here
 			return false;
 	}
 
-	*session_in_transaction << "SELECT value FROM metadata WHERE id='db_version'",
-			Poco::Data::Keywords::into(db_version,(const uint32_t)0), Poco::Data::Keywords::now;
+	IF_NO_ROWS(stmt, *session_in_transaction,
+		"SELECT value FROM metadata WHERE id='db_version'",
+			Poco::Data::Keywords::into(db_version))
+	{
+		db_version = 0;
+	}
 
 	return true;
 }

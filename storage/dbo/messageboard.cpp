@@ -66,9 +66,9 @@ bool MessageBoard::AddMessage(Poco::Data::Session* session_in_transaction, Poco:
 
 	Poco::UInt64 now = Time::NowUTC();
 	
-	*session_in_transaction << "INSERT INTO messageboard (message, posted_time, user) "\
+	DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO messageboard (message, posted_time, user) "\
 														"VALUE (?, ?, ?)",
-		Poco::Data::Keywords::useRef(message), Poco::Data::Keywords::use(now), Poco::Data::Keywords::use(user_id), Poco::Data::Keywords::now;
+		Poco::Data::Keywords::useRef(message), Poco::Data::Keywords::use(now), Poco::Data::Keywords::use(user_id), Poco::Data::Keywords::now;)
 
 	//TODO
 

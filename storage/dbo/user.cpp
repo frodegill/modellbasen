@@ -18,8 +18,11 @@ bool User::HasTag(const std::string& tag) const
 		return false;
 
 	uint16_t tag_count = 0;
-	*session << "SELECT COUNT(*) FROM taginstance ti, tag t WHERE ti.owner=? AND ti.tag=t.id AND t.name=?",
-			Poco::Data::Keywords::into(tag_count,(const uint16_t)0), Poco::Data::Keywords::useRef(m_id), Poco::Data::Keywords::useRef(tag), Poco::Data::Keywords::now;
+	DEBUG_TRY_CATCH(*session << "SELECT COUNT(*) FROM taginstance ti, tag t WHERE ti.owner=? AND ti.tag=t.id AND t.name=?",
+		Poco::Data::Keywords::into(tag_count),
+		Poco::Data::Keywords::useRef(m_id),
+		Poco::Data::Keywords::useRef(tag),
+		Poco::Data::Keywords::now;)
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 

@@ -40,10 +40,10 @@ bool UserManager::Exists(Poco::Data::Session* session, const std::string& userna
 	std::string username_lowercase = boost::locale::to_lower(username);
 
 	int exist_count = 0;
-	*session << "SELECT COUNT(*) FROM user WHERE username=?",
+	DEBUG_TRY_CATCH(*session << "SELECT COUNT(*) FROM user WHERE username=?",
 		Poco::Data::Keywords::into(exist_count),
 		Poco::Data::Keywords::use(username_lowercase),
-		Poco::Data::Keywords::now;
+		Poco::Data::Keywords::now;)
 	
 	exists = 0<exist_count;
 	return true;
@@ -65,7 +65,10 @@ bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 	ComputeHash(username, password, hash);
 
 	DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO user (username, bcrypt_password_hash, email) VALUE (?, ?, ?)",
-		Poco::Data::Keywords::useRef(username), Poco::Data::Keywords::use(hash), Poco::Data::Keywords::useRef(email), Poco::Data::Keywords::now;)
+		Poco::Data::Keywords::useRef(username),
+		Poco::Data::Keywords::use(hash),
+		Poco::Data::Keywords::useRef(email),
+		Poco::Data::Keywords::now;)
 
 	return Tag::SetUserTag(session_in_transaction, username, TAG_POSTCODE, postcode, 0, 0);
 }
@@ -89,10 +92,13 @@ bool UserManager::GetUserId(Poco::Data::Session* session, const std::string& use
 
 	std::string username_lowercase = boost::locale::to_lower(username);
 
-	*session << "SELECT id FROM user WHERE username=?",
-		Poco::Data::Keywords::into(user_id, Poco::Data::Position(0), INVALID_ID),
-		Poco::Data::Keywords::use(username_lowercase),
-		Poco::Data::Keywords::now;
+	IF_NO_ROWS(stmt, *session,
+		"SELECT id FROM user WHERE username=?",
+			Poco::Data::Keywords::into(user_id, Poco::Data::Position(0), INVALID_ID),
+			Poco::Data::Keywords::use(username_lowercase))
+	{
+		user_id = INVALID_ID;
+	}
 	
 	return true;
 }
@@ -111,11 +117,15 @@ bool UserManager::LogIn(const std::string& username, const std::string& password
 		return false;
 	}
 
-	*session << "SELECT id, bcrypt_password_hash FROM user WHERE username=?",
-		Poco::Data::Keywords::into(user->m_id),
-		Poco::Data::Keywords::into(user->m_bcrypt_password_hash),
-		Poco::Data::Keywords::use(username_lowercase),
-		Poco::Data::Keywords::now;
+	IF_NO_ROWS(stmt, *session,
+		"SELECT id, bcrypt_password_hash FROM user WHERE username=?",
+			Poco::Data::Keywords::into(user->m_id),
+			Poco::Data::Keywords::into(user->m_bcrypt_password_hash),
+			Poco::Data::Keywords::use(username_lowercase))
+	{
+		delete user;
+		return false;
+	}
 	
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
@@ -156,10 +166,10 @@ bool UserManager::ChangePassword(Poco::Data::Session* session_in_transaction,
 
 	ComputeHash(m_current_user->GetUsername(), new_password, hash);
 
-	*session_in_transaction << "UPDATE user SET bcrypt_password_hash=? WHERE id=?",
+	DEBUG_TRY_CATCH(*session_in_transaction << "UPDATE user SET bcrypt_password_hash=? WHERE id=?",
 			Poco::Data::Keywords::use(hash),
 			Poco::Data::Keywords::use(m_current_user->m_id),
-			Poco::Data::Keywords::now;
+			Poco::Data::Keywords::now;)
 
 	m_current_user->SetPasswordHash(hash);
 	return true;
@@ -174,10 +184,10 @@ bool UserManager::AdminChangePassword(Poco::Data::Session* session_in_transactio
 	std::string username_lowercase = boost::locale::to_lower(username);
 
 	uint count;
-	*session_in_transaction << "SELECT COUNT(*) FROM user WHERE username=?",
+	DEBUG_TRY_CATCH(*session_in_transaction << "SELECT COUNT(*) FROM user WHERE username=?",
 			Poco::Data::Keywords::into(count),
 			Poco::Data::Keywords::use(username_lowercase),
-			Poco::Data::Keywords::now;
+			Poco::Data::Keywords::now;)
 
 	if (0 == count)
 		return true;
@@ -185,10 +195,10 @@ bool UserManager::AdminChangePassword(Poco::Data::Session* session_in_transactio
 	std::string hash;
 	ComputeHash(username_lowercase, new_password, hash);
 
-	*session_in_transaction << "UPDATE user SET bcrypt_password_hash=? WHERE username=?",
+	DEBUG_TRY_CATCH(*session_in_transaction << "UPDATE user SET bcrypt_password_hash=? WHERE username=?",
 			Poco::Data::Keywords::use(hash),
 			Poco::Data::Keywords::use(username_lowercase),
-			Poco::Data::Keywords::now;
+			Poco::Data::Keywords::now;)
 
 	return true;
 }

@@ -1,12 +1,13 @@
 #include "banner.h"
 
+#include "../../app/defines.h"
 #include "../../utils/time.h"
 
 
 using namespace modellbasen;
 
 Banner::Banner()
-: m_id(0),
+: m_id(INVALID_ID),
   m_valid_from(0),
   m_valid_to(0),
   m_hits(0)
@@ -27,9 +28,9 @@ bool Banner::GetDisplayBanner(Poco::Data::Session* session_in_transaction, Banne
 	if (banner.IsValid())
 	{
 		Poco::UInt32 id = banner.GetId();
-		*session_in_transaction << "UPDATE banner SET hits=hits+1 WHERE id=?",
+		DEBUG_TRY_CATCH(*session_in_transaction << "UPDATE banner SET hits=hits+1 WHERE id=?",
 				Poco::Data::Keywords::use(id),
-				Poco::Data::Keywords::now;
+				Poco::Data::Keywords::now;)
 	}
 
 	return banner.IsValid();

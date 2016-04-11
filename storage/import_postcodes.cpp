@@ -193,20 +193,22 @@ void PostCodesImporter::FillFilebuffer(std::ifstream& file, char* filebuffer, si
 bool PostCodesImporter::StorePostCode(Poco::Data::Session* session_in_transaction,
                                       const std::string& postcode, const std::string& place, double latitude, double longitude)
 {
-	*session_in_transaction << "INSERT INTO postcode (postcode, place, latitude, longitude) "\
+	DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO postcode (postcode, place, latitude, longitude) "\
 	                            "VALUE (?, ?, ?, ?) "\
 	                            "ON DUPLICATE KEY UPDATE place=?, latitude=?, longitude=?;",
 		Poco::Data::Keywords::useRef(postcode), Poco::Data::Keywords::useRef(place), Poco::Data::Keywords::use(latitude), Poco::Data::Keywords::use(longitude),
 		Poco::Data::Keywords::useRef(place), Poco::Data::Keywords::use(latitude), Poco::Data::Keywords::use(longitude),
-		Poco::Data::Keywords::now;
-	
+		Poco::Data::Keywords::now;)
+
 	return true;
 }
 
 bool PostCodesImporter::CalculatePostCodeDistances(Poco::Data::Session* session_in_transaction, WebApplication* app, Wt::WProgressBar* progressbar)
 {
 	std::list<PostCode> postcodes;
-	*session_in_transaction << "SELECT postcode, place, latitude, longitude FROM postcode;", Poco::Data::Keywords::into(postcodes), Poco::Data::Keywords::now;
+	DEBUG_TRY_CATCH(*session_in_transaction << "SELECT postcode, place, latitude, longitude FROM postcode;",
+		Poco::Data::Keywords::into(postcodes),
+		Poco::Data::Keywords::now;)
 
 	size_t total_distances = (postcodes.size() * (postcodes.size()-1)) / 2;
 	progressbar->setRange(0, total_distances);
@@ -235,7 +237,7 @@ bool PostCodesImporter::CalculatePostCodeDistances(Poco::Data::Session* session_
 			destination_postcode = destination.GetPostCode(); 
 			distance = DistanceBetweenPoints(source.GetLatitude(), source.GetLongitude(), destination.GetLatitude(), destination.GetLongitude());
 
-			insert_statement.execute();
+			DEBUG_TRY_CATCH(insert_statement.execute();)
 
 			processed_distances++;
 			if (0 == (processed_distances%10000))

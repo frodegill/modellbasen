@@ -8,10 +8,10 @@
 using namespace modellbasen;
 
 Tag::Tag()
-: m_id(0),
+: m_id(INVALID_ID),
   m_insert_datatype(0),
   m_query_datatype(0),
-  m_parent_id(0),
+  m_parent_id(INVALID_ID),
   m_query_only(true)
 {
 }
@@ -24,8 +24,12 @@ bool Tag::Initialize(Poco::UInt32 id)
 	if (!DB.CreateSession(session))
 		return false;
 
-	*session << "SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE id=?;",
-		Poco::Data::Keywords::use(id), Poco::Data::Keywords::into(*this), Poco::Data::Keywords::now;
+	IF_NO_ROWS(stmt, *session,
+		"SELECT id,name,insert_datatype,query_datatype,parent,query_only FROM tag WHERE id=?;",
+			Poco::Data::Keywords::use(id), Poco::Data::Keywords::into(*this))
+	{
+		m_id = INVALID_ID;
+	}
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 	return true;
@@ -39,12 +43,18 @@ bool Tag::GetTagValues(std::list<TagValue>& tag_values) const
 	if (!DB.CreateSession(session))
 		return false;
 
-	*session << "SELECT id,value,pos,tag FROM tagvalue WHERE tag=? ORDER BY pos;",
-		Poco::Data::Keywords::useRef(m_id), Poco::Data::Keywords::into(tag_values), Poco::Data::Keywords::now;
+	bool ret = true;
+
+	IF_NO_ROWS(stmt, *session,
+		"SELECT id,value,pos,tag FROM tagvalue WHERE tag=? ORDER BY pos;",
+			Poco::Data::Keywords::useRef(m_id), Poco::Data::Keywords::into(tag_values))
+	{
+		ret = false;
+	}
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
-	return true;
+	return ret;
 }
 
 bool Tag::GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const
@@ -77,8 +87,8 @@ bool Tag::GetId(Poco::Data::Session* session, const std::string& tagname, Poco::
 		return false;
 
 	IF_NO_ROWS(stmt, *session,
-	           "SELECT id FROM tag WHERE name=?;",
-		           Poco::Data::Keywords::useRef(tagname), Poco::Data::Keywords::into(id))
+		"SELECT id FROM tag WHERE name=?;",
+			Poco::Data::Keywords::useRef(tagname), Poco::Data::Keywords::into(id))
 	{
 		id = INVALID_ID;
 	}
@@ -105,9 +115,9 @@ bool Tag::SetEventTag(Poco::Data::Session* session_in_transaction,
 	Poco::UInt32 event_participant_id;
 
 	IF_NO_ROWS(stmt, *session_in_transaction,
-	           "SELECT id FROM eventparticipant WHERE event=? AND participant=?;",
-		           Poco::Data::Keywords::use(event_id), Poco::Data::Keywords::use(participant_id),
-		           Poco::Data::Keywords::into(event_participant_id))
+		"SELECT id FROM eventparticipant WHERE event=? AND participant=?;",
+			Poco::Data::Keywords::use(event_id), Poco::Data::Keywords::use(participant_id),
+			Poco::Data::Keywords::into(event_participant_id))
 	{
 		event_participant_id = INVALID_ID;
 	}
@@ -137,9 +147,9 @@ bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
 	if (INVALID_ID!=user_id)
 	{
 		IF_NO_ROWS(stmt, *session_in_transaction,
-		           "SELECT id FROM taginstance WHERE tag=? AND owner=?;",
-			           Poco::Data::Keywords::use(tag_id), Poco::Data::Keywords::use(user_id),
-			           Poco::Data::Keywords::into(taginstance_id))
+			"SELECT id FROM taginstance WHERE tag=? AND owner=?;",
+				Poco::Data::Keywords::use(tag_id), Poco::Data::Keywords::use(user_id),
+				Poco::Data::Keywords::into(taginstance_id))
 		{
 			taginstance_id = INVALID_ID;
 		}
@@ -157,11 +167,11 @@ bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
 
 	if (INVALID_ID!=taginstance_id) //Exists. Update
 	{
-		*session_in_transaction << "UPDATE taginstance SET stringvalue=?, intvalue=?, timevalue=? WHERE id=?",
+		DEBUG_TRY_CATCH(*session_in_transaction << "UPDATE taginstance SET stringvalue=?, intvalue=?, timevalue=? WHERE id=?",
 				Poco::Data::Keywords::useRef(string_value),
 				Poco::Data::Keywords::use(int_value),
 				Poco::Data::Keywords::use(time_value),
-				Poco::Data::Keywords::now;
+				Poco::Data::Keywords::now;)
 	}
 	else //Does not exist. Create
 	{
