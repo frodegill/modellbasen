@@ -1,5 +1,6 @@
+#include <Wt/WBreak>
 #include <Wt/WGridLayout>
-#include <Wt/WPushButton>
+#include <Wt/WGroupBox>
 #include <Wt/WText>
 
 #include "register_profile_tab.h"
@@ -7,6 +8,7 @@
 #include "../../../singleton/db.h"
 #include "../../../storage/usermanager.h"
 #include "../../../storage/dbo/postcode.h"
+#include "../../../storage/dbo/tag.h"
 
 
 using namespace modellbasen;
@@ -47,15 +49,28 @@ RegisterProfileTab::RegisterProfileTab(WebApplication* app)
 	m_postcode_edit->setText("");
 	profile_grid_layout->addWidget(m_postcode_edit, row++, 1, Wt::AlignLeft);
 
-	Wt::WPushButton* register_button = new Wt::WPushButton(Wt::WString::tr("RegisterButton"));
-	register_button->clicked().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
-	profile_grid_layout->addWidget(register_button, row++, 0, 1, 2, Wt::AlignCenter);
+	Wt::WGroupBox* profile_type_box = new Wt::WGroupBox(Wt::WString::tr("ProfileType"));
+	m_model_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_MODEL), profile_type_box);
+	profile_type_box->addWidget(new Wt::WBreak());
+	m_photographer_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_PHOTOGRAPHER), profile_type_box);
+	profile_type_box->addWidget(new Wt::WBreak());
+	m_mua_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_MUA), profile_type_box);
+	profile_type_box->addWidget(new Wt::WBreak());
+	m_hairdresser_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_HAIRDRESSER), profile_type_box);
+	profile_type_box->addWidget(new Wt::WBreak());
+	m_agency_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_AGENCY), profile_type_box);
+	profile_type_box->addWidget(new Wt::WBreak());
+	profile_grid_layout->addWidget(profile_type_box, row++, 0, 1, 2, Wt::AlignCenter);
+
+	m_register_button = new Wt::WPushButton(Wt::WString::tr("RegisterButton"));
+	m_register_button->clicked().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
+	profile_grid_layout->addWidget(m_register_button, row++, 0, 1, 2, Wt::AlignCenter);
 
 	m_feedback_text = new Wt::WText();
 	m_feedback_text->setWidth(Wt::WLength(20, Wt::WLength::FontEm));
 	m_feedback_text->setStyleClass("feedback");
 	m_feedback_text->hide();
-	profile_grid_layout->addWidget(m_feedback_text, row++, 0, 1, 2, Wt::AlignLeft);
+	profile_grid_layout->addWidget(m_feedback_text, row++, 0, 1, 2, Wt::AlignCenter);
 }
 
 RegisterProfileTab::~RegisterProfileTab()
@@ -65,6 +80,15 @@ RegisterProfileTab::~RegisterProfileTab()
 void RegisterProfileTab::OnRegisterButtonClicked()
 {
 	Wt::WFormWidget* widget = GetFirstIncompleteFormElement();
+	if (!widget)
+	{
+		if (m_model_checkbox->hasFocus()) widget=m_photographer_checkbox;
+		else if (m_photographer_checkbox->hasFocus()) widget=m_mua_checkbox;
+		else if (m_mua_checkbox->hasFocus()) widget=m_hairdresser_checkbox;
+		else if (m_hairdresser_checkbox->hasFocus()) widget=m_agency_checkbox;
+		else if (m_agency_checkbox->hasFocus()) widget=m_register_button;
+	}
+	
 	if (widget)
 	{
 		widget->setFocus();
@@ -77,8 +101,16 @@ void RegisterProfileTab::OnRegisterButtonClicked()
 
 	std::string username = m_username_edit->text().trim().toUTF8();
 	std::string password = m_password_edit->text().toUTF8();
+
+	Poco::UInt32 type_bflag = 0;
+	if(m_model_checkbox->isChecked())        type_bflag|=MODEL_BFLAG;
+	if(m_photographer_checkbox->isChecked()) type_bflag|=PHOTOGRAPHER_BFLAG;
+	if(m_mua_checkbox->isChecked())          type_bflag|=MUA_BFLAG;
+	if(m_hairdresser_checkbox->isChecked())  type_bflag|=HAIRDRESSER_BFLAG;
+	if(m_agency_checkbox->isChecked())       type_bflag|=AGENCY_BFLAG;
+
 	if (!UserManager::RegisterUser(session_in_transaction, username, password,
-	                               m_email_edit->text().trim().toUTF8(), m_postcode_edit->text().trim().toUTF8()))
+	                               m_email_edit->text().trim().toUTF8(), m_postcode_edit->text().trim().toUTF8(), type_bflag))
 	{
 		DB.ReleaseSession(session_in_transaction, PocoGlue::ROLLBACK);
 		return;

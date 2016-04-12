@@ -51,11 +51,12 @@ bool UserManager::Exists(Poco::Data::Session* session, const std::string& userna
 
 bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 															 const std::string& username, const std::string& password,
-                               const std::string& email, const std::string& postcode)
+                               const std::string& email, const std::string& postcode,
+															 Poco::UInt32 type_bflag)
 {
 	bool username_exists, postcode_exists;
 	if (!session_in_transaction ||
-		  username.empty() ||
+	    username.empty() ||
 	    !Exists(session_in_transaction, username, username_exists) || username_exists ||
 	    !PostCode::Exists(session_in_transaction, postcode, postcode_exists) || !postcode_exists ||
 	    email.empty())
@@ -70,7 +71,17 @@ bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 		Poco::Data::Keywords::useRef(email),
 		Poco::Data::Keywords::now;)
 
-	return Tag::SetUserTag(session_in_transaction, username, TAG_POSTCODE, postcode, 0, 0);
+	Poco::UInt32 user_id;
+	if (!GetUserId(session_in_transaction, username, user_id) || INVALID_ID==user_id)
+		return false;
+
+	bool ret = Tag::SetUserTag(session_in_transaction, user_id, TAG_POSTCODE, postcode, 0, 0);
+	if (ret && (0!=(type_bflag&MODEL_BFLAG)))        ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_MODEL, "", 0, 0);
+	if (ret && (0!=(type_bflag&PHOTOGRAPHER_BFLAG))) ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_PHOTOGRAPHER, "", 0, 0);
+	if (ret && (0!=(type_bflag&MUA_BFLAG)))          ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_MUA, "", 0, 0);
+	if (ret && (0!=(type_bflag&HAIRDRESSER_BFLAG)))  ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_HAIRDRESSER, "", 0, 0);
+	if (ret && (0!=(type_bflag&AGENCY_BFLAG)))       ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_AGENCY, "", 0, 0);
+	return ret;
 }
 
 bool UserManager::GetUserId(const std::string& username, Poco::UInt32& user_id)

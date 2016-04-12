@@ -45,6 +45,7 @@
 	<message id="Tab.ProfileTab">Profile</message>
 
 	<message id="Tab.RegisterProfileTab">New Profile</message>
+	<message id="ProfileType">Profile type</message>
 
 	<message id="Tab.MessageBoardTab">Messageboard</message>
 	<message id="PostedTimeHeader">Time</message>

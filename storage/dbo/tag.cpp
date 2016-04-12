@@ -96,13 +96,9 @@ bool Tag::GetId(Poco::Data::Session* session, const std::string& tagname, Poco::
 	return true;
 }
 
-bool Tag::SetUserTag(Poco::Data::Session* session_in_transaction,
-										 const std::string& username, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
+bool Tag::SetUserTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id,
+										 const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
 {
-	Poco::UInt32 user_id;
-	if (!UserManager::GetUserId(session_in_transaction, username, user_id) || INVALID_ID==user_id)
-		return false;
-
 	return SetTag(session_in_transaction, user_id, INVALID_ID, tag_name, string_value, int_value, time_value);
 }
 

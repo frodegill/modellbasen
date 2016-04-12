@@ -66,7 +66,11 @@ namespace modellbasen
 #define TAG_SEX                            ("tag.sex")
 #define TAG_SIRNAME                        ("tag.sirname")
 
-	
+#define MODEL_BFLAG        (1<<0)
+#define PHOTOGRAPHER_BFLAG (1<<1)
+#define MUA_BFLAG          (1<<2)
+#define HAIRDRESSER_BFLAG  (1<<3)
+#define AGENCY_BFLAG       (1<<4)
 
 class Tag {
 public: //For PoCo::Data
@@ -111,7 +115,7 @@ public:
 	static bool GetId(const std::string& tagname, Poco::UInt32& id);
 	static bool GetId(Poco::Data::Session* session, const std::string& tagname, Poco::UInt32& id);
 	
-	static bool SetUserTag(Poco::Data::Session* session_in_transaction, const std::string& username,
+	static bool SetUserTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id,
 												 const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
 	static bool SetEventTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 event_id, Poco::UInt32 participant_id,
 													const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
