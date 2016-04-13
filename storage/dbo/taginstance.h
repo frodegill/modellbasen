@@ -24,9 +24,9 @@ public:
 
 private:
 	Poco::UInt32 m_id;
-	std::string  m_stringvalue;
-	Poco::UInt32 m_intvalue;
-	Poco::Int64  m_datetimevalue;
+	Poco::Nullable<std::string>  m_stringvalue;
+	Poco::Nullable<Poco::UInt32> m_intvalue;
+	Poco::Nullable<Poco::Int64>  m_datetimevalue;
 	Poco::UInt32 m_tag_id;
 	Poco::UInt32 m_owner_id;
 	Poco::UInt32 m_eventparticipant_id;

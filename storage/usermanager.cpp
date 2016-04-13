@@ -75,12 +75,17 @@ bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 	if (!GetUserId(session_in_transaction, username, user_id) || INVALID_ID==user_id)
 		return false;
 
-	bool ret = Tag::SetUserTag(session_in_transaction, user_id, TAG_POSTCODE, postcode, 0, 0);
-	if (ret && (0!=(type_bflag&MODEL_BFLAG)))        ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_MODEL, "", 0, 0);
-	if (ret && (0!=(type_bflag&PHOTOGRAPHER_BFLAG))) ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_PHOTOGRAPHER, "", 0, 0);
-	if (ret && (0!=(type_bflag&MUA_BFLAG)))          ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_MUA, "", 0, 0);
-	if (ret && (0!=(type_bflag&HAIRDRESSER_BFLAG)))  ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_HAIRDRESSER, "", 0, 0);
-	if (ret && (0!=(type_bflag&AGENCY_BFLAG)))       ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_AGENCY, "", 0, 0);
+	Poco::Nullable<std::string> null_stringvalue;
+	Poco::Nullable<Poco::UInt32> null_intvalue;
+	Poco::Nullable<Poco::UInt64> null_timevalue;
+
+	Poco::Nullable<std::string> postcode_stringvalue(postcode);
+	bool ret = Tag::SetUserTag(session_in_transaction, user_id, TAG_POSTCODE, postcode_stringvalue, null_intvalue, null_timevalue);
+	if (ret && (0!=(type_bflag&MODEL_BFLAG)))        ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_MODEL, null_stringvalue, null_intvalue, null_timevalue);
+	if (ret && (0!=(type_bflag&PHOTOGRAPHER_BFLAG))) ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_PHOTOGRAPHER, null_stringvalue, null_intvalue, null_timevalue);
+	if (ret && (0!=(type_bflag&MUA_BFLAG)))          ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_MUA, null_stringvalue, null_intvalue, null_timevalue);
+	if (ret && (0!=(type_bflag&HAIRDRESSER_BFLAG)))  ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_HAIRDRESSER, null_stringvalue, null_intvalue, null_timevalue);
+	if (ret && (0!=(type_bflag&AGENCY_BFLAG)))       ret=Tag::SetUserTag(session_in_transaction, user_id, TAG_AGENCY, null_stringvalue, null_intvalue, null_timevalue);
 	return ret;
 }
 

@@ -97,13 +97,20 @@ bool Tag::GetId(Poco::Data::Session* session, const std::string& tagname, Poco::
 }
 
 bool Tag::SetUserTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id,
-										 const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
+                     const std::string& tag_name,
+                     Poco::Nullable<std::string>& stringvalue,
+                     Poco::Nullable<Poco::UInt32>& intvalue,
+                     Poco::Nullable<Poco::UInt64>& timevalue)
 {
-	return SetTag(session_in_transaction, user_id, INVALID_ID, tag_name, string_value, int_value, time_value);
+	return SetTag(session_in_transaction, user_id, INVALID_ID, tag_name, stringvalue, intvalue, timevalue);
 }
 
 bool Tag::SetEventTag(Poco::Data::Session* session_in_transaction,
-											Poco::UInt32 event_id, Poco::UInt32 participant_id, const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value)
+                      Poco::UInt32 event_id, Poco::UInt32 participant_id,
+                      const std::string& tag_name,
+                      Poco::Nullable<std::string>& stringvalue,
+                      Poco::Nullable<Poco::UInt32>& intvalue,
+                      Poco::Nullable<Poco::UInt64>& timevalue)
 {
 	if (!session_in_transaction || INVALID_ID==event_id || INVALID_ID==participant_id)
 		return false;
@@ -121,13 +128,15 @@ bool Tag::SetEventTag(Poco::Data::Session* session_in_transaction,
 	if (INVALID_ID == event_participant_id)
 		return false;
 
-	return SetTag(session_in_transaction, INVALID_ID, event_participant_id, tag_name, string_value, int_value, time_value);
+	return SetTag(session_in_transaction, INVALID_ID, event_participant_id, tag_name, stringvalue, intvalue, timevalue);
 }
 
 bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
-								 Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
-								 const std::string& tag_name,
-								 const std::string& string_value, int int_value, Poco::UInt64 time_value)
+                 Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
+                 const std::string& tag_name,
+                 Poco::Nullable<std::string>& stringvalue,
+                 Poco::Nullable<Poco::UInt32>& intvalue,
+                 Poco::Nullable<Poco::UInt64>& timevalue)
 {
 	if (!session_in_transaction ||
 		  (INVALID_ID==user_id && INVALID_ID==event_participant_id) || //neither user nor event
@@ -164,9 +173,9 @@ bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
 	if (INVALID_ID!=taginstance_id) //Exists. Update
 	{
 		DEBUG_TRY_CATCH(*session_in_transaction << "UPDATE taginstance SET stringvalue=?, intvalue=?, timevalue=? WHERE id=?",
-				Poco::Data::Keywords::useRef(string_value),
-				Poco::Data::Keywords::use(int_value),
-				Poco::Data::Keywords::use(time_value),
+				Poco::Data::Keywords::use(stringvalue),
+				Poco::Data::Keywords::use(intvalue),
+				Poco::Data::Keywords::use(timevalue),
 				Poco::Data::Keywords::now;)
 	}
 	else //Does not exist. Create
@@ -181,8 +190,12 @@ bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
 
 		DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO taginstance (stringvalue, intvalue, timevalue, tag, owner, eventparticipant) "
 		                                           "VALUE (?, ?, ?, ?, ?, ?)",
-			Poco::Data::Keywords::useRef(string_value), Poco::Data::Keywords::use(int_value), Poco::Data::Keywords::use(time_value),
-			Poco::Data::Keywords::use(tag_id), Poco::Data::Keywords::use(user_id_value), Poco::Data::Keywords::use(event_participant_id_value),
+			Poco::Data::Keywords::use(stringvalue),
+			Poco::Data::Keywords::use(intvalue),
+			Poco::Data::Keywords::use(timevalue),
+			Poco::Data::Keywords::use(tag_id),
+			Poco::Data::Keywords::use(user_id_value),
+			Poco::Data::Keywords::use(event_participant_id_value),
 			Poco::Data::Keywords::now;)
 	}
 

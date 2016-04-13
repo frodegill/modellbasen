@@ -116,12 +116,21 @@ public:
 	static bool GetId(Poco::Data::Session* session, const std::string& tagname, Poco::UInt32& id);
 	
 	static bool SetUserTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id,
-												 const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
+	                       const std::string& tag_name,
+	                       Poco::Nullable<std::string>& stringvalue,
+	                       Poco::Nullable<Poco::UInt32>& intvalue,
+	                       Poco::Nullable<Poco::UInt64>& timevalue);
 	static bool SetEventTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 event_id, Poco::UInt32 participant_id,
-													const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
+	                   const std::string& tag_name,
+	                   Poco::Nullable<std::string>& stringvalue,
+	                   Poco::Nullable<Poco::UInt32>& intvalue,
+	                   Poco::Nullable<Poco::UInt64>& timevalue);
 private:
 	static bool SetTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
-										 const std::string& tag_name, const std::string& string_value, int int_value, Poco::UInt64 time_value);
+	                   const std::string& tag_name,
+	                   Poco::Nullable<std::string>& stringvalue,
+	                   Poco::Nullable<Poco::UInt32>& intvalue,
+	                   Poco::Nullable<Poco::UInt64>& timevalue);
 
 private:
 	const std::string& GetName() const {return m_name;}
