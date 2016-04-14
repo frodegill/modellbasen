@@ -45,7 +45,10 @@
 	<message id="Tab.ProfileTab">Profile</message>
 
 	<message id="Tab.RegisterProfileTab">New Profile</message>
+	<message id="Email">Email</message>
+	<message id="Postcode">Postcode</message>
 	<message id="ProfileType">Profile type</message>
+	<message id="RegisterButton">Register</message>
 
 	<message id="Tab.MessageBoardTab">Messageboard</message>
 	<message id="PostedTimeHeader">Time</message>
