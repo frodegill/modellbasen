@@ -200,6 +200,7 @@ void MainWidget::OnLoggedIn()
 	m_search_tab->OnLoggedIn();
 	m_administrator_tab->OnLoggedIn();
 	UpdateTabVisibility();
+	ActivateTab(PROFILE);
 }
 
 void MainWidget::OnLoggedOut()
