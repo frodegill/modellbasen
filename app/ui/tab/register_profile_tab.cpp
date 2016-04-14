@@ -51,14 +51,19 @@ RegisterProfileTab::RegisterProfileTab(WebApplication* app)
 
 	Wt::WGroupBox* profile_type_box = new Wt::WGroupBox(Wt::WString::tr("ProfileType"));
 	m_model_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_MODEL), profile_type_box);
+	m_model_checkbox->enterPressed().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
 	profile_type_box->addWidget(new Wt::WBreak());
 	m_photographer_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_PHOTOGRAPHER), profile_type_box);
+	m_photographer_checkbox->enterPressed().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
 	profile_type_box->addWidget(new Wt::WBreak());
 	m_mua_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_MUA), profile_type_box);
+	m_mua_checkbox->enterPressed().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
 	profile_type_box->addWidget(new Wt::WBreak());
 	m_hairdresser_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_HAIRDRESSER), profile_type_box);
+	m_hairdresser_checkbox->enterPressed().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
 	profile_type_box->addWidget(new Wt::WBreak());
 	m_agency_checkbox = new Wt::WCheckBox(Wt::WString::tr(TAG_AGENCY), profile_type_box);
+	m_agency_checkbox->enterPressed().connect(this, &RegisterProfileTab::OnRegisterButtonClicked);
 	profile_type_box->addWidget(new Wt::WBreak());
 	profile_grid_layout->addWidget(profile_type_box, row++, 0, 1, 2, Wt::AlignCenter);
 
@@ -82,11 +87,13 @@ void RegisterProfileTab::OnRegisterButtonClicked()
 	Wt::WFormWidget* widget = GetFirstIncompleteFormElement();
 	if (!widget)
 	{
-		if (m_model_checkbox->hasFocus()) widget=m_photographer_checkbox;
-		else if (m_photographer_checkbox->hasFocus()) widget=m_mua_checkbox;
-		else if (m_mua_checkbox->hasFocus()) widget=m_hairdresser_checkbox;
-		else if (m_hairdresser_checkbox->hasFocus()) widget=m_agency_checkbox;
-		else if (m_agency_checkbox->hasFocus()) widget=m_register_button;
+		Wt::WObject* sender_ctrl = sender();
+		if (sender_ctrl==m_postcode_edit) widget=m_model_checkbox;
+		else if (sender_ctrl==m_model_checkbox) widget=m_photographer_checkbox;
+		else if (sender_ctrl==m_photographer_checkbox) widget=m_mua_checkbox;
+		else if (sender_ctrl==m_mua_checkbox) widget=m_hairdresser_checkbox;
+		else if (sender_ctrl==m_hairdresser_checkbox) widget=m_agency_checkbox;
+		else if (sender_ctrl==m_agency_checkbox) widget=m_register_button;
 	}
 	
 	if (widget)
