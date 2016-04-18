@@ -19,6 +19,8 @@ public:
 	~RegisterProfileTab();
 
 public:
+	void OnUsernameChanged();
+	void OnPostcodeChanged();
 	void OnRegisterButtonClicked();
 
 	void OnActivateTab();
@@ -35,6 +37,7 @@ private:
 	Wt::WLineEdit*   m_password_edit;
 	Wt::WLineEdit*   m_email_edit;
 	Wt::WLineEdit*   m_postcode_edit;
+	Wt::WText*       m_postcode_text;
 	Wt::WCheckBox*   m_model_checkbox;
 	Wt::WCheckBox*   m_photographer_checkbox;
 	Wt::WCheckBox*   m_mua_checkbox;
