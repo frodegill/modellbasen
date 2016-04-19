@@ -51,6 +51,9 @@ private:
 	Wt::WText*       m_login_feedback_text;
 
 	Wt::WPushButton* m_logout_button;
+
+	Wt::WText*       m_username_text;
+	Wt::WText*       m_messages_text;
 };
 
 } // namespace modellbasen

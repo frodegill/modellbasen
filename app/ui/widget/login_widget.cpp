@@ -111,10 +111,20 @@ void LoginWidget::InitializeLoggedInContainer()
 	logout_grid_layout->setContentsMargins(0, 0, 0, 0);
 	m_logged_in_container->setLayout(logout_grid_layout);
 
+	//Create username widget
+	logout_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Username")), 0, 0, Wt::AlignRight);
+	m_username_text = new Wt::WText();
+	logout_grid_layout->addWidget(m_username_text, 0, 1, Wt::AlignLeft);
+
+	//Create messages widget
+	logout_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Messages")), 1, 0, Wt::AlignRight);
+	m_messages_text = new Wt::WText();
+	logout_grid_layout->addWidget(m_messages_text, 1, 1, Wt::AlignLeft);
+
 	//Create logout button
 	m_logout_button = new Wt::WPushButton(Wt::WString::tr("LogoutButton"));
 	m_logout_button->clicked().connect(this, &LoginWidget::OnLogoutButtonClicked);
-	logout_grid_layout->addWidget(m_logout_button, 0, 0, Wt::AlignLeft);
+	logout_grid_layout->addWidget(m_logout_button, 0, 2, 2, 1, Wt::AlignRight);
 }
 
 void LoginWidget::UsernameEnterPressed()
@@ -200,6 +210,8 @@ void LoginWidget::OnLoggedIn()
 {
 	m_login_feedback_text->hide();
 	m_not_logged_in_container->hide();
+	m_username_text->setText(Wt::WString::fromUTF8(m_app->GetUserManager()->GetCurrentUser()->GetUsername()));
+	m_messages_text->setText("ToDo");
 	m_logged_in_container->show();
 }
 
@@ -207,4 +219,6 @@ void LoginWidget::OnLoggedOut()
 {
 	m_not_logged_in_container->show();
 	m_logged_in_container->hide();
+	m_username_text->setText("");
+	m_messages_text->setText("");
 }
