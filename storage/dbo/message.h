@@ -23,6 +23,7 @@ public:
 
 private:
 	Poco::UInt32 m_id;
+	std::string  m_subject;
 	std::string  m_text;
 	Poco::UInt32 m_sender_id;
 	Poco::UInt32 m_recipient_id;
@@ -42,12 +43,13 @@ namespace Data {
 template <> class TypeHandler<class modellbasen::Message>
 {
 public:
-	static std::size_t size() {return 10;}
+	static std::size_t size() {return 11;}
 
 	static void bind(std::size_t pos, const modellbasen::Message& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
 		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<std::string>::bind(pos++, obj.m_subject, pBinder, dir);
 		TypeHandler<std::string>::bind(pos++, obj.m_text, pBinder, dir);
 		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_sender_id, pBinder, dir);
 		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_recipient_id, pBinder, dir);
@@ -63,6 +65,7 @@ public:
 	{
 		poco_assert_dbg(pBinder);
 		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<std::string>::prepare(pos++, obj.m_subject, pPreparator);
 		TypeHandler<std::string>::prepare(pos++, obj.m_text, pPreparator);
 		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_sender_id, pPreparator);
 		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_recipient_id, pPreparator);
@@ -78,6 +81,7 @@ public:
 	{
 		poco_assert_dbg(pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);
+		TypeHandler<std::string>::extract(pos++, obj.m_subject, defVal.m_subject, pExt);
 		TypeHandler<std::string>::extract(pos++, obj.m_text, defVal.m_text, pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_sender_id, defVal.m_sender_id, pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_recipient_id, defVal.m_recipient_id, pExt);
