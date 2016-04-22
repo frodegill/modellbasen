@@ -5,6 +5,7 @@
 #include <Wt/WLocalizedStrings>
 #include "classes.h"
 #include "../poco_glue.h"
+#include "../../app/defines.h"
 #include "../../singleton/db.h"
 
 
@@ -97,8 +98,8 @@ public:
 	Tag();
 
 	bool Initialize(Poco::UInt32 id);
-	void Reset() {m_id=0;}
-	bool IsValid() const {return 0!=m_id;}
+	void Reset() {m_id=INVALID_ID;}
+	bool IsValid() const {return INVALID_ID!=m_id;}
 
 public:
 	Poco::UInt32       GetId() const {return m_id;}

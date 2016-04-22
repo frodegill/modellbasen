@@ -3,6 +3,7 @@
 
 #include "classes.h"
 #include "../poco_glue.h"
+#include "../../app/defines.h"
 #include "../../singleton/db.h"
 
 #include <string>
@@ -20,8 +21,8 @@ public: //For PoCo::Data
 public:
 	Banner();
 
-	void Reset() {m_id = 0;}
-	bool IsValid() const {return 0!=m_id;}
+	void Reset() {m_id=INVALID_ID;}
+	bool IsValid() const {return INVALID_ID!=m_id;}
 
 	static bool GetDisplayBanner(Poco::Data::Session* session_in_transaction, Banner& banner);
 

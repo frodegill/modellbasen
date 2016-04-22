@@ -9,7 +9,7 @@ using namespace modellbasen;
 TagValue::TagValue()
 : m_id(INVALID_ID),
   m_pos(0),
-  m_tag_id(0)
+  m_tag_id(INVALID_ID)
 {
 }
 

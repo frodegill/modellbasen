@@ -8,8 +8,8 @@ using namespace modellbasen;
 
 Banner::Banner()
 : m_id(INVALID_ID),
-  m_valid_from(0),
-  m_valid_to(0),
+  m_valid_from(EPOCH),
+  m_valid_to(EPOCH),
   m_hits(0)
 {
 }

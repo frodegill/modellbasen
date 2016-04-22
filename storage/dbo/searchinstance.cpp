@@ -3,6 +3,7 @@
 
 #include "searchinstance.h"
 #include "tagvalue.h"
+#include "../../app/defines.h"
 #include "../../singleton/logging.h"
 
 
@@ -17,7 +18,7 @@ SearchInstance::SearchInstance(WebApplication* app, Poco::UInt32 tag_id, Tag::Ta
   m_inverted(false),
   m_intvalue(0),
   m_intvalue2(0),
-  m_datetimevalue(0)
+  m_datetimevalue(EPOCH)
 {
 }
 

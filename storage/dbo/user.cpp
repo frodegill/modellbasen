@@ -6,8 +6,8 @@
 using namespace modellbasen;
 
 User::User()
-: m_id(0),
-  m_profile_picture_id(0)
+: m_id(INVALID_ID),
+  m_profile_picture_id(INVALID_ID)
 {
 }
 

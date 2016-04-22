@@ -110,7 +110,7 @@ bool UserManager::GetUserId(Poco::Data::Session* session, const std::string& use
 
 	IF_NO_ROWS(stmt, *session,
 		"SELECT id FROM user WHERE username=?",
-			Poco::Data::Keywords::into(user_id, Poco::Data::Position(0), INVALID_ID),
+			Poco::Data::Keywords::into(user_id),
 			Poco::Data::Keywords::use(username_lowercase))
 	{
 		user_id = INVALID_ID;

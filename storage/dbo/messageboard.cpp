@@ -13,7 +13,7 @@ using namespace modellbasen;
 
 MessageBoard::MessageBoard()
 : m_id(INVALID_ID),
-  m_posted_time(0),
+  m_posted_time(EPOCH),
   m_user_id(INVALID_ID)
 {
 }
@@ -53,7 +53,7 @@ bool MessageBoard::InitializeGlobalMessageboardList()
 		g_messageboard_model.setItem(row, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(username)));
 		g_messageboard_model.setItem(row++, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(message)));
 	}
-		
+
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
 	return true;
