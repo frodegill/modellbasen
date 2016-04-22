@@ -26,7 +26,8 @@ public:
 	void OnLoggedOut();
 
 public:
-	void serverPush();
+	void OnPushedRefresh();
+	void OnPushedRefreshMessagecount();
 
 public:
 	UserManager*           GetUserManager() const {return m_usermanager;}

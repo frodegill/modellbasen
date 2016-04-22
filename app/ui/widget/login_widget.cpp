@@ -222,3 +222,8 @@ void LoginWidget::OnLoggedOut()
 	m_username_text->setText("");
 	m_messages_text->setText("");
 }
+
+void LoginWidget::OnPushedRefreshMessagecount()
+{
+	//TODO
+}

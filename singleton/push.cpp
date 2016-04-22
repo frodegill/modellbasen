@@ -8,23 +8,25 @@
 #include "../storage/dbo/user.h"
 #include "../utils/time.h"
 
+#include <boost/locale.hpp>
 #include <Wt/WServer>
 #include <Wt/WStandardItem>
 
 
 std::vector<ClientConnection> g_client_connections;
 
-ClientConnection::ClientConnection(const std::string& session_id, modellbasen::WebApplication* application, const boost::function<void()>& function)
-	: m_session_id(session_id), m_application(application), m_function(function)
-{}
-
-void connect(modellbasen::WebApplication* application, const boost::function<void()>& function)
+ClientConnection::ClientConnection(const std::string& session_id, modellbasen::WebApplication* application)
+	: m_session_id(session_id), m_application(application), m_func_bflag(0)
 {
-	boost::mutex::scoped_lock lock(g_global_mutex);
-	g_client_connections.push_back(ClientConnection(Wt::WApplication::instance()->sessionId(), application, function));
 }
 
-void disconnect(modellbasen::WebApplication* application)
+void RegisterConnection(modellbasen::WebApplication* application)
+{
+	boost::mutex::scoped_lock lock(g_global_mutex);
+	g_client_connections.push_back(ClientConnection(Wt::WApplication::instance()->sessionId(), application));
+}
+
+void UnregisterConnection(modellbasen::WebApplication* application)
 {
 	boost::mutex::scoped_lock lock(g_global_mutex);
 
@@ -32,6 +34,44 @@ void disconnect(modellbasen::WebApplication* application)
 	for (i=0; i<g_client_connections.size(); ++i) {
 		if (g_client_connections[i].m_application == application) {
 			g_client_connections.erase(g_client_connections.begin() + i);
+			break;
+		}
+	}
+}
+
+void ConnectRefreshFunction(modellbasen::WebApplication* application, const boost::function<void()>& function)
+{
+	boost::mutex::scoped_lock lock(g_global_mutex);
+	std::size_t i;
+	for (i=0; i<g_client_connections.size(); ++i) {
+		if (g_client_connections[i].m_application == application) {
+			g_client_connections[i].m_refresh_function = function;
+			g_client_connections[i].m_func_bflag |= POST_MESSAGE_TO_BOARD_FUNC;
+			break;
+		}
+	}
+}
+
+void ConnectRefreshMessagecountFunction(modellbasen::WebApplication* application, const boost::function<void()>& function)
+{
+	boost::mutex::scoped_lock lock(g_global_mutex);
+	std::size_t i;
+	for (i=0; i<g_client_connections.size(); ++i) {
+		if (g_client_connections[i].m_application == application) {
+			g_client_connections[i].m_refresh_messagecount_function = function;
+			g_client_connections[i].m_func_bflag |= NOTIFY_MESSAGE_TO_USER;
+			break;
+		}
+	}
+}
+
+void DisconnectFunction(modellbasen::WebApplication* application, uint32_t function_type)
+{
+	boost::mutex::scoped_lock lock(g_global_mutex);
+	std::size_t i;
+	for (i=0; i<g_client_connections.size(); ++i) {
+		if (g_client_connections[i].m_application == application) {
+			g_client_connections[i].m_func_bflag &= ~function_type;
 			break;
 		}
 	}
@@ -73,7 +113,40 @@ bool PostMessageToBoard(const modellbasen::WebApplication* application, const st
 	std::size_t i;
 	for (i=0; i<g_client_connections.size(); ++i) {
 		ClientConnection& application_connection = g_client_connections[i];
-		Wt::WServer::instance()->post(application_connection.m_session_id, application_connection.m_function);
+		if (0==(application_connection.m_func_bflag&POST_MESSAGE_TO_BOARD_FUNC))
+			continue;
+
+		Wt::WServer::instance()->post(application_connection.m_session_id, application_connection.m_refresh_function);
+	}
+	return true;
+}
+
+bool NotifyMessageToUser(const std::string& username)
+{
+	std::string username_lowercase = boost::locale::to_lower(username);
+
+	boost::mutex::scoped_lock lock(g_global_mutex);
+
+	const modellbasen::UserManager* usermanager;
+	const modellbasen::User* user;
+	std::size_t i;
+	for (i=0; i<g_client_connections.size(); ++i) {
+		ClientConnection& application_connection = g_client_connections[i];
+		if (0==(application_connection.m_func_bflag&NOTIFY_MESSAGE_TO_USER))
+			continue;
+
+		if (!application_connection.m_application)
+			continue;
+		
+		usermanager = application_connection.m_application->GetUserManager();
+		if (!usermanager)
+			continue;
+		
+		user = usermanager->GetCurrentUser();
+		if (!user || username_lowercase!=boost::locale::to_lower(user->GetUsername()))
+			continue;
+
+		Wt::WServer::instance()->post(application_connection.m_session_id, application_connection.m_refresh_messagecount_function);
 	}
 	return true;
 }

@@ -38,6 +38,8 @@ public:
 	void OnLoggedIn();
 	void OnLoggedOut();
 
+	void OnPushedRefreshMessagecount();
+
 private:
 	WebApplication*  m_app;
 	Wt::WContainerWidget* m_not_logged_in_container;

@@ -45,6 +45,8 @@ public:
 	void OnRegisterNewProfile();
 	void OnCloseBannerButtonClicked();
 
+	void OnPushedRefreshMessagecount();
+
 private:
 	WebApplication* m_app;
 	bool            m_initialized;

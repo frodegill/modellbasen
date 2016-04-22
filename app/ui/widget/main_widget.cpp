@@ -221,3 +221,8 @@ void MainWidget::OnCloseBannerButtonClicked()
 {
 	m_banner_widget->hide();
 }
+
+void MainWidget::OnPushedRefreshMessagecount()
+{
+	m_login_widget->OnPushedRefreshMessagecount();
+}

@@ -19,13 +19,15 @@ WebApplication::WebApplication(const Wt::WEnvironment& environment)
 	setTitle(Wt::WString::tr("AppName"));
 	internalPathChanged().connect(this, &WebApplication::onInternalPathChange);
 	enableUpdates(true);
-	::connect(this, boost::bind(&WebApplication::serverPush, this));
+	::RegisterConnection(this);
+	::ConnectRefreshFunction(this, boost::bind(&WebApplication::OnPushedRefresh, this));
+	::ConnectRefreshMessagecountFunction(this, boost::bind(&WebApplication::OnPushedRefreshMessagecount, this));
 }
 
 WebApplication::~WebApplication()
 {
 	enableUpdates(false);
-	::disconnect(this);
+	::UnregisterConnection(this);
 
 	delete m_main_widget;
 
@@ -74,8 +76,15 @@ void WebApplication::OnLoggedOut()
 		m_main_widget->OnLoggedIn();
 }
 
-void WebApplication::serverPush()
+void WebApplication::OnPushedRefresh()
 {
 	boost::mutex::scoped_lock lock(g_global_mutex);
 	Wt::WApplication::instance()->triggerUpdate();
+}
+
+void WebApplication::OnPushedRefreshMessagecount()
+{
+	boost::mutex::scoped_lock lock(g_global_mutex);
+	if (m_main_widget)
+		m_main_widget->OnPushedRefreshMessagecount();
 }
