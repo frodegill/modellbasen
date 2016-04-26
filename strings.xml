@@ -6,6 +6,8 @@
 
 	<message id="DateFormat">d.MMM yyyy HH:mm</message>
 
+	<message id="Arg">{1}</message>
+
 	<message id="ArgInteger">{1} ({2})</message>
 	<message id="ArgString">{1} ({2})</message>
 	<message id="ArgDate">{1} ({2})</message>
@@ -52,8 +54,8 @@
 
 	<message id="Tab.MessageBoardTab">Messageboard</message>
 	<message id="PostedTimeHeader">Time</message>
-	<message id="UsernameHeader">Username</message>
-	<message id="MessageHeader">Message</message>
+	<message id="UsernameHeader">Username:</message>
+	<message id="MessageHeader">Messages:</message>
 
 	<message id="Tab.SearchTab">Search</message>
 
@@ -168,6 +170,7 @@
 	<message id="InvalidPasswordEmpty">Password cannot be empty!</message>
 	<message id="InvalidPasswordMismatch">Passwords do not match!</message>
 	
+	<message id="Err">ERR</message>
 	<message id="ErrorSettingPassword">Something failed when updating password</message>
 	<message id="ErrorWritingToDatabase">Something failed when writing to database</message>
 

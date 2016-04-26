@@ -1,6 +1,7 @@
 #include "message.h"
 
 #include "../../app/defines.h"
+#include "../../singleton/db.h"
 
 
 using namespace modellbasen;
@@ -16,4 +17,34 @@ Message::Message()
   m_sender_has_deleted(false),
   m_recipient_has_deleted(false)
 {
+}
+
+bool Message::GetUnreadCount(const Poco::UInt32& user_id, size_t& count)
+{
+	Poco::Data::Session* session;
+	if (!DB.CreateSession(session))
+		return false;
+
+	bool ret = GetUnreadCount(session, user_id, count);
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+	return ret;
+}
+
+bool Message::GetUnreadCount(Poco::Data::Session* session, const Poco::UInt32& user_id, size_t& count)
+{
+	if (!session)
+		return false;
+
+	Poco::UInt64 epoch = EPOCH;
+	IF_NO_ROWS(stmt, *session, "SELECT COUNT(*) FROM message WHERE recipient=? AND read_time=? AND recipient_deleted=false",
+		Poco::Data::Keywords::into(count),
+		Poco::Data::Keywords::useRef(user_id),
+		Poco::Data::Keywords::use(epoch),
+		Poco::Data::Keywords::now)
+	{
+		count = 0;
+	}
+
+	return true;
 }

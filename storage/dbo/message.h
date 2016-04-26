@@ -21,6 +21,10 @@ public:
 public:
 	Poco::UInt32       GetId() const {return m_id;}
 
+public:
+	static bool GetUnreadCount(const Poco::UInt32& user_id, size_t& count);
+	static bool GetUnreadCount(Poco::Data::Session* session, const Poco::UInt32& user_id, size_t& count);
+
 private:
 	Poco::UInt32 m_id;
 	std::string  m_subject;
