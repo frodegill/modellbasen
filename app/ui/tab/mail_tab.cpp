@@ -1,12 +1,12 @@
 #include <Wt/WVBoxLayout>
 
-#include "profile_tab.h"
+#include "mail_tab.h"
 #include "../../application.h"
 
 
 using namespace modellbasen;
 
-ProfileTab::ProfileTab(WebApplication* app)
+MailTab::MailTab(WebApplication* app)
 : Wt::WContainerWidget(),
   m_app(app)
 {
@@ -15,14 +15,19 @@ ProfileTab::ProfileTab(WebApplication* app)
 	setLayout(tab_container_vbox);
 }
 
-ProfileTab::~ProfileTab()
+MailTab::~MailTab()
 {
 }
 
-void ProfileTab::OnLoggedIn()
+void MailTab::OnLoggedIn()
 {
 }
 
-void ProfileTab::OnLoggedOut()
+void MailTab::OnLoggedOut()
 {
+}
+
+void MailTab::OnPushedRefreshMessagecount()
+{
+	//TODO
 }

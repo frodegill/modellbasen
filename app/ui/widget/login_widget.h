@@ -38,8 +38,6 @@ public:
 	void OnLoggedIn();
 	void OnLoggedOut();
 
-	void OnPushedRefreshMessagecount();
-
 private:
 	WebApplication*  m_app;
 	Wt::WContainerWidget* m_not_logged_in_container;
@@ -55,7 +53,6 @@ private:
 	Wt::WPushButton* m_logout_button;
 
 	Wt::WText*       m_username_text;
-	Wt::WText*       m_unread_messages_text;
 };
 
 } // namespace modellbasen

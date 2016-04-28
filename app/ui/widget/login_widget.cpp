@@ -4,7 +4,6 @@
 #include "login_widget.h"
 #include "../../application.h"
 #include "../../defines.h"
-#include "../../../storage/dbo/message.h"
 #include "../../../storage/usermanager.h"
 
 
@@ -117,15 +116,10 @@ void LoginWidget::InitializeLoggedInContainer()
 	m_username_text = new Wt::WText();
 	logout_grid_layout->addWidget(m_username_text, 0, 1, Wt::AlignLeft);
 
-	//Create messages widget
-	logout_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("MessageHeader")), 1, 0, Wt::AlignRight);
-	m_unread_messages_text = new Wt::WText();
-	logout_grid_layout->addWidget(m_unread_messages_text, 1, 1, Wt::AlignLeft);
-
 	//Create logout button
 	m_logout_button = new Wt::WPushButton(Wt::WString::tr("LogoutButton"));
 	m_logout_button->clicked().connect(this, &LoginWidget::OnLogoutButtonClicked);
-	logout_grid_layout->addWidget(m_logout_button, 0, 2, 2, 1, Wt::AlignRight);
+	logout_grid_layout->addWidget(m_logout_button, 0, 2, Wt::AlignRight);
 }
 
 void LoginWidget::UsernameEnterPressed()
@@ -212,7 +206,6 @@ void LoginWidget::OnLoggedIn()
 	m_login_feedback_text->hide();
 	m_not_logged_in_container->hide();
 	m_username_text->setText(Wt::WString::fromUTF8(m_app->GetUserManager()->GetCurrentUser()->GetUsername()));
-	OnPushedRefreshMessagecount();
 	m_logged_in_container->show();
 }
 
@@ -221,28 +214,4 @@ void LoginWidget::OnLoggedOut()
 	m_not_logged_in_container->show();
 	m_logged_in_container->hide();
 	m_username_text->setText("");
-	m_unread_messages_text->setText("");
-}
-
-void LoginWidget::OnPushedRefreshMessagecount()
-{
-	Poco::Data::Session* session;
-	if (!m_app->GetUserManager()->GetCurrentUser() ||
-	    !DB.CreateSession(session))
-	{
-		m_unread_messages_text->setText("");
-		return;
-	}
-
-	size_t message_count;
-	if (!Message::GetUnreadCount(session, m_app->GetUserManager()->GetCurrentUser()->GetId(), message_count))
-	{
-		m_unread_messages_text->setText(Wt::WString::tr("Err"));
-	}
-	else
-	{
-		m_unread_messages_text->setText(Wt::WString::tr("Arg").arg(message_count));
-	}
-
-	DB.ReleaseSession(session, PocoGlue::IGNORE);
 }

@@ -4,12 +4,14 @@
 #include "main_widget.h"
 #include "login_widget.h"
 #include "../tab/administrator_tab.h"
+#include "../tab/mail_tab.h"
 #include "../tab/messageboard_tab.h"
 #include "../tab/profile_tab.h"
 #include "../tab/register_profile_tab.h"
 #include "../tab/search_tab.h"
 #include "../../application.h"
 #include "../../../storage/dbo/banner.h"
+#include "../../../storage/dbo/message.h"
 #include "../../../storage/usermanager.h"
 
 
@@ -24,6 +26,7 @@ MainWidget::MainWidget(WebApplication* app)
   m_tab_widget(nullptr),
   m_profile_tab(nullptr),
   m_register_profile_tab(nullptr),
+  m_mail_tab(nullptr),
   m_messageboard_tab(nullptr),
   m_search_tab(nullptr),
   m_administrator_tab(nullptr)
@@ -51,6 +54,7 @@ void MainWidget::Initialize()
 	m_tab_widget = new Wt::WTabWidget();
 	CreateProfileTab(m_tab_widget);
 	CreateRegisterProfileTab(m_tab_widget);
+	CreateMailTab(m_tab_widget);
 	CreateMessageBoardTab(m_tab_widget);
 	CreateSearchTab(m_tab_widget);
 	CreateAdministratorTab(m_tab_widget);
@@ -142,6 +146,13 @@ void MainWidget::CreateRegisterProfileTab(Wt::WTabWidget* tab_widget)
 	tab_widget->addTab(m_register_profile_tab, Wt::WString::tr("Tab.RegisterProfileTab"));
 }
 
+void MainWidget::CreateMailTab(Wt::WTabWidget* tab_widget)
+{
+	m_mail_tab = new MailTab(m_app);
+	tab_widget->addTab(m_mail_tab, Wt::WString(""));
+	UpdateMailTabText();
+}
+
 void MainWidget::CreateMessageBoardTab(Wt::WTabWidget* tab_widget)
 {
 	m_messageboard_tab = new MessageBoardTab(m_app);
@@ -167,7 +178,34 @@ void MainWidget::UpdateTabVisibility()
 	bool is_administrator = current_user && current_user->HasTag(TAG_ADMINISTRATOR);
 	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_profile_tab), !is_logged_in);
 	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_register_profile_tab), true);
+	UpdateMailTabText();
+	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_mail_tab), !is_logged_in);
 	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_administrator_tab), !is_administrator);
+}
+
+void MainWidget::UpdateMailTabText()
+{
+	const User* user = m_app->GetUserManager()->GetCurrentUser();
+	Poco::Data::Session* session;
+	if (!user || !DB.CreateSession(session))
+	{
+		m_tab_widget->setTabText(m_tab_widget->indexOf(m_mail_tab), Wt::WString::tr("Tab.MailTab").arg("err1"));
+		return;
+	}
+
+	Wt::WString label;
+	size_t message_count;
+	if (!Message::GetUnreadCount(session, user->GetId(), message_count))
+	{
+		label = Wt::WString::tr("Tab.MailTab").arg("err");
+	}
+	else
+	{
+		label = Wt::WString::tr("Tab.MailTab").arg(message_count);
+	}
+	m_tab_widget->setTabText(m_tab_widget->indexOf(m_mail_tab), label);
+
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
 }
 
 void MainWidget::ActivateTab(const TabType& tab_type)
@@ -177,6 +215,7 @@ void MainWidget::ActivateTab(const TabType& tab_type)
 	{
 		case PROFILE:          widget = m_profile_tab; break;
 		case REGISTER_PROFILE: widget = m_register_profile_tab; m_register_profile_tab->OnActivateTab(); break;
+		case MAIL:             widget = m_mail_tab; break;
 		case MESSAGEBOARD:     widget = m_messageboard_tab; break;
 		case SEARCH:           widget = m_search_tab; break;
 		case ADMINISTRATOR:    widget = m_administrator_tab; break;
@@ -197,6 +236,7 @@ void MainWidget::OnLoggedIn()
 	m_login_widget->OnLoggedIn();
 	m_profile_tab->OnLoggedIn();
 	m_messageboard_tab->OnLoggedIn();
+	m_mail_tab->OnLoggedIn();
 	m_search_tab->OnLoggedIn();
 	m_administrator_tab->OnLoggedIn();
 	UpdateTabVisibility();
@@ -208,6 +248,7 @@ void MainWidget::OnLoggedOut()
 	UpdateTabVisibility();
 	m_login_widget->OnLoggedOut();
 	m_profile_tab->OnLoggedOut();
+	m_mail_tab->OnLoggedOut();
 	m_messageboard_tab->OnLoggedOut();
 	m_search_tab->OnLoggedOut();
 	m_administrator_tab->OnLoggedOut();
@@ -224,5 +265,6 @@ void MainWidget::OnCloseBannerButtonClicked()
 
 void MainWidget::OnPushedRefreshMessagecount()
 {
-	m_login_widget->OnPushedRefreshMessagecount();
+	m_mail_tab->OnPushedRefreshMessagecount();
+	UpdateMailTabText();
 }

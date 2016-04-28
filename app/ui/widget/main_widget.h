@@ -12,6 +12,7 @@ namespace modellbasen
 
 class AdministratorTab;
 class LoginWidget;
+class MailTab;
 class MessageBoardTab;
 class ProfileTab;
 class RegisterProfileTab;
@@ -21,7 +22,7 @@ class WebApplication;
 class MainWidget : public Wt::WContainerWidget
 {
 public:
-	enum TabType {PROFILE, REGISTER_PROFILE, MESSAGEBOARD, SEARCH, ADMINISTRATOR};
+	enum TabType {PROFILE, REGISTER_PROFILE, MAIL, MESSAGEBOARD, SEARCH, ADMINISTRATOR};
 
 	MainWidget(WebApplication* app);
 	~MainWidget();
@@ -33,10 +34,12 @@ private:
 	void AddBanner(Wt::WVBoxLayout* layout);
 	void CreateProfileTab(Wt::WTabWidget* tab_widget);
 	void CreateRegisterProfileTab(Wt::WTabWidget* tab_widget);
+	void CreateMailTab(Wt::WTabWidget* tab_widget);
 	void CreateMessageBoardTab(Wt::WTabWidget* tab_widget);
 	void CreateSearchTab(Wt::WTabWidget* tab_widget);
 	void CreateAdministratorTab(Wt::WTabWidget* tab_widget);
 	void UpdateTabVisibility();
+	void UpdateMailTabText();
 
 public:
 	void ActivateTab(const TabType& tab_type);
@@ -57,6 +60,7 @@ private:
 	Wt::WTabWidget*     m_tab_widget;
 	ProfileTab*         m_profile_tab;
 	RegisterProfileTab* m_register_profile_tab;
+	MailTab*            m_mail_tab;
 	MessageBoardTab*    m_messageboard_tab;
 	SearchTab*          m_search_tab;
 	AdministratorTab*   m_administrator_tab;
