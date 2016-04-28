@@ -112,7 +112,7 @@ void LoginWidget::InitializeLoggedInContainer()
 	m_logged_in_container->setLayout(logout_grid_layout);
 
 	//Create username widget
-	logout_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("UsernameHeader")), 0, 0, Wt::AlignRight);
+	logout_grid_layout->addWidget(new Wt::WText(Wt::WString::tr("Username")), 0, 0, Wt::AlignRight);
 	m_username_text = new Wt::WText();
 	logout_grid_layout->addWidget(m_username_text, 0, 1, Wt::AlignLeft);
 

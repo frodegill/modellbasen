@@ -45,7 +45,10 @@
 	<message id="CloseBannerButton">Hide Ad</message>
 
 	<message id="Tab.ProfileTab">Profile</message>
+
 	<message id="Tab.MailTab">Mail ({1})</message>
+
+	<message id="Tab.PictureTab">Pictures</message>
 
 	<message id="Tab.RegisterProfileTab">New Profile</message>
 	<message id="Email">Email</message>
@@ -55,7 +58,8 @@
 
 	<message id="Tab.MessageBoardTab">Messageboard</message>
 	<message id="PostedTimeHeader">Time</message>
-	<message id="UsernameHeader">Username:</message>
+	<message id="UsernameHeader">Username</message>
+	<message id="MessageHeader">Message</message>
 
 	<message id="Tab.SearchTab">Search</message>
 

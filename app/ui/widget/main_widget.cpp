@@ -6,6 +6,7 @@
 #include "../tab/administrator_tab.h"
 #include "../tab/mail_tab.h"
 #include "../tab/messageboard_tab.h"
+#include "../tab/picture_tab.h"
 #include "../tab/profile_tab.h"
 #include "../tab/register_profile_tab.h"
 #include "../tab/search_tab.h"
@@ -24,9 +25,10 @@ MainWidget::MainWidget(WebApplication* app)
   m_login_widget(nullptr),
   m_banner_widget(nullptr),
   m_tab_widget(nullptr),
-  m_profile_tab(nullptr),
   m_register_profile_tab(nullptr),
+  m_profile_tab(nullptr),
   m_mail_tab(nullptr),
+  m_picture_tab(nullptr),
   m_messageboard_tab(nullptr),
   m_search_tab(nullptr),
   m_administrator_tab(nullptr)
@@ -52,9 +54,10 @@ void MainWidget::Initialize()
 
 	//Tabs
 	m_tab_widget = new Wt::WTabWidget();
-	CreateProfileTab(m_tab_widget);
 	CreateRegisterProfileTab(m_tab_widget);
+	CreateProfileTab(m_tab_widget);
 	CreateMailTab(m_tab_widget);
+	CreatePictureTab(m_tab_widget);
 	CreateMessageBoardTab(m_tab_widget);
 	CreateSearchTab(m_tab_widget);
 	CreateAdministratorTab(m_tab_widget);
@@ -134,16 +137,16 @@ void MainWidget::AddBanner(Wt::WVBoxLayout* layout)
 	}
 }
 
-void MainWidget::CreateProfileTab(Wt::WTabWidget* tab_widget)
-{
-	m_profile_tab = new ProfileTab(m_app);
-	tab_widget->addTab(m_profile_tab, Wt::WString::tr("Tab.ProfileTab"));
-}
-
 void MainWidget::CreateRegisterProfileTab(Wt::WTabWidget* tab_widget)
 {
 	m_register_profile_tab = new RegisterProfileTab(m_app);
 	tab_widget->addTab(m_register_profile_tab, Wt::WString::tr("Tab.RegisterProfileTab"));
+}
+
+void MainWidget::CreateProfileTab(Wt::WTabWidget* tab_widget)
+{
+	m_profile_tab = new ProfileTab(m_app);
+	tab_widget->addTab(m_profile_tab, Wt::WString::tr("Tab.ProfileTab"));
 }
 
 void MainWidget::CreateMailTab(Wt::WTabWidget* tab_widget)
@@ -151,6 +154,12 @@ void MainWidget::CreateMailTab(Wt::WTabWidget* tab_widget)
 	m_mail_tab = new MailTab(m_app);
 	tab_widget->addTab(m_mail_tab, Wt::WString(""));
 	UpdateMailTabText();
+}
+
+void MainWidget::CreatePictureTab(Wt::WTabWidget* tab_widget)
+{
+	m_picture_tab = new PictureTab(m_app);
+	tab_widget->addTab(m_picture_tab, Wt::WString::tr("Tab.PictureTab"));
 }
 
 void MainWidget::CreateMessageBoardTab(Wt::WTabWidget* tab_widget)
@@ -176,10 +185,11 @@ void MainWidget::UpdateTabVisibility()
 	bool is_logged_in = m_app->GetUserManager()->IsLoggedIn();
 	const User* current_user = m_app->GetUserManager()->GetCurrentUser();
 	bool is_administrator = current_user && current_user->HasTag(TAG_ADMINISTRATOR);
-	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_profile_tab), !is_logged_in);
 	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_register_profile_tab), true);
+	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_profile_tab), !is_logged_in);
 	UpdateMailTabText();
 	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_mail_tab), !is_logged_in);
+	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_picture_tab), !is_logged_in);
 	m_tab_widget->setTabHidden(m_tab_widget->indexOf(m_administrator_tab), !is_administrator);
 }
 
@@ -213,9 +223,10 @@ void MainWidget::ActivateTab(const TabType& tab_type)
 	Wt::WWidget* widget = nullptr;
 	switch(tab_type)
 	{
-		case PROFILE:          widget = m_profile_tab; break;
 		case REGISTER_PROFILE: widget = m_register_profile_tab; m_register_profile_tab->OnActivateTab(); break;
+		case PROFILE:          widget = m_profile_tab; break;
 		case MAIL:             widget = m_mail_tab; break;
+		case PICTURE:          widget = m_picture_tab; break;
 		case MESSAGEBOARD:     widget = m_messageboard_tab; break;
 		case SEARCH:           widget = m_search_tab; break;
 		case ADMINISTRATOR:    widget = m_administrator_tab; break;
@@ -237,6 +248,7 @@ void MainWidget::OnLoggedIn()
 	m_profile_tab->OnLoggedIn();
 	m_messageboard_tab->OnLoggedIn();
 	m_mail_tab->OnLoggedIn();
+	m_picture_tab->OnLoggedIn();
 	m_search_tab->OnLoggedIn();
 	m_administrator_tab->OnLoggedIn();
 	UpdateTabVisibility();
