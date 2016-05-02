@@ -3,6 +3,7 @@
 
 #include "classes.h"
 #include "../poco_glue.h"
+#include "../../app/defines.h"
 #include <string>
 
 
@@ -13,7 +14,7 @@ class PostCode {
 public: //For PoCo::Data
 	friend class Poco::Data::TypeHandler<class modellbasen::PostCode>;
 	bool operator <(const PostCode& postcode) const {return m_postcode.compare(postcode.m_postcode);} //For set and multiset support
-	Poco::UInt32 operator()() const {return atoi(m_postcode.c_str());} //Operator to return the key for the map and multimap
+	IdType operator()() const {return atoi(m_postcode.c_str());} //Operator to return the key for the map and multimap
 
 public:
 	PostCode();

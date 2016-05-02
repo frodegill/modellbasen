@@ -16,7 +16,7 @@ Tag::Tag()
 {
 }
 
-bool Tag::Initialize(Poco::UInt32 id)
+bool Tag::Initialize(IdType id)
 {
 	Reset();
 
@@ -69,7 +69,7 @@ bool Tag::GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, st
 	return localized_strings->resolveKey(key, text);
 }
 
-bool Tag::GetId(const std::string& tagname, Poco::UInt32& id)
+bool Tag::GetId(const std::string& tagname, IdType& id)
 {
 	Poco::Data::Session* session;
 	if (!DB.CreateSession(session))
@@ -81,7 +81,7 @@ bool Tag::GetId(const std::string& tagname, Poco::UInt32& id)
 	return ret;
 }
 
-bool Tag::GetId(Poco::Data::Session* session, const std::string& tagname, Poco::UInt32& id)
+bool Tag::GetId(Poco::Data::Session* session, const std::string& tagname, IdType& id)
 {
 	if (!session)
 		return false;
@@ -96,26 +96,26 @@ bool Tag::GetId(Poco::Data::Session* session, const std::string& tagname, Poco::
 	return true;
 }
 
-bool Tag::SetUserTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id,
+bool Tag::SetUserTag(Poco::Data::Session* session_in_transaction, IdType user_id,
                      const std::string& tag_name,
                      Poco::Nullable<std::string>& stringvalue,
                      Poco::Nullable<Poco::UInt32>& intvalue,
-                     Poco::Nullable<Poco::UInt64>& timevalue)
+                     Poco::Nullable<TimeType>& timevalue)
 {
 	return SetTag(session_in_transaction, user_id, INVALID_ID, tag_name, stringvalue, intvalue, timevalue);
 }
 
 bool Tag::SetEventTag(Poco::Data::Session* session_in_transaction,
-                      Poco::UInt32 event_id, Poco::UInt32 participant_id,
+                      IdType event_id, IdType participant_id,
                       const std::string& tag_name,
                       Poco::Nullable<std::string>& stringvalue,
                       Poco::Nullable<Poco::UInt32>& intvalue,
-                      Poco::Nullable<Poco::UInt64>& timevalue)
+                      Poco::Nullable<TimeType>& timevalue)
 {
 	if (!session_in_transaction || INVALID_ID==event_id || INVALID_ID==participant_id)
 		return false;
 
-	Poco::UInt32 event_participant_id;
+	IdType event_participant_id;
 
 	IF_NO_ROWS(stmt, *session_in_transaction,
 		"SELECT id FROM eventparticipant WHERE event=? AND participant=?;",
@@ -132,23 +132,23 @@ bool Tag::SetEventTag(Poco::Data::Session* session_in_transaction,
 }
 
 bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
-                 Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
+                 IdType user_id, IdType event_participant_id,
                  const std::string& tag_name,
                  Poco::Nullable<std::string>& stringvalue,
                  Poco::Nullable<Poco::UInt32>& intvalue,
-                 Poco::Nullable<Poco::UInt64>& timevalue)
+                 Poco::Nullable<TimeType>& timevalue)
 {
 	if (!session_in_transaction ||
 		  (INVALID_ID==user_id && INVALID_ID==event_participant_id) || //neither user nor event
 	    (INVALID_ID!=user_id && INVALID_ID!=event_participant_id)) //both user and event
 		return false;
 
-	Poco::UInt32 tag_id;
+	IdType tag_id;
 	if (!GetId(session_in_transaction, tag_name, tag_id) || INVALID_ID==tag_id)
 		return false;
 
 	//Check if tag already exists
-	Poco::UInt32 taginstance_id;
+	IdType taginstance_id;
 	if (INVALID_ID!=user_id)
 	{
 		IF_NO_ROWS(stmt, *session_in_transaction,
@@ -180,11 +180,11 @@ bool Tag::SetTag(Poco::Data::Session* session_in_transaction,
 	}
 	else //Does not exist. Create
 	{
-		Poco::Nullable<Poco::UInt32> user_id_value;
+		Poco::Nullable<IdType> user_id_value;
 		if (INVALID_ID != user_id)
 			user_id_value.assign(user_id);
 
-		Poco::Nullable<Poco::UInt32> event_participant_id_value;
+		Poco::Nullable<IdType> event_participant_id_value;
 		if (INVALID_ID != event_participant_id)
 			event_participant_id_value.assign(event_participant_id);
 

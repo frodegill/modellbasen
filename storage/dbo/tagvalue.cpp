@@ -13,7 +13,7 @@ TagValue::TagValue()
 {
 }
 
-bool TagValue::Initialize(Poco::UInt32 id)
+bool TagValue::Initialize(IdType id)
 {
 	Reset();
 

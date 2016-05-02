@@ -9,6 +9,9 @@
 namespace modellbasen
 {
 
+#define IdType   Poco::UInt32
+#define TimeType Poco::Int64
+
 #define SERVER_LOCALE "nb_NO"
 
 #define PI (3.1415926535897932385) 

@@ -71,13 +71,13 @@ bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 		Poco::Data::Keywords::useRef(email),
 		Poco::Data::Keywords::now;)
 
-	Poco::UInt32 user_id;
+	IdType user_id;
 	if (!GetUserId(session_in_transaction, username, user_id) || INVALID_ID==user_id)
 		return false;
 
 	Poco::Nullable<std::string> null_stringvalue;
 	Poco::Nullable<Poco::UInt32> null_intvalue;
-	Poco::Nullable<Poco::UInt64> null_timevalue;
+	Poco::Nullable<TimeType> null_timevalue;
 
 	Poco::Nullable<std::string> postcode_stringvalue(postcode);
 	bool ret = Tag::SetUserTag(session_in_transaction, user_id, TAG_POSTCODE, postcode_stringvalue, null_intvalue, null_timevalue);
@@ -89,7 +89,7 @@ bool UserManager::RegisterUser(Poco::Data::Session* session_in_transaction,
 	return ret;
 }
 
-bool UserManager::GetUserId(const std::string& username, Poco::UInt32& user_id)
+bool UserManager::GetUserId(const std::string& username, IdType& user_id)
 {
 	Poco::Data::Session* session;
 	if (!DB.CreateSession(session))
@@ -101,7 +101,7 @@ bool UserManager::GetUserId(const std::string& username, Poco::UInt32& user_id)
 	return ret;
 }
 
-bool UserManager::GetUserId(Poco::Data::Session* session, const std::string& username, Poco::UInt32& user_id)
+bool UserManager::GetUserId(Poco::Data::Session* session, const std::string& username, IdType& user_id)
 {
 	if (!session)
 		return false;

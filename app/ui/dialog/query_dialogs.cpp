@@ -32,7 +32,7 @@ QueryDialogs::~QueryDialogs()
 {
 }
 
-bool QueryDialogs::Initialize(Poco::UInt32 tag_id)
+bool QueryDialogs::Initialize(IdType tag_id)
 {
 	m_query_tag = std::shared_ptr<Tag>(new Tag());
 	if (!m_query_tag->Initialize(tag_id))
@@ -151,7 +151,7 @@ bool QueryDialogs::GetString(std::string& value) const
 	return true;
 }
 
-bool QueryDialogs::GetDatetime(Poco::UInt64& value) const
+bool QueryDialogs::GetDatetime(TimeType& value) const
 {
 	Wt::WDate date = m_datetime_edit->date();
 	if (!date.isValid())
@@ -161,17 +161,17 @@ bool QueryDialogs::GetDatetime(Poco::UInt64& value) const
 	return true;
 }
 
-bool QueryDialogs::GetSingleSelect(Poco::UInt32& selected_value) const
+bool QueryDialogs::GetSingleSelect(IdType& selected_value) const
 {
 	selected_value = 0;
 
 	int selected_row = m_singleselect_box->currentIndex();
 	Wt::WModelIndex model_index = m_select_box_model->index(selected_row, 0);
-	selected_value = boost::any_cast<Poco::UInt32>(m_select_box_model->data(model_index, Wt::UserRole));
+	selected_value = boost::any_cast<IdType>(m_select_box_model->data(model_index, Wt::UserRole));
 	return true;
 }
 
-bool QueryDialogs::GetMultiSelect(std::list<Poco::UInt32>& selected_values) const
+bool QueryDialogs::GetMultiSelect(std::list<IdType>& selected_values) const
 {
 	selected_values.clear();
 
@@ -180,7 +180,7 @@ bool QueryDialogs::GetMultiSelect(std::list<Poco::UInt32>& selected_values) cons
 	{
 		int selected_row = *it;
 		Wt::WModelIndex model_index = m_select_box_model->index(selected_row, 0);
-		selected_values.push_back(boost::any_cast<Poco::UInt32>(m_select_box_model->data(model_index, Wt::UserRole)));
+		selected_values.push_back(boost::any_cast<IdType>(m_select_box_model->data(model_index, Wt::UserRole)));
 	}
 	return true;
 }

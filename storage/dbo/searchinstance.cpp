@@ -10,7 +10,7 @@
 using namespace modellbasen;
 
 
-SearchInstance::SearchInstance(WebApplication* app, Poco::UInt32 tag_id, Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype)
+SearchInstance::SearchInstance(WebApplication* app, IdType tag_id, Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype)
 : m_app(app),
   m_tag_id(tag_id),
   m_insert_datatype(insert_datatype),
@@ -122,7 +122,7 @@ void SearchInstance::SetStringValue(const std::string& stringvalue)
 	}
 }
 
-void SearchInstance::SetDatetimeValue(Poco::Int64 datetimevalue)
+void SearchInstance::SetDatetimeValue(TimeType datetimevalue)
 {
 	if (Tag::DATETIME==m_query_datatype)
 	{
@@ -134,7 +134,7 @@ void SearchInstance::SetDatetimeValue(Poco::Int64 datetimevalue)
 	}
 }
 
-void SearchInstance::SetSelectionValues(const std::list<Poco::UInt32>& selectionvalues)
+void SearchInstance::SetSelectionValues(const std::list<IdType>& selectionvalues)
 {
 	if (Tag::MULTISELECT==m_query_datatype)
 	{
@@ -170,7 +170,7 @@ void SearchInstance::MultiselectAsString(std::string& str) const
 	str.clear();
 
 	std::string tag_value_str;
-	for(std::list<Poco::UInt32>::const_iterator it = m_selectionvalues.begin(); it!=m_selectionvalues.end(); ++it)
+	for(std::list<IdType>::const_iterator it = m_selectionvalues.begin(); it!=m_selectionvalues.end(); ++it)
 	{
 		TagValue tag_value;
 		tag_value.Initialize(*it);

@@ -2,6 +2,7 @@
 #define _TIME_H_
 
 #include "../storage/poco_glue.h"
+#include "../app/defines.h"
 
 
 namespace modellbasen
@@ -10,8 +11,8 @@ namespace modellbasen
 class Time
 {
 public:
-	static Poco::UInt64 NowUTC();
-	static void ToString(const Poco::UInt64& time, std::string& as_string);
+	static TimeType NowUTC();
+	static void ToString(const TimeType& time, std::string& as_string);
 };
 
 } // namespace modellbasen

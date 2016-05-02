@@ -35,7 +35,7 @@ bool MessageBoard::InitializeGlobalMessageboardList()
 		return false;
 
 	std::string message;
-	Poco::UInt64 timestamp;
+	TimeType timestamp;
 	std::string username;
 	Poco::Data::Statement statement(*session);
 	statement << "SELECT m.message, m.posted_time, u.username FROM messageboard m, user u WHERE m.user=u.id ORDER BY m.posted_time DESC LIMIT 25", //25=MAX_MESSAGEBOARD_ROWS
@@ -59,12 +59,12 @@ bool MessageBoard::InitializeGlobalMessageboardList()
 	return true;
 }
 
-bool MessageBoard::AddMessage(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id, const std::string& message)
+bool MessageBoard::AddMessage(Poco::Data::Session* session_in_transaction, IdType user_id, const std::string& message)
 {
 	if (!session_in_transaction || INVALID_ID==user_id || message.empty())
 		return false;
 
-	Poco::UInt64 now = Time::NowUTC();
+	TimeType now = Time::NowUTC();
 	
 	DEBUG_TRY_CATCH(*session_in_transaction << "INSERT INTO messageboard (message, posted_time, user) "\
 														"VALUE (?, ?, ?)",

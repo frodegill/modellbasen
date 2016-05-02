@@ -15,19 +15,19 @@ class TagValue {
 public: //For PoCo::Data
 	friend class Poco::Data::TypeHandler<class modellbasen::TagValue>;
 	bool operator <(const TagValue& tagvalue) const {return m_id < tagvalue.m_id;} //For set and multiset support
-	Poco::UInt32 operator()() const {return m_id;} //Operator to return the key for the map and multimap
+	IdType operator()() const {return m_id;} //Operator to return the key for the map and multimap
 
 public:
 	TagValue();
 
-	bool Initialize(Poco::UInt32 id);
+	bool Initialize(IdType id);
 	void Reset() {m_id=INVALID_ID;}
 	bool IsValid() const {return INVALID_ID!=m_id;}
 
 public:
-	Poco::UInt32       GetId() const {return m_id;}
+	IdType       GetId() const {return m_id;}
 	Poco::UInt32       GetPos() const {return m_pos;}
-	Poco::UInt32       GetTagId() const {return m_tag_id;}
+	IdType       GetTagId() const {return m_tag_id;}
 
 	bool               GetTagValueText(Wt::WLocalizedStrings* localized_strings, std::string& text) const;
 
@@ -35,10 +35,10 @@ private:
 	const std::string& GetValue() const {return m_value;}
 
 private:
-	Poco::UInt32 m_id;
+	IdType m_id;
 	std::string  m_value;
 	Poco::UInt32 m_pos;
-	Poco::UInt32 m_tag_id;
+	IdType m_tag_id;
 };
 
 } // namespace modellbasen
@@ -54,28 +54,28 @@ public:
 	static void bind(std::size_t pos, const modellbasen::TagValue& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<IdType>::bind(pos++, obj.m_id, pBinder, dir);
 		TypeHandler<std::string>::bind(pos++, obj.m_value, pBinder, dir);
 		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_pos, pBinder, dir);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_tag_id, pBinder, dir);
+		TypeHandler<IdType>::bind(pos++, obj.m_tag_id, pBinder, dir);
 	}
 
 	static void prepare(std::size_t pos, const modellbasen::TagValue& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<IdType>::prepare(pos++, obj.m_id, pPreparator);
 		TypeHandler<std::string>::prepare(pos++, obj.m_value, pPreparator);
 		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_pos, pPreparator);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_tag_id, pPreparator);
+		TypeHandler<IdType>::prepare(pos++, obj.m_tag_id, pPreparator);
 	}
 
 	static void extract(std::size_t pos, modellbasen::TagValue& obj, const modellbasen::TagValue& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
-		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);
+		TypeHandler<IdType>::extract(pos++, obj.m_id, defVal.m_id, pExt);
 		TypeHandler<std::string>::extract(pos++, obj.m_value, defVal.m_value, pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_pos, defVal.m_pos, pExt);
-		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_tag_id, defVal.m_tag_id, pExt);
+		TypeHandler<IdType>::extract(pos++, obj.m_tag_id, defVal.m_tag_id, pExt);
 	}
 };
 

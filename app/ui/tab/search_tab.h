@@ -37,8 +37,8 @@ private:
 
 	void PopulateTagsContainers();
 
-	void OnSearchInstanceTagButtonClicked(Poco::UInt32 tag_id);
-	void OnAvailableTagButtonClicked(Poco::UInt32 tag_id);
+	void OnSearchInstanceTagButtonClicked(IdType tag_id);
+	void OnAvailableTagButtonClicked(IdType tag_id);
 
 private:
 	WebApplication* m_app;

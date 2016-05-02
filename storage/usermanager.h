@@ -30,8 +30,8 @@ public:
 													 const std::string& email, const std::string& postcode,
 													 Poco::UInt32 type_bflag);
 
-	static bool GetUserId(const std::string& username, Poco::UInt32& user_id);
-	static bool GetUserId(Poco::Data::Session* session, const std::string& username, Poco::UInt32& user_id);
+	static bool GetUserId(const std::string& username, IdType& user_id);
+	static bool GetUserId(Poco::Data::Session* session, const std::string& username, IdType& user_id);
 	
 public:
 	bool LogIn(const std::string& username, const std::string& password);

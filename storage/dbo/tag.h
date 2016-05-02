@@ -77,7 +77,7 @@ class Tag {
 public: //For PoCo::Data
 	friend class Poco::Data::TypeHandler<class modellbasen::Tag>;
 	bool operator <(const Tag& tag) const {return m_id < tag.m_id;} //For set and multiset support
-	Poco::UInt32 operator()() const {return m_id;} //Operator to return the key for the map and multimap
+	IdType operator()() const {return m_id;} //Operator to return the key for the map and multimap
 
 	enum TagDataType {
 		UNKNOWN=0,
@@ -97,15 +97,15 @@ public: //For PoCo::Data
 public:
 	Tag();
 
-	bool Initialize(Poco::UInt32 id);
+	bool Initialize(IdType id);
 	void Reset() {m_id=INVALID_ID;}
 	bool IsValid() const {return INVALID_ID!=m_id;}
 
 public:
-	Poco::UInt32       GetId() const {return m_id;}
+	IdType       GetId() const {return m_id;}
 	TagDataType        GetInsertDataType() const {return static_cast<TagDataType>(m_insert_datatype);}
 	TagDataType        GetQueryDataType() const {return static_cast<TagDataType>(m_query_datatype);}
-	Poco::UInt32       GetParentId() const {return m_parent_id;}
+	IdType       GetParentId() const {return m_parent_id;}
 	bool               IsQueryOnly() const {return m_query_only;}
 
 	bool               GetTagValues(std::list<TagValue>& tag_values) const;
@@ -113,35 +113,35 @@ public:
 	bool               GetTagText(Wt::WLocalizedStrings* localized_strings, bool is_query, std::string& text) const;
 
 public:
-	static bool GetId(const std::string& tagname, Poco::UInt32& id);
-	static bool GetId(Poco::Data::Session* session, const std::string& tagname, Poco::UInt32& id);
+	static bool GetId(const std::string& tagname, IdType& id);
+	static bool GetId(Poco::Data::Session* session, const std::string& tagname, IdType& id);
 	
-	static bool SetUserTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id,
+	static bool SetUserTag(Poco::Data::Session* session_in_transaction, IdType user_id,
 	                       const std::string& tag_name,
 	                       Poco::Nullable<std::string>& stringvalue,
 	                       Poco::Nullable<Poco::UInt32>& intvalue,
-	                       Poco::Nullable<Poco::UInt64>& timevalue);
-	static bool SetEventTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 event_id, Poco::UInt32 participant_id,
+	                       Poco::Nullable<TimeType>& timevalue);
+	static bool SetEventTag(Poco::Data::Session* session_in_transaction, IdType event_id, IdType participant_id,
 	                   const std::string& tag_name,
 	                   Poco::Nullable<std::string>& stringvalue,
 	                   Poco::Nullable<Poco::UInt32>& intvalue,
-	                   Poco::Nullable<Poco::UInt64>& timevalue);
+	                   Poco::Nullable<TimeType>& timevalue);
 private:
-	static bool SetTag(Poco::Data::Session* session_in_transaction, Poco::UInt32 user_id, Poco::UInt32 event_participant_id,
+	static bool SetTag(Poco::Data::Session* session_in_transaction, IdType user_id, IdType event_participant_id,
 	                   const std::string& tag_name,
 	                   Poco::Nullable<std::string>& stringvalue,
 	                   Poco::Nullable<Poco::UInt32>& intvalue,
-	                   Poco::Nullable<Poco::UInt64>& timevalue);
+	                   Poco::Nullable<TimeType>& timevalue);
 
 private:
 	const std::string& GetName() const {return m_name;}
 
 private:
-	Poco::UInt32 m_id;
+	IdType m_id;
 	std::string  m_name;
 	Poco::UInt32 m_insert_datatype;
 	Poco::UInt32 m_query_datatype;
-	Poco::UInt32 m_parent_id;
+	IdType m_parent_id;
 	bool         m_query_only;
 };
 
@@ -158,33 +158,33 @@ public:
 	static void bind(std::size_t pos, const modellbasen::Tag& obj, AbstractBinder::Ptr pBinder, AbstractBinder::Direction dir)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_id, pBinder, dir);
+		TypeHandler<IdType>::bind(pos++, obj.m_id, pBinder, dir);
 		TypeHandler<std::string>::bind(pos++, obj.m_name, pBinder, dir);
 		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_insert_datatype, pBinder, dir);
 		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_query_datatype, pBinder, dir);
-		TypeHandler<Poco::UInt32>::bind(pos++, obj.m_parent_id, pBinder, dir);
+		TypeHandler<IdType>::bind(pos++, obj.m_parent_id, pBinder, dir);
 		TypeHandler<bool>::bind(pos++, obj.m_query_only, pBinder, dir);
 	}
 
 	static void prepare(std::size_t pos, const modellbasen::Tag& obj, AbstractPreparator::Ptr pPreparator)
 	{
 		poco_assert_dbg(pBinder);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_id, pPreparator);
+		TypeHandler<IdType>::prepare(pos++, obj.m_id, pPreparator);
 		TypeHandler<std::string>::prepare(pos++, obj.m_name, pPreparator);
 		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_insert_datatype, pPreparator);
 		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_query_datatype, pPreparator);
-		TypeHandler<Poco::UInt32>::prepare(pos++, obj.m_parent_id, pPreparator);
+		TypeHandler<IdType>::prepare(pos++, obj.m_parent_id, pPreparator);
 		TypeHandler<bool>::prepare(pos++, obj.m_query_only, pPreparator);
 	}
 
 	static void extract(std::size_t pos, modellbasen::Tag& obj, const modellbasen::Tag& defVal, AbstractExtractor::Ptr pExt)
 	{
 		poco_assert_dbg(pExt);
-		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_id, defVal.m_id, pExt);
+		TypeHandler<IdType>::extract(pos++, obj.m_id, defVal.m_id, pExt);
 		TypeHandler<std::string>::extract(pos++, obj.m_name, defVal.m_name, pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_insert_datatype, defVal.m_insert_datatype, pExt);
 		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_query_datatype, defVal.m_query_datatype, pExt);
-		TypeHandler<Poco::UInt32>::extract(pos++, obj.m_parent_id, defVal.m_parent_id, pExt);
+		TypeHandler<IdType>::extract(pos++, obj.m_parent_id, defVal.m_parent_id, pExt);
 		TypeHandler<bool>::extract(pos++, obj.m_query_only, defVal.m_query_only, pExt);
 	}
 };

@@ -7,12 +7,12 @@
 
 using namespace modellbasen;
 
-Poco::UInt64 Time::NowUTC()
+TimeType Time::NowUTC()
 {
 	return Wt::WDateTime::currentDateTime().toTime_t();
 }
 
-void Time::ToString(const Poco::UInt64& time, std::string& as_string)
+void Time::ToString(const TimeType& time, std::string& as_string)
 {
 	Wt::WDateTime datetime;
 	datetime.setTime_t(time);

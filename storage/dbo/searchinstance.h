@@ -13,11 +13,11 @@ namespace modellbasen
 class SearchInstance {
 
 public:
-	SearchInstance(WebApplication* app, Poco::UInt32 tag_id, Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype);
+	SearchInstance(WebApplication* app, IdType tag_id, Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype);
 	~SearchInstance();
 
 public:
-	Poco::UInt32 GetTagId() const {return m_tag_id;}
+	IdType GetTagId() const {return m_tag_id;}
 	bool ToString(std::string& str) const;
 
 	bool IsInverted() const {return m_inverted;}
@@ -27,8 +27,8 @@ public:
 	void SetIntValue(Poco::UInt32 intvalue);
 	void SetIntValues(Poco::UInt32 intvalue, Poco::UInt32 intvalue2);
 	void SetStringValue(const std::string& stringvalue);
-	void SetDatetimeValue(Poco::Int64 datetimevalue);
-	void SetSelectionValues(const std::list<Poco::UInt32>& selectionvalues);
+	void SetDatetimeValue(TimeType datetimevalue);
+	void SetSelectionValues(const std::list<IdType>& selectionvalues);
 
 private:
 	void DateAsString(std::string& str) const;
@@ -37,7 +37,7 @@ private:
 
 private:
 	WebApplication* m_app;
-	Poco::UInt32 m_tag_id;
+	IdType m_tag_id;
 	Tag::TagDataType m_insert_datatype;
 	Tag::TagDataType m_query_datatype;
 
@@ -46,8 +46,8 @@ private:
 	Poco::UInt32 m_intvalue;
 	Poco::UInt32 m_intvalue2;
 	std::string  m_stringvalue;
-	Poco::Int64  m_datetimevalue;
-	std::list<Poco::UInt32> m_selectionvalues;
+	TimeType  m_datetimevalue;
+	std::list<IdType> m_selectionvalues;
 };
 
 } // namespace modellbasen

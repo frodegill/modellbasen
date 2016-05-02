@@ -76,7 +76,7 @@ void SearchTab::OnQueryConfirmed()
 	if (!query_tag)
 		return;
 
-	Poco::UInt32 tag_id = query_tag->GetId();
+	IdType tag_id = query_tag->GetId();
 	if (!tag_id)
 		return;
 
@@ -102,7 +102,7 @@ void SearchTab::OnQueryConfirmed()
 		}
 		case Tag::DATETIME:
 		{
-			Poco::UInt64 value;
+			TimeType value;
 			if (m_current_query_dialog->GetDatetime(value))
 				m_search->AddDatetimeSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value);
 
@@ -115,7 +115,7 @@ void SearchTab::OnQueryConfirmed()
 		}
 		case Tag::SINGLESELECT:
 		{
-			Poco::UInt32 value;
+			IdType value;
 			if (m_current_query_dialog->GetSingleSelect(value))
 				m_search->AddIntegerSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), value);
 
@@ -123,7 +123,7 @@ void SearchTab::OnQueryConfirmed()
 		}
 		case Tag::MULTISELECT:
 		{
-			std::list<Poco::UInt32> values;
+			std::list<IdType> values;
 			if (m_current_query_dialog->GetMultiSelect(values))
 				m_search->AddStringListSearchInstance(tag_id, query_tag->GetInsertDataType(), query_tag->GetQueryDataType(), values);
 
@@ -204,7 +204,7 @@ void SearchTab::PopulateTagsContainers()
 			{
 				Wt::WPushButton* button = new Wt::WPushButton(tag_text);
 				button->setMargin(Wt::WLength(0.2, Wt::WLength::FontEm));
-				Poco::UInt32 tag_id = search_instance->GetTagId();
+				IdType tag_id = search_instance->GetTagId();
 				button->clicked().connect(std::bind(&SearchTab::OnSearchInstanceTagButtonClicked, this, tag_id));
 				m_search_tags->addWidget(button);
 			}
@@ -222,20 +222,20 @@ void SearchTab::PopulateTagsContainers()
 			tag.GetTagText(m_app->localizedStrings(), true, tag_text);
 			Wt::WPushButton* button = new Wt::WPushButton(tag_text);
 			button->setMargin(Wt::WLength(0.2, Wt::WLength::FontEm));
-			Poco::UInt32 tag_id = tag.GetId();
+			IdType tag_id = tag.GetId();
 			button->clicked().connect(std::bind(&SearchTab::OnAvailableTagButtonClicked, this, tag_id));
 			m_available_tags->addWidget(button);
 		}
 	}
 }
 
-void SearchTab::OnSearchInstanceTagButtonClicked(Poco::UInt32 tag_id)
+void SearchTab::OnSearchInstanceTagButtonClicked(IdType tag_id)
 {
 	if (m_search->InvertOrRemoveSearchInstance(tag_id))
 		PopulateTagsContainers();
 }
 
-void SearchTab::OnAvailableTagButtonClicked(Poco::UInt32 tag_id)
+void SearchTab::OnAvailableTagButtonClicked(IdType tag_id)
 {
 	m_current_query_dialog = std::shared_ptr<QueryDialogs>(new QueryDialogs(m_app, this));
 	if (!m_current_query_dialog->Initialize(tag_id) ||

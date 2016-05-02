@@ -26,7 +26,7 @@ public:
 	QueryDialogs(WebApplication* app, SearchTab* search_tab);
 	~QueryDialogs();
 
-	bool Initialize(Poco::UInt32 tag_id);
+	bool Initialize(IdType tag_id);
 
 	bool ExecuteAsync();
 
@@ -35,9 +35,9 @@ public:
 public:
 	bool GetInt(Poco::UInt32& value) const;
 	bool GetString(std::string& value) const;
-	bool GetDatetime(Poco::UInt64& value) const;
-	bool GetSingleSelect(Poco::UInt32& selected_value) const;
-	bool GetMultiSelect(std::list<Poco::UInt32>& selected_values) const;
+	bool GetDatetime(TimeType& value) const;
+	bool GetSingleSelect(IdType& selected_value) const;
+	bool GetMultiSelect(std::list<IdType>& selected_values) const;
 	bool GetInts(Poco::UInt32& value1, Poco::UInt32& value2) const;
 	bool GetStringInt(std::string& value1, Poco::UInt32& value2) const;
 	bool GetDistance(std::string& postcode, Poco::UInt32& distance) const;

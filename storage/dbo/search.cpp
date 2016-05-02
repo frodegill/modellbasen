@@ -11,7 +11,7 @@ Search::Search(WebApplication* app)
 {
 }
 
-bool Search::GetSearchedTagIds(std::list<Poco::UInt32>& result) const
+bool Search::GetSearchedTagIds(std::list<IdType>& result) const
 {
 	result.clear();
 	for(std::list<std::shared_ptr<SearchInstance>>::const_iterator it = m_searchinstances.begin(); it!=m_searchinstances.end(); ++it)
@@ -26,12 +26,12 @@ bool Search::GetAvailableTags(std::list<Tag>& tags) const
 {
 	tags.clear();
 
-	std::list<Poco::UInt32> searched_tag_ids;
+	std::list<IdType> searched_tag_ids;
 	if (!GetSearchedTagIds(searched_tag_ids))
 		return false;
 
 	std::string parent_ids;
-	for(std::list<Poco::UInt32>::const_iterator it = searched_tag_ids.begin(); it!=searched_tag_ids.end(); ++it)
+	for(std::list<IdType>::const_iterator it = searched_tag_ids.begin(); it!=searched_tag_ids.end(); ++it)
 	{
 		if (!parent_ids.empty())
 		{
@@ -66,7 +66,7 @@ bool Search::FindMatchingUsers(std::list<User>& result) const
 	return false;
 }
 
-bool Search::AddIntegerSearchInstance(Poco::UInt32 tag_id, //integer, location
+bool Search::AddIntegerSearchInstance(IdType tag_id, //integer, location
                                       Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, Poco::UInt32 intvalue)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
@@ -74,7 +74,7 @@ bool Search::AddIntegerSearchInstance(Poco::UInt32 tag_id, //integer, location
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::AddStringSearchInstance(Poco::UInt32 tag_id, //string
+bool Search::AddStringSearchInstance(IdType tag_id, //string
                                      Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::string& stringvalue)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
@@ -82,30 +82,30 @@ bool Search::AddStringSearchInstance(Poco::UInt32 tag_id, //string
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::AddDatetimeSearchInstance(Poco::UInt32 tag_id, //datetime
-                                       Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, Poco::UInt64 datetimevalue)
+bool Search::AddDatetimeSearchInstance(IdType tag_id, //datetime
+                                       Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, TimeType datetimevalue)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
 	search_instance->SetDatetimeValue(datetimevalue);
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::AddBooleanSearchInstance(Poco::UInt32 tag_id, //boolean (exists)
+bool Search::AddBooleanSearchInstance(IdType tag_id, //boolean (exists)
                                       Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::AddStringListSearchInstance(Poco::UInt32 tag_id, //singleselect, multiselect
-                                         Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::list<Poco::UInt32>& selectionvalues)
+bool Search::AddStringListSearchInstance(IdType tag_id, //singleselect, multiselect
+                                         Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::list<IdType>& selectionvalues)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
 	search_instance->SetSelectionValues(selectionvalues);
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::AddIntegerIntegerSearchInstance(Poco::UInt32 tag_id, //height_range, day_range, age_range, distance
+bool Search::AddIntegerIntegerSearchInstance(IdType tag_id, //height_range, day_range, age_range, distance
                                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, Poco::UInt32 intvalue, Poco::UInt32 intvalue2)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
@@ -113,7 +113,7 @@ bool Search::AddIntegerIntegerSearchInstance(Poco::UInt32 tag_id, //height_range
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::AddStringIntegerSearchInstance(Poco::UInt32 tag_id, //height_range, day_range, age_range, distance
+bool Search::AddStringIntegerSearchInstance(IdType tag_id, //height_range, day_range, age_range, distance
                                              Tag::TagDataType insert_datatype, Tag::TagDataType query_datatype, const std::string& stringvalue, Poco::UInt32 intvalue)
 {
 	std::shared_ptr<SearchInstance> search_instance(new SearchInstance(m_app, tag_id, insert_datatype, query_datatype));
@@ -122,7 +122,7 @@ bool Search::AddStringIntegerSearchInstance(Poco::UInt32 tag_id, //height_range,
 	return AddSearchInstance(search_instance);
 }
 
-bool Search::InvertOrRemoveSearchInstance(Poco::UInt32 tag_id)
+bool Search::InvertOrRemoveSearchInstance(IdType tag_id)
 {
 	for(std::list<std::shared_ptr<SearchInstance>>::const_iterator it = m_searchinstances.begin(); it!=m_searchinstances.end(); ++it)
 	{
