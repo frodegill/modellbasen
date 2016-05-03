@@ -47,6 +47,12 @@
 	<message id="Tab.ProfileTab">Profile</message>
 
 	<message id="Tab.MailTab">Mail ({1})</message>
+	<message id="NewButton">New</message>
+	<message id="ReplyButton">Reply</message>
+	<message id="DeleteButton">Delete</message>
+	<message id="SubjectHeader">Subject</message>
+	<message id="FromHeader">From</message>
+	<message id="SentTimeHeader">Sent</message>
 
 	<message id="Tab.PictureTab">Pictures</message>
 
