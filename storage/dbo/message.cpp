@@ -48,3 +48,25 @@ bool Message::GetUnreadCount(Poco::Data::Session* session, const IdType& user_id
 
 	return true;
 }
+
+bool Message::GetAllUserMessagesMetadata(Poco::Data::Session* session, const IdType& user_id, std::list<Message>& messages)
+{
+	if (!session)
+		return false;
+
+	IF_NO_ROWS(stmt, *session, "SELECT id, subject, '' AS message, sender, recipient, "\
+	                            "sent_time, read_time, replied_time, in_reply_to, "\
+	                            "sender_deleted, recipient_deleted "\
+	                           "FROM message "\
+	                           "WHERE ((sender=? AND NOT sender_deleted) OR (recipient=? AND NOT recipient_deleted)) "\
+	                           "ORDER BY id",
+		Poco::Data::Keywords::into(messages),
+		Poco::Data::Keywords::useRef(user_id),
+		Poco::Data::Keywords::useRef(user_id),
+		Poco::Data::Keywords::now)
+	{
+		messages.clear();
+	}
+
+	return true;
+}

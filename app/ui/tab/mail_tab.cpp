@@ -4,6 +4,9 @@
 #include "mail_tab.h"
 #include "../../application.h"
 #include "../../defines.h"
+#include "../../../singleton/db.h"
+#include "../../../storage/usermanager.h"
+#include "../../../storage/dbo/message.h"
 
 
 using namespace modellbasen;
@@ -92,4 +95,19 @@ void MailTab::RePopulateMailModel()
 		m_mail_model->setHeaderData(1, Wt::Horizontal, boost::any(Wt::WString::tr("FromHeader")));
 		m_mail_model->setHeaderData(2, Wt::Horizontal, boost::any(Wt::WString::tr("SentTimeHeader")));
 	}
+
+	const User* user = m_app->GetUserManager()->GetCurrentUser();
+	Poco::Data::Session* session;
+	if (!user || !DB.CreateSession(session))
+		return;
+
+	std::list<Message> messages;
+	bool ret = Message::GetAllUserMessagesMetadata(session, user->GetId(), messages);
+
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
+
+	if (!ret)
+		return;
+
+	//TODO
 }
