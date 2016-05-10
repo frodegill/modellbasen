@@ -9,10 +9,12 @@
 namespace modellbasen
 {
 
+#define SERVER_LOCALE "nb_NO"
+
 #define IdType   Poco::UInt32
 #define TimeType Poco::Int64
 
-#define SERVER_LOCALE "nb_NO"
+#define IdRole (Wt::UserRole+0)
 
 #define PI (3.1415926535897932385) 
 #define DEG2RAD(d)	((d) * PI/180.0)

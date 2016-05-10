@@ -5,6 +5,8 @@
 #include "../singleton/db.h"
 #include "dbo/user.h"
 
+#include <unordered_map>
+
 
 namespace modellbasen
 {
@@ -32,6 +34,8 @@ public:
 
 	static bool GetUserId(const std::string& username, IdType& user_id);
 	static bool GetUserId(Poco::Data::Session* session, const std::string& username, IdType& user_id);
+
+	bool GetUsername(Poco::Data::Session* session, IdType id, std::string& username);
 	
 public:
 	bool LogIn(const std::string& username, const std::string& password);
@@ -49,6 +53,8 @@ public:
 private:
 	WebApplication* m_app;
 	User* m_current_user;
+
+	std::unordered_map<IdType, std::string> m_username_cache;
 };
 
 } // namespace modellbasen

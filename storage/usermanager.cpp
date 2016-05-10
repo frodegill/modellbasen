@@ -119,6 +119,33 @@ bool UserManager::GetUserId(Poco::Data::Session* session, const std::string& use
 	return true;
 }
 
+bool UserManager::GetUsername(Poco::Data::Session* session, IdType id, std::string& username)
+{
+	if (!session || INVALID_ID==id)
+		return false;
+
+	//Check in cache
+	std::unordered_map<IdType, std::string>::iterator iter = m_username_cache.find(id);
+	if (m_username_cache.end() != iter)
+	{
+		username = m_username_cache[id];
+		return true;
+	}
+	
+	//Check in database
+	IF_NO_ROWS(stmt, *session,
+		"SELECT username FROM user WHERE id=?",
+			Poco::Data::Keywords::into(username),
+			Poco::Data::Keywords::use(id))
+	{
+		return false;
+	}
+
+	//Found. Add to cache
+	m_username_cache[id] = username;
+	return true;
+}
+
 bool UserManager::LogIn(const std::string& username, const std::string& password)
 {
 	std::string username_lowercase = boost::locale::to_lower(username);

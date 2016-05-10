@@ -1,3 +1,4 @@
+#include <Wt/WStandardItem>
 #include <Wt/WHBoxLayout>
 #include <Wt/WVBoxLayout>
 
@@ -7,6 +8,7 @@
 #include "../../../singleton/db.h"
 #include "../../../storage/usermanager.h"
 #include "../../../storage/dbo/message.h"
+#include "../../../utils/time.h"
 
 
 using namespace modellbasen;
@@ -46,7 +48,7 @@ MailTab::MailTab(WebApplication* app)
 	m_mail_model = new Wt::WStandardItemModel();
 	m_mail_tree_view = new Wt::WTreeView();
 	m_mail_tree_view->setModel(m_mail_model);
-	m_mail_tree_view->setRootIsDecorated(false);
+	m_mail_tree_view->setRootIsDecorated(true);
 	m_mail_tree_view->setSelectionMode(Wt::SingleSelection);
 	m_mail_tree_view->setDragEnabled(false);
   m_mail_tree_view->setDropsEnabled(false);
@@ -88,26 +90,104 @@ void MailTab::OnDeleteButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 void MailTab::RePopulateMailModel()
 {
 	m_mail_model->clear();
-	if (3 > m_mail_model->columnCount())
+	if (4 > m_mail_model->columnCount())
 	{
-		m_mail_model->insertColumns(0, 3 - m_mail_model->columnCount());
+		m_mail_model->insertColumns(0, 4 - m_mail_model->columnCount());
 		m_mail_model->setHeaderData(0, Wt::Horizontal, boost::any(Wt::WString::tr("SubjectHeader")));
 		m_mail_model->setHeaderData(1, Wt::Horizontal, boost::any(Wt::WString::tr("FromHeader")));
-		m_mail_model->setHeaderData(2, Wt::Horizontal, boost::any(Wt::WString::tr("SentTimeHeader")));
+		m_mail_model->setHeaderData(2, Wt::Horizontal, boost::any(Wt::WString::tr("ToHeader")));
+		m_mail_model->setHeaderData(3, Wt::Horizontal, boost::any(Wt::WString::tr("SentTimeHeader")));
 	}
 
-	const User* user = m_app->GetUserManager()->GetCurrentUser();
+	UserManager* user_manager = m_app->GetUserManager();
+	const User* user = user_manager->GetCurrentUser();
 	Poco::Data::Session* session;
 	if (!user || !DB.CreateSession(session))
 		return;
 
-	std::list<Message> messages;
-	bool ret = Message::GetAllUserMessagesMetadata(session, user->GetId(), messages);
+	IdType user_id = user->GetId();
+
+	IdType id;
+	std::string subject;
+	IdType sender_id;
+	IdType recipient_id;
+	TimeType sent_time;
+	TimeType read_time;
+	IdType in_reply_to;
+	bool sender_deleted;
+	bool recipient_deleted;
+	Poco::Data::Statement statement(*session);
+	statement << "SELECT id, subject, sender, recipient, sent_time, read_time, in_reply_to, sender_deleted, recipient_deleted "\
+	                           "FROM message "\
+	                           "WHERE ((sender=? AND NOT sender_deleted) OR (recipient=? AND NOT recipient_deleted)) "\
+	                           "ORDER BY id",
+		Poco::Data::Keywords::into(id),
+		Poco::Data::Keywords::into(subject),
+		Poco::Data::Keywords::into(sender_id),
+		Poco::Data::Keywords::into(recipient_id),
+		Poco::Data::Keywords::into(sent_time),
+		Poco::Data::Keywords::into(read_time),
+		Poco::Data::Keywords::into(in_reply_to),
+		Poco::Data::Keywords::into(sender_deleted),
+		Poco::Data::Keywords::into(recipient_deleted),
+		Poco::Data::Keywords::use(user_id),
+		Poco::Data::Keywords::use(user_id),
+		Poco::Data::Keywords::range<Poco::Data::Limit::SizeT>(0,1);
+
+
+	Poco::Data::Session* username_session;
+	if (!DB.CreateSession(username_session))
+	{
+		DB.ReleaseSession(session, PocoGlue::IGNORE); //Cleanup already created session
+		return;
+	}
+
+	std::unordered_map<IdType, Wt::WStandardItem*> item_cache;
+	std::string sender_username;
+	std::string recipient_username;
+	std::string posted_time;
+	int row = 0;
+	while (!statement.done() && 0<statement.execute())
+	{
+		Wt::WStandardItem* mail_item = new Wt::WStandardItem(Wt::WString::fromUTF8(subject));
+		mail_item->setData(boost::any((const IdType)id), IdRole);
+		mail_item->setStyleClass(EPOCH==read_time ? "unread" : "read");
+
+		if (in_reply_to && item_cache.end()!=item_cache.find(in_reply_to))
+		{
+			Wt::WStandardItem* parent_item = item_cache[in_reply_to];
+			int child_row = parent_item->rowCount();
+			parent_item->setChild(child_row, 0, mail_item);
+			if (user_manager->GetUsername(username_session, sender_id, sender_username))
+			{
+				parent_item->setChild(child_row, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(sender_username)));
+			}
+			if (user_manager->GetUsername(username_session, recipient_id, recipient_username))
+			{
+				parent_item->setChild(child_row, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(recipient_username)));
+			}
+			Time::ToString(sent_time, posted_time);
+			parent_item->setChild(child_row, 3, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
+		}
+		else {
+			m_mail_model->setItem(row, 0, mail_item);
+			if (user_manager->GetUsername(username_session, sender_id, sender_username))
+			{
+				m_mail_model->setItem(row, 1, new Wt::WStandardItem(Wt::WString::fromUTF8(sender_username)));
+			}
+			if (user_manager->GetUsername(username_session, recipient_id, recipient_username))
+			{
+				m_mail_model->setItem(row, 2, new Wt::WStandardItem(Wt::WString::fromUTF8(recipient_username)));
+			}
+			Time::ToString(sent_time, posted_time);
+			m_mail_model->setItem(row++, 3, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
+		}
+		item_cache[id] = mail_item;
+	}
+	DB.ReleaseSession(username_session, PocoGlue::IGNORE);
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
-	if (!ret)
-		return;
-
+	m_mail_model->sort(0);
 	//TODO
 }

@@ -23,3 +23,11 @@
 .feedback {
   color: red;
 }
+
+.unread {
+	font-weight: bold;
+}
+
+.read {
+	font-weight: normal;
+}

@@ -26,8 +26,6 @@ public:
 	static bool GetUnreadCount(const IdType& user_id, size_t& count);
 	static bool GetUnreadCount(Poco::Data::Session* session, const IdType& user_id, size_t& count);
 
-	static bool GetAllUserMessagesMetadata(Poco::Data::Session* session, const IdType& user_id, std::list<Message>& messages);
-
 private:
 	IdType m_id;
 	std::string  m_subject;
