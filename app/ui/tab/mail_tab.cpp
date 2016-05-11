@@ -89,6 +89,15 @@ void MailTab::OnDeleteButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 
 void MailTab::RePopulateMailModel()
 {
+	//Get current selection
+	IdType selected_id = INVALID_ID;
+	Wt::WModelIndexSet selected_indexes = m_mail_tree_view->selectedIndexes();
+	if (!selected_indexes.empty())
+	{
+		selected_id = boost::any_cast<IdType>(selected_indexes.begin()->data(IdRole));
+	}
+	
+	//Clear model
 	m_mail_model->clear();
 	if (4 > m_mail_model->columnCount())
 	{
@@ -99,6 +108,7 @@ void MailTab::RePopulateMailModel()
 		m_mail_model->setHeaderData(3, Wt::Horizontal, boost::any(Wt::WString::tr("SentTimeHeader")));
 	}
 
+	//Regenerate model content
 	UserManager* user_manager = m_app->GetUserManager();
 	const User* user = user_manager->GetCurrentUser();
 	Poco::Data::Session* session;
@@ -151,7 +161,8 @@ void MailTab::RePopulateMailModel()
 	{
 		Wt::WStandardItem* mail_item = new Wt::WStandardItem(Wt::WString::fromUTF8(subject));
 		mail_item->setData(boost::any((const IdType)id), IdRole);
-		mail_item->setStyleClass(EPOCH==read_time ? "unread" : "read");
+		bool unread = EPOCH==read_time;
+		mail_item->setStyleClass(unread ? "unread" : "read");
 
 		if (in_reply_to && item_cache.end()!=item_cache.find(in_reply_to))
 		{
@@ -168,6 +179,16 @@ void MailTab::RePopulateMailModel()
 			}
 			Time::ToString(sent_time, posted_time);
 			parent_item->setChild(child_row, 3, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
+			
+			if (unread)
+			{
+				Wt::WStandardItem* parent_to_expand = parent_item;
+				while (parent_to_expand)
+				{
+					m_mail_tree_view->expand(parent_to_expand->index());
+					parent_to_expand = parent_to_expand->parent();
+				}
+			}
 		}
 		else {
 			m_mail_model->setItem(row, 0, mail_item);
@@ -183,11 +204,17 @@ void MailTab::RePopulateMailModel()
 			m_mail_model->setItem(row++, 3, new Wt::WStandardItem(Wt::WString::fromUTF8(posted_time)));
 		}
 		item_cache[id] = mail_item;
+		
+		if (id==selected_id)
+		{
+			Wt::WModelIndexSet select_indexes;
+			select_indexes.insert(mail_item->index());
+			m_mail_tree_view->setSelectedIndexes(select_indexes);
+		}
 	}
 	DB.ReleaseSession(username_session, PocoGlue::IGNORE);
 
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
 	m_mail_model->sort(0);
-	//TODO
 }
