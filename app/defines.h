@@ -28,6 +28,9 @@ namespace modellbasen
 
 #define DEFAULT_PADDING (8)
 
+#define NO_STRETCH (0)
+#define STRETCH (1)
+
 #define MAX_UPLOAD_SIZE (-1)
 
 #define INVALID_ID (static_cast<Poco::UInt32>(0))

@@ -20,7 +20,12 @@ MailTab::MailTab(WebApplication* app)
   m_reply_button(nullptr),
   m_delete_button(nullptr),
   m_mail_model(nullptr),
-  m_mail_tree_view(nullptr)
+  m_mail_tree_view(nullptr),
+  m_mail_container(nullptr),
+  m_receiver_selectbox(nullptr),
+  m_subject_edit(nullptr),
+  m_body_edit(nullptr),
+  m_send_button(nullptr)
 {
 	Wt::WVBoxLayout* tab_container_vbox = new Wt::WVBoxLayout();
 	tab_container_vbox->setContentsMargins(0, 9, 0, 0);
@@ -53,8 +58,36 @@ MailTab::MailTab(WebApplication* app)
 	m_mail_tree_view->setDragEnabled(false);
   m_mail_tree_view->setDropsEnabled(false);
   m_mail_tree_view->setEditTriggers(Wt::WAbstractItemView::NoEditTrigger);
+	m_mail_tree_view->selectionChanged().connect(this, &MailTab::OnSelectionChanged);
 	tab_container_vbox->addWidget(m_mail_tree_view);
 	
+  m_mail_container = new Wt::WContainerWidget();
+	Wt::WGridLayout* mail_container_grid = new Wt::WGridLayout();
+	mail_container_grid->setContentsMargins(0, 9, 0, 0);
+	m_mail_container->setLayout(mail_container_grid);
+	mail_container_grid->setColumnStretch(0, NO_STRETCH);
+	mail_container_grid->setColumnStretch(1, STRETCH);
+
+	int row = 0;
+	mail_container_grid->addWidget(new Wt::WText(Wt::WString::tr("Receiver")), row, 0, Wt::AlignRight);
+	//m_receiver_selectbox(nullptr),
+	row++;
+ 
+	mail_container_grid->addWidget(new Wt::WText(Wt::WString::tr("Subject")), row, 0, Wt::AlignRight);
+	m_subject_edit = new Wt::WLineEdit();
+	mail_container_grid->addWidget(m_subject_edit, row++, 1, Wt::AlignJustify);
+
+  m_body_edit = new Wt::WTextEdit();
+	mail_container_grid->addWidget(m_body_edit, row++, 0, 1, 2, Wt::AlignJustify);
+
+	m_send_button = new Wt::WPushButton(Wt::WString::tr("SendButton"));
+	m_send_button->clicked().connect(this, &MailTab::OnSendButtonClicked);
+	mail_container_grid->addWidget(m_send_button, row++, 0, 1, 2, Wt::AlignCenter);
+	
+	tab_container_vbox->addWidget(m_mail_container);
+
+	m_body_edit->hide();
+	m_send_button->hide();
 }
 
 MailTab::~MailTab()
@@ -85,6 +118,32 @@ void MailTab::OnReplyButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 
 void MailTab::OnDeleteButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 {
+}
+
+void MailTab::OnSendButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
+{
+}
+
+void MailTab::OnSelectionChanged()
+{
+	m_send_button->hide();
+
+	IdType selected_id = INVALID_ID;
+	Wt::WModelIndexSet selected_indexes = m_mail_tree_view->selectedIndexes();
+	if (!selected_indexes.empty())
+	{
+		selected_id = boost::any_cast<IdType>(selected_indexes.begin()->data(IdRole));
+	}
+
+	if (INVALID_ID==selected_id)
+	{
+		m_mail_container->hide();
+		return;
+	}
+
+	m_mail_container->show();
+	m_body_edit->setReadOnly(true);
+	//TODO Show message
 }
 
 void MailTab::RePopulateMailModel()

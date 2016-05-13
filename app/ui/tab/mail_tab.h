@@ -2,8 +2,11 @@
 #define _MAIL_TAB_H_
 
 #include <Wt/WContainerWidget>
+#include <Wt/WLineEdit>
 #include <Wt/WPushButton>
+#include <Wt/WSelectionBox>
 #include <Wt/WStandardItemModel>
+#include <Wt/WTextEdit>
 #include <Wt/WTreeView>
 
 
@@ -28,6 +31,9 @@ public:
 	void OnNewButtonClicked(const Wt::WMouseEvent& mouse);
 	void OnReplyButtonClicked(const Wt::WMouseEvent& mouse);
 	void OnDeleteButtonClicked(const Wt::WMouseEvent& mouse);
+	void OnSendButtonClicked(const Wt::WMouseEvent& mouse);
+
+	void OnSelectionChanged();
 
 private:
 	void RePopulateMailModel();
@@ -41,6 +47,12 @@ private:
 
 	Wt::WStandardItemModel* m_mail_model;
 	Wt::WTreeView* m_mail_tree_view;
+	
+	Wt::WContainerWidget* m_mail_container;
+	Wt::WSelectionBox* m_receiver_selectbox;
+	Wt::WLineEdit* m_subject_edit;
+	Wt::WTextEdit* m_body_edit;
+	Wt::WPushButton* m_send_button;
 };
 
 } // namespace modellbasen
