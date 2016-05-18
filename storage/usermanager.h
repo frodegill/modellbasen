@@ -6,6 +6,7 @@
 #include "dbo/user.h"
 
 #include <unordered_map>
+#include <Wt/WStringListModel>
 
 
 namespace modellbasen
@@ -36,7 +37,9 @@ public:
 	static bool GetUserId(Poco::Data::Session* session, const std::string& username, IdType& user_id);
 
 	bool GetUsername(Poco::Data::Session* session, IdType id, std::string& username);
-	
+
+	static bool GetMatchingUsernames(Poco::Data::Session* session, const std::string& filter, Wt::WStringListModel& username_model);
+
 public:
 	bool LogIn(const std::string& username, const std::string& password);
 	const User* GetCurrentUser() const {return m_current_user;}

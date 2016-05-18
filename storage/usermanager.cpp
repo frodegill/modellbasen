@@ -146,6 +146,27 @@ bool UserManager::GetUsername(Poco::Data::Session* session, IdType id, std::stri
 	return true;
 }
 
+bool UserManager::GetMatchingUsernames(Poco::Data::Session* session, const std::string& filter, Wt::WStringListModel& username_model)
+{
+  std::vector<Wt::WString> empty_list;
+	username_model.setStringList(empty_list);
+
+	std::string username_filter = "%"+filter+"%";
+	std::string username;
+	Poco::Data::Statement statement(*session);
+	statement << "SELECT username FROM user WHERE username LIKE ? ORDER BY username LIMIT 25",
+		Poco::Data::Keywords::into(username),
+		Poco::Data::Keywords::use(username_filter),
+		Poco::Data::Keywords::range<Poco::Data::Limit::SizeT>(0,1);
+
+	while (!statement.done() && 0<statement.execute())
+	{
+		username_model.addString(username);
+	}
+
+	return true;
+}
+
 bool UserManager::LogIn(const std::string& username, const std::string& password)
 {
 	std::string username_lowercase = boost::locale::to_lower(username);

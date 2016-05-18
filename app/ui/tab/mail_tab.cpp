@@ -22,7 +22,9 @@ MailTab::MailTab(WebApplication* app)
   m_mail_model(nullptr),
   m_mail_tree_view(nullptr),
   m_mail_container(nullptr),
-  m_receiver_selectbox(nullptr),
+  m_receiver_edit(nullptr),
+  m_receiver_virtmodel(nullptr),
+  m_receiver_popup(nullptr),
   m_subject_edit(nullptr),
   m_body_edit(nullptr),
   m_send_button(nullptr)
@@ -70,8 +72,17 @@ MailTab::MailTab(WebApplication* app)
 
 	int row = 0;
 	mail_container_grid->addWidget(new Wt::WText(Wt::WString::tr("Receiver")), row, 0, Wt::AlignRight);
-	//m_receiver_selectbox(nullptr),
-	row++;
+	m_receiver_edit = new Wt::WLineEdit();
+	m_receiver_virtmodel = new Wt::WStringListModel();
+  Wt::WSuggestionPopup::Options simpleOptions;
+	m_receiver_popup = new Wt::WSuggestionPopup(simpleOptions);
+	m_receiver_popup->forEdit(m_receiver_edit);
+	m_receiver_popup->setModel(m_receiver_virtmodel);
+  m_receiver_popup->setFilterLength(1);
+  m_receiver_popup->filterModel().connect(this, &MailTab::OnFilterSuggestions);
+  m_receiver_popup->setMinimumSize(150, Wt::WLength::Auto);
+  m_receiver_popup->setMaximumSize(Wt::WLength::Auto, 300);
+	mail_container_grid->addWidget(m_receiver_edit, row++, 1, Wt::AlignLeft);
  
 	mail_container_grid->addWidget(new Wt::WText(Wt::WString::tr("Subject")), row, 0, Wt::AlignRight);
 	m_subject_edit = new Wt::WLineEdit();
@@ -144,6 +155,17 @@ void MailTab::OnSelectionChanged()
 	m_mail_container->show();
 	m_body_edit->setReadOnly(true);
 	//TODO Show message
+}
+
+void MailTab::OnFilterSuggestions(const Wt::WString& input)
+{
+	Poco::Data::Session* session;
+	if (!DB.CreateSession(session))
+		return;
+
+	UserManager::GetMatchingUsernames(session, input.toUTF8(), *m_receiver_virtmodel);
+	
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
 }
 
 void MailTab::RePopulateMailModel()

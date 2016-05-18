@@ -4,8 +4,9 @@
 #include <Wt/WContainerWidget>
 #include <Wt/WLineEdit>
 #include <Wt/WPushButton>
-#include <Wt/WSelectionBox>
+#include <Wt/WSuggestionPopup>
 #include <Wt/WStandardItemModel>
+#include <Wt/WStringListModel>
 #include <Wt/WTextEdit>
 #include <Wt/WTreeView>
 
@@ -34,6 +35,7 @@ public:
 	void OnSendButtonClicked(const Wt::WMouseEvent& mouse);
 
 	void OnSelectionChanged();
+  void OnFilterSuggestions(const Wt::WString& input);
 
 private:
 	void RePopulateMailModel();
@@ -49,7 +51,9 @@ private:
 	Wt::WTreeView* m_mail_tree_view;
 	
 	Wt::WContainerWidget* m_mail_container;
-	Wt::WSelectionBox* m_receiver_selectbox;
+	Wt::WLineEdit* m_receiver_edit;
+	Wt::WStringListModel* m_receiver_virtmodel;
+	Wt::WSuggestionPopup* m_receiver_popup;
 	Wt::WLineEdit* m_subject_edit;
 	Wt::WTextEdit* m_body_edit;
 	Wt::WPushButton* m_send_button;

@@ -52,7 +52,10 @@
 	<message id="DeleteButton">Delete</message>
 	<message id="SubjectHeader">Subject</message>
 	<message id="FromHeader">From</message>
+	<message id="ToHeader">To</message>
 	<message id="SentTimeHeader">Sent</message>
+	<message id="Receiver">To</message>
+	<message id="Subject">Subject</message>
 
 	<message id="Tab.PictureTab">Pictures</message>
 
