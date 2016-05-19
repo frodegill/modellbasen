@@ -75,8 +75,11 @@ MailTab::MailTab(WebApplication* app)
 	m_receiver_edit = new Wt::WLineEdit();
 	m_receiver_virtmodel = new Wt::WStringListModel();
   Wt::WSuggestionPopup::Options simpleOptions;
+	simpleOptions.highlightBeginTag = "<b>";
+	simpleOptions.highlightEndTag = "</b>";
+	simpleOptions.listSeparator = 0;
 	m_receiver_popup = new Wt::WSuggestionPopup(simpleOptions);
-	m_receiver_popup->forEdit(m_receiver_edit);
+	m_receiver_popup->forEdit(m_receiver_edit, Wt::WSuggestionPopup::DropDownIcon);
 	m_receiver_popup->setModel(m_receiver_virtmodel);
   m_receiver_popup->setFilterLength(1);
   m_receiver_popup->filterModel().connect(this, &MailTab::OnFilterSuggestions);
@@ -88,7 +91,8 @@ MailTab::MailTab(WebApplication* app)
 	m_subject_edit = new Wt::WLineEdit();
 	mail_container_grid->addWidget(m_subject_edit, row++, 1, Wt::AlignJustify);
 
-  m_body_edit = new Wt::WTextEdit();
+  m_body_edit = new Wt::WTextArea();
+	mail_container_grid->setRowStretch(row, true);
 	mail_container_grid->addWidget(m_body_edit, row++, 0, 1, 2, Wt::AlignJustify);
 
 	m_send_button = new Wt::WPushButton(Wt::WString::tr("SendButton"));
@@ -97,8 +101,7 @@ MailTab::MailTab(WebApplication* app)
 	
 	tab_container_vbox->addWidget(m_mail_container);
 
-	m_body_edit->hide();
-	m_send_button->hide();
+	ShowMailContainer(HIDDEN);
 }
 
 MailTab::~MailTab()
@@ -137,8 +140,6 @@ void MailTab::OnSendButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 
 void MailTab::OnSelectionChanged()
 {
-	m_send_button->hide();
-
 	IdType selected_id = INVALID_ID;
 	Wt::WModelIndexSet selected_indexes = m_mail_tree_view->selectedIndexes();
 	if (!selected_indexes.empty())
@@ -148,12 +149,11 @@ void MailTab::OnSelectionChanged()
 
 	if (INVALID_ID==selected_id)
 	{
-		m_mail_container->hide();
+		ShowMailContainer(HIDDEN);
 		return;
 	}
 
-	m_mail_container->show();
-	m_body_edit->setReadOnly(true);
+	ShowMailContainer(READ_ONLY);
 	//TODO Show message
 }
 
@@ -298,4 +298,31 @@ void MailTab::RePopulateMailModel()
 	DB.ReleaseSession(session, PocoGlue::IGNORE);
 
 	m_mail_model->sort(0);
+}
+
+void MailTab::ShowMailContainer(MailVisibility visibility)
+{
+	switch(visibility)
+	{
+		case HIDDEN:
+		{
+			m_mail_container->hide();
+			break;
+		}
+		case READ_ONLY:
+		{
+			m_mail_container->show();
+			m_body_edit->setReadOnly(true);
+			m_body_edit->show();
+			m_send_button->hide();
+		}
+		case SHOWN:
+		{
+			m_mail_container->show();
+			m_body_edit->setReadOnly(false);
+			m_body_edit->show();
+			m_send_button->show();
+			break;
+		}
+	};
 }

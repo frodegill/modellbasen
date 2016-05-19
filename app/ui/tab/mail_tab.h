@@ -18,6 +18,12 @@ class WebApplication;
 
 class MailTab : public Wt::WContainerWidget
 {
+enum MailVisibility {
+	HIDDEN,
+	READ_ONLY,
+	SHOWN
+};
+
 public:
 	MailTab(WebApplication* app);
 	~MailTab();
@@ -39,6 +45,7 @@ public:
 
 private:
 	void RePopulateMailModel();
+	void ShowMailContainer(MailVisibility visibility);
 
 private:
 	WebApplication* m_app;
@@ -55,7 +62,7 @@ private:
 	Wt::WStringListModel* m_receiver_virtmodel;
 	Wt::WSuggestionPopup* m_receiver_popup;
 	Wt::WLineEdit* m_subject_edit;
-	Wt::WTextEdit* m_body_edit;
+	Wt::WTextArea* m_body_edit;
 	Wt::WPushButton* m_send_button;
 };
 
