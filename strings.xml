@@ -50,6 +50,7 @@
 	<message id="NewButton">New</message>
 	<message id="ReplyButton">Reply</message>
 	<message id="DeleteButton">Delete</message>
+	<message id="SendButton">Send</message>
 	<message id="SubjectHeader">Subject</message>
 	<message id="FromHeader">From</message>
 	<message id="ToHeader">To</message>

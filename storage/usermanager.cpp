@@ -151,12 +151,14 @@ bool UserManager::GetMatchingUsernames(Poco::Data::Session* session, const std::
   std::vector<Wt::WString> empty_list;
 	username_model.setStringList(empty_list);
 
+	size_t max_matching_username_limit = MAX_MATCHING_USERNAMES;
 	std::string username_filter = "%"+filter+"%";
 	std::string username;
 	Poco::Data::Statement statement(*session);
-	statement << "SELECT username FROM user WHERE username LIKE ? ORDER BY username LIMIT 25",
+	statement << "SELECT username FROM user WHERE username LIKE ? ORDER BY username LIMIT ?",
 		Poco::Data::Keywords::into(username),
 		Poco::Data::Keywords::use(username_filter),
+		Poco::Data::Keywords::use(max_matching_username_limit),
 		Poco::Data::Keywords::range<Poco::Data::Limit::SizeT>(0,1);
 
 	while (!statement.done() && 0<statement.execute())

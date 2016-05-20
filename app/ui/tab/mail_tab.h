@@ -28,6 +28,9 @@ public:
 	MailTab(WebApplication* app);
 	~MailTab();
 
+private:
+	Wt::WLineEdit* CreateReceiverEdit();
+
 public:
 	void OnLoggedIn();
 	void OnLoggedOut();

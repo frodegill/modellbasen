@@ -10,6 +10,11 @@
 #include "../../../storage/dbo/message.h"
 #include "../../../utils/time.h"
 
+/*
+ * See also: http://www.webtoolkit.eu/wt/blog/2010/03/02/javascript_that_is_c__
+ */
+#define INLINE_JAVASCRIPT(...) #__VA_ARGS__
+
 
 using namespace modellbasen;
 
@@ -72,20 +77,7 @@ MailTab::MailTab(WebApplication* app)
 
 	int row = 0;
 	mail_container_grid->addWidget(new Wt::WText(Wt::WString::tr("Receiver")), row, 0, Wt::AlignRight);
-	m_receiver_edit = new Wt::WLineEdit();
-	m_receiver_virtmodel = new Wt::WStringListModel();
-  Wt::WSuggestionPopup::Options simpleOptions;
-	simpleOptions.highlightBeginTag = "<b>";
-	simpleOptions.highlightEndTag = "</b>";
-	simpleOptions.listSeparator = 0;
-	m_receiver_popup = new Wt::WSuggestionPopup(simpleOptions);
-	m_receiver_popup->forEdit(m_receiver_edit, Wt::WSuggestionPopup::DropDownIcon);
-	m_receiver_popup->setModel(m_receiver_virtmodel);
-  m_receiver_popup->setFilterLength(1);
-  m_receiver_popup->filterModel().connect(this, &MailTab::OnFilterSuggestions);
-  m_receiver_popup->setMinimumSize(150, Wt::WLength::Auto);
-  m_receiver_popup->setMaximumSize(Wt::WLength::Auto, 300);
-	mail_container_grid->addWidget(m_receiver_edit, row++, 1, Wt::AlignLeft);
+	mail_container_grid->addWidget(CreateReceiverEdit(), row++, 1, Wt::AlignLeft);
  
 	mail_container_grid->addWidget(new Wt::WText(Wt::WString::tr("Subject")), row, 0, Wt::AlignRight);
 	m_subject_edit = new Wt::WLineEdit();
@@ -106,6 +98,38 @@ MailTab::MailTab(WebApplication* app)
 
 MailTab::~MailTab()
 {
+}
+
+Wt::WLineEdit* MailTab::CreateReceiverEdit()
+{
+	std::string matcherJS = INLINE_JAVASCRIPT
+	(
+		function(edit) {
+			var value = edit.value;
+			return function(suggestion) {
+				if (!suggestion)
+					return {match:false, suggestion:""};
+				return {match:true, suggestion:suggestion};
+			}
+		}
+	);
+
+	std::string replacerJS = INLINE_JAVASCRIPT
+	(
+		function(edit, suggestionText, suggestionValue) {edit.value=suggestionValue;}
+	);
+
+	m_receiver_edit = new Wt::WLineEdit();
+	m_receiver_virtmodel = new Wt::WStringListModel();
+	m_receiver_popup = new Wt::WSuggestionPopup(matcherJS, replacerJS);
+	m_receiver_popup->setModel(m_receiver_virtmodel);
+	m_receiver_popup->setFilterLength(-1);
+	m_receiver_popup->setDropDownIconUnfiltered(true);
+	m_receiver_popup->filterModel().connect(this, &MailTab::OnFilterSuggestions);
+	m_receiver_popup->setMinimumSize(150, Wt::WLength::Auto);
+	m_receiver_popup->setMaximumSize(Wt::WLength::Auto, 300);
+	m_receiver_popup->forEdit(m_receiver_edit, Wt::WSuggestionPopup::Editing);
+	return m_receiver_edit;
 }
 
 void MailTab::OnLoggedIn()

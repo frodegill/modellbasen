@@ -32,6 +32,7 @@ namespace modellbasen
 #define STRETCH (1)
 
 #define MAX_UPLOAD_SIZE (-1)
+#define MAX_MATCHING_USERNAMES (15)
 
 #define INVALID_ID (static_cast<Poco::UInt32>(0))
 #define EPOCH (0)
