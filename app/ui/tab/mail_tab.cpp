@@ -177,8 +177,29 @@ void MailTab::OnSelectionChanged()
 		return;
 	}
 
+	Poco::Data::Session* session;
+	if (!DB.CreateSession(session))
+		return;
+
+	Message message;
+	if (!Message::GetMessage(session, selected_id, message))
+	{
+		m_receiver_edit->setText("");
+		m_subject_edit->setText("");
+		m_body_edit->setText("");
+	}
+	else
+	{
+		std::string receiver;
+		if (m_app->GetUserManager()->GetUsername(session, message.GetRecipientId(), receiver))
+			m_receiver_edit->setText(Wt::WString::fromUTF8(receiver));
+		
+		m_subject_edit->setText(message.GetSubject());
+		m_body_edit->setText(message.GetText());
+	}
 	ShowMailContainer(READ_ONLY);
-	//TODO Show message
+
+	DB.ReleaseSession(session, PocoGlue::IGNORE);
 }
 
 void MailTab::OnFilterSuggestions(const Wt::WString& input)
@@ -336,15 +357,18 @@ void MailTab::ShowMailContainer(MailVisibility visibility)
 		case READ_ONLY:
 		{
 			m_mail_container->show();
+			m_receiver_edit->setReadOnly(true);
+			m_subject_edit->setReadOnly(true);
 			m_body_edit->setReadOnly(true);
-			m_body_edit->show();
 			m_send_button->hide();
+			break;
 		}
 		case SHOWN:
 		{
 			m_mail_container->show();
+			m_receiver_edit->setReadOnly(false);
+			m_subject_edit->setReadOnly(false);
 			m_body_edit->setReadOnly(false);
-			m_body_edit->show();
 			m_send_button->show();
 			break;
 		}

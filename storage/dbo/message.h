@@ -19,23 +19,38 @@ public: //For PoCo::Data
 public:
 	Message();
 
+	void        Reset() {m_id = INVALID_ID;}
+	bool        IsValid() const {return INVALID_ID==m_id;}
+	static bool GetMessage(IdType id, Message& message);
+	static bool GetMessage(Poco::Data::Session* session, IdType id, Message& message);
+
 public:
-	IdType       GetId() const {return m_id;}
+	IdType      GetId() const {return m_id;}
+	const std::string& GetSubject() const {return m_subject;}
+	const std::string& GetText() const {return m_text;}
+	IdType      GetSenderId() const {return m_sender_id;}
+	IdType      GetRecipientId() const {return m_recipient_id;}
+	TimeType    GetSentTime() const {return m_sent_time;}
+	TimeType    GetReadTime() const {return m_read_time;}
+	TimeType    GetRepliedTime() const {return m_replied_time;}
+	IdType      GetInReplyToId() const {return m_in_reply_to_id;}
+	bool        GetSenderHasDeleted() const {return m_sender_has_deleted;}
+	bool        GetRecipientHasDeleted() const {return m_recipient_has_deleted;}
 
 public:
 	static bool GetUnreadCount(const IdType& user_id, size_t& count);
 	static bool GetUnreadCount(Poco::Data::Session* session, const IdType& user_id, size_t& count);
 
 private:
-	IdType m_id;
+	IdType       m_id;
 	std::string  m_subject;
 	std::string  m_text;
-	IdType m_sender_id;
-	IdType m_recipient_id;
-	TimeType  m_sent_time;
-	TimeType  m_read_time;
-	TimeType  m_replied_time;
-	IdType m_in_reply_to_id;
+	IdType       m_sender_id;
+	IdType       m_recipient_id;
+	TimeType     m_sent_time;
+	TimeType     m_read_time;
+	TimeType     m_replied_time;
+	IdType       m_in_reply_to_id;
 	bool         m_sender_has_deleted;
 	bool         m_recipient_has_deleted;
 };
