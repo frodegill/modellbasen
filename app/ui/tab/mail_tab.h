@@ -10,6 +10,9 @@
 #include <Wt/WTextEdit>
 #include <Wt/WTreeView>
 
+#include "../../defines.h"
+#include "../../../singleton/db.h"
+
 
 namespace modellbasen
 {
@@ -59,6 +62,7 @@ private:
 
 	Wt::WStandardItemModel* m_mail_model;
 	Wt::WTreeView* m_mail_tree_view;
+	IdType m_selected_mail_id;
 	
 	Wt::WContainerWidget* m_mail_container;
 	Wt::WLineEdit* m_receiver_edit;

@@ -41,6 +41,11 @@ public:
 	static bool GetUnreadCount(const IdType& user_id, size_t& count);
 	static bool GetUnreadCount(Poco::Data::Session* session, const IdType& user_id, size_t& count);
 
+	static bool SendMessage(Poco::Data::Session* session_in_transaction,
+	                        const std::string& subject, const std::string& text,
+	                        IdType sender_id, IdType recipient_id,
+	                        IdType in_reply_to_id);
+
 private:
 	IdType       m_id;
 	std::string  m_subject;

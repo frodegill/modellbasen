@@ -4,8 +4,7 @@
 
 #include "mail_tab.h"
 #include "../../application.h"
-#include "../../defines.h"
-#include "../../../singleton/db.h"
+#include "../../../singleton/push.h"
 #include "../../../storage/usermanager.h"
 #include "../../../storage/dbo/message.h"
 #include "../../../utils/time.h"
@@ -26,6 +25,7 @@ MailTab::MailTab(WebApplication* app)
   m_delete_button(nullptr),
   m_mail_model(nullptr),
   m_mail_tree_view(nullptr),
+  m_selected_mail_id(INVALID_ID),
   m_mail_container(nullptr),
   m_receiver_edit(nullptr),
   m_receiver_virtmodel(nullptr),
@@ -160,18 +160,43 @@ void MailTab::OnDeleteButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 
 void MailTab::OnSendButtonClicked(const Wt::WMouseEvent& UNUSED(mouse))
 {
+	std::string receiver_username = m_receiver_edit->text().toUTF8();
+	IdType receiver_id;
+	if (receiver_username.empty() ||
+	    !m_app->GetUserManager()->GetUserId(receiver_username, receiver_id) ||
+	    INVALID_ID==receiver_id)
+		return;
+
+	std::string subject = m_subject_edit->text().toUTF8();
+	std::string body = m_body_edit->text().toUTF8();
+	if (body.empty())
+		return;
+
+	Poco::Data::Session* session_in_transaction;
+	if (!DB.CreateSession(session_in_transaction))
+		return;
+
+	bool ret = Message::SendMessage(session_in_transaction,
+	                                subject, body,
+	                                m_app->GetUserManager()->GetCurrentUser()->GetId(),
+	                                receiver_id,
+	                                m_selected_mail_id);
+
+	DB.ReleaseSession(session_in_transaction, ret ? PocoGlue::COMMIT : PocoGlue::ROLLBACK);
+
+	::NotifyMessageToUser(receiver_username);
 }
 
 void MailTab::OnSelectionChanged()
 {
-	IdType selected_id = INVALID_ID;
+	m_selected_mail_id = INVALID_ID;
 	Wt::WModelIndexSet selected_indexes = m_mail_tree_view->selectedIndexes();
 	if (!selected_indexes.empty())
 	{
-		selected_id = boost::any_cast<IdType>(selected_indexes.begin()->data(IdRole));
+		m_selected_mail_id = boost::any_cast<IdType>(selected_indexes.begin()->data(IdRole));
 	}
 
-	if (INVALID_ID==selected_id)
+	if (INVALID_ID==m_selected_mail_id)
 	{
 		ShowMailContainer(HIDDEN);
 		return;
@@ -182,7 +207,7 @@ void MailTab::OnSelectionChanged()
 		return;
 
 	Message message;
-	if (!Message::GetMessage(session, selected_id, message))
+	if (!Message::GetMessage(session, m_selected_mail_id, message))
 	{
 		m_receiver_edit->setText("");
 		m_subject_edit->setText("");

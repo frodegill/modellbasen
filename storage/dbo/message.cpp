@@ -2,6 +2,7 @@
 
 #include "../../app/defines.h"
 #include "../../singleton/db.h"
+#include "../../utils/time.h"
 
 
 using namespace modellbasen;
@@ -67,6 +68,38 @@ bool Message::GetUnreadCount(Poco::Data::Session* session, const IdType& user_id
 	{
 		count = 0;
 	}
+
+	return true;
+}
+
+bool Message::SendMessage(Poco::Data::Session* session_in_transaction,
+                          const std::string& subject, const std::string& text,
+                          IdType sender_id, IdType recipient_id,
+                          IdType in_reply_to_id)
+{
+	if (!session_in_transaction || text.empty() || INVALID_ID==sender_id || INVALID_ID==recipient_id)
+		return false;
+
+	TimeType now = Time::NowUTC();
+
+	if (INVALID_ID != in_reply_to_id)
+	{
+		*session_in_transaction << "UPDATE message SET replied_time=? WHERE id=? AND replied_time=null",
+			Poco::Data::Keywords::use(now),
+			Poco::Data::Keywords::use(in_reply_to_id),
+			Poco::Data::Keywords::now;
+	}
+
+	*session_in_transaction << "INSERT INTO message (subject,message,sender,recipient,sent_time,read_time,replied_time,"\
+	                            "in_reply_to,sender_deleted,recipient_deleted) "\
+	                           "VALUE (?,?,?,?,?,null,null,?,false,false)",
+		Poco::Data::Keywords::useRef(subject),
+		Poco::Data::Keywords::useRef(text),
+		Poco::Data::Keywords::use(sender_id),
+		Poco::Data::Keywords::use(recipient_id),
+		Poco::Data::Keywords::use(now),
+		Poco::Data::Keywords::use(in_reply_to_id),
+		Poco::Data::Keywords::now;
 
 	return true;
 }
